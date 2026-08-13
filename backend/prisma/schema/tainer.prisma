@@ -1,0 +1,14 @@
+model Trainer {
+  id             Int            @id @default(autoincrement())
+  name           String
+  specialization Specialization @default(Cardio)
+  email          String         @unique
+  contact        String
+  experience     Int
+  status         Status         @default(Active)
+  createdAt      DateTime       @default(now())
+
+  classes   Class[]
+  bookings  Booking[]
+  schedules Schedule[]
+}

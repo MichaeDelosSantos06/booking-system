@@ -1,0 +1,49 @@
+enum Role {
+  Admin
+  Member
+}
+
+enum Status {
+  Active
+  Inactive
+}
+
+enum ScheduleStat {
+  Open
+  Past
+}
+
+enum Difficulty {
+  Beginner
+  Intermediate
+  Advance
+}
+
+enum Category {
+  Cardio
+  Strength
+  Flexibility
+  Combat
+  GroupFitness
+}
+
+enum Specialization {
+  Cardio
+  Yoga
+  Strengthtraining
+  Boxing
+  ZumbaDance
+  HIIT
+  Pilates
+  CrossFit
+}
+
+enum Location {
+  StudioA
+  StudioB
+  CyclingStudio
+  MainFloor
+  WeightRoom
+  BoxingRing
+  OutdoorCourt
+}

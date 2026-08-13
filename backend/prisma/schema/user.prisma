@@ -1,0 +1,12 @@
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  contact      String
+  email        String   @unique
+  passwordHash String
+  status       Status   @default(Active)
+  role         Role     @default(Member)
+  createdAt    DateTime @default(now())
+
+  bookings Booking[]
+}

@@ -1,0 +1,14 @@
+model Schedule {
+  id        Int          @id @default(autoincrement())
+  classId   Int
+  trainerId Int
+  location  Location
+  startAt   DateTime
+  endAt     DateTime
+  capacity  Int
+  status    ScheduleStat @default(Open)
+  createdAt DateTime     @default(now())
+
+  class   Class   @relation(fields: [classId], references: [id])
+  trainer Trainer @relation(fields: [trainerId], references: [id])
+}

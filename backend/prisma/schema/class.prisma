@@ -1,0 +1,14 @@
+model Class {
+  id         Int        @id @default(autoincrement())
+  trainerId  Int
+  className  String
+  imageUrl   String
+  duration   Int
+  category   Category   @default(Cardio)
+  difficulty Difficulty @default(Beginner)
+  status     Status     @default(Active)
+
+  trainer   Trainer    @relation(fields: [trainerId], references: [id])
+  bookings  Booking[]
+  schedules Schedule[]
+}
