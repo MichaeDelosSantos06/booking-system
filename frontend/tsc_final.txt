@@ -1,0 +1,2 @@
+src/contexts/auth/AuthProvider.tsx(13,24): error TS6133: 'email' is declared but its value is never read.
+src/contexts/auth/AuthProvider.tsx(13,39): error TS6133: 'password' is declared but its value is never read.
