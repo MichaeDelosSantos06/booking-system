@@ -17,3 +17,12 @@ export interface CreateUserDto {
   password: string;
   confirmPassword: string;
 }
+
+export type ResetPasswordDto = {
+  password: string;
+  confirmPassword: string;
+};
+
+export type ForgotPasswordDto = {
+  email: string;
+};

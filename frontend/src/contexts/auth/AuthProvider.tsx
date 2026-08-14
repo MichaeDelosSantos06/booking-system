@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 import type { User } from "../../types/user.type";
 import UserService from "../../services/user.service";
-import type { LoginDto } from "../../types/user.type";
+import type { LoginDto, CreateUserDto } from "../../types/user.type";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -13,10 +13,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
 
-  const login = async (data: LoginDto) => {
-    const result = await UserService.loginUser(data);
+  const getCurrentUser = async () => {
+    const result = await UserService.getCurrentUser();
 
-    setUser(result.data);
+    setUser(result.user);
+  };
+
+  const login = async (data: LoginDto) => {
+    await UserService.loginUser(data);
+    await getCurrentUser();
   };
 
   const logout = async () => {
@@ -24,12 +29,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  const registerUser = async (data: CreateUserDto) => {
+    await UserService.registerUser(data);
+    await getCurrentUser();
+  };
+
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const result = await UserService.getCurrentUser();
-
-        setUser(result.data);
+        await getCurrentUser();
       } catch {
         setUser(null);
       } finally {
@@ -48,6 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated: user !== null,
         login,
         logout,
+        registerUser,
       }}
     >
       {children}

@@ -2,12 +2,16 @@ import type { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import UserService from "../services/user.service.js";
 import type { CreateUserDto, LoginDto } from "../types/user.type.js";
+import { setAccessTokenCookie } from "../utils/setAcessTokenCookie.js";
 
 const UserController = {
   registerUser: asyncHandler(async (req: Request, res: Response) => {
     const data: CreateUserDto = req.body;
 
-    await UserService.registerUser(data);
+    const { token } = await UserService.registerUser(data);
+
+    setAccessTokenCookie(res, token);
+
     return res.status(201).json({
       success: true,
       message: "Registered Successfully!",
@@ -19,11 +23,7 @@ const UserController = {
 
     const { token } = await UserService.loginUser(data);
 
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    });
+    setAccessTokenCookie(res, token);
 
     return res.status(200).json({
       success: true,

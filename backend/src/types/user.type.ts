@@ -10,3 +10,9 @@ export interface LoginDto {
   email: string;
   password: string;
 }
+
+export interface ResetTokenDto {
+  userId: number;
+  tokenHash: string;
+  expiresAt: Date;
+}

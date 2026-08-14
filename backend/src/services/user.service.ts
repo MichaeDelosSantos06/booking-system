@@ -17,12 +17,27 @@ const UserService = {
     const saltRounds = 12;
     const passwordHashed = await bcrypt.hash(password, saltRounds);
 
-    return UserRepository.registerUser({
+    const user = await UserRepository.registerUser({
       name,
       email,
       contact,
       passwordHash: passwordHashed,
     });
+
+    const token = generateAccessToken({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token,
+    };
   },
 
   loginUser: async (data: LoginDto) => {

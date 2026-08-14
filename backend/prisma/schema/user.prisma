@@ -9,4 +9,5 @@ model User {
   createdAt    DateTime @default(now())
 
   bookings Booking[]
+  passwordResetTokens PasswordResetToken[]
 }

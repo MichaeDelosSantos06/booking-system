@@ -13,7 +13,7 @@ const UserService = {
   },
 
   getCurrentUser: async () => {
-    const result = await api.post("/user/me");
+    const result = await api.get("/user/me");
     return result.data;
   },
 

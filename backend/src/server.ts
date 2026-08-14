@@ -17,6 +17,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
 
 import userRoute from "./routes/user.route.js";
+import passwordResetRoute from "./routes/passwordReset.routes.js";
 
 app.use(helmet());
 app.use(
@@ -42,6 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ROUTES HERE
 app.use("/api", userRoute);
+app.use("/api", passwordResetRoute);
 
 app.use(notFound);
 app.use(errorHandler);
