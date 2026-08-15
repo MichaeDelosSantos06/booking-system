@@ -1,6 +1,6 @@
 const IconLogo = () => {
   return (
-    <div className="flex items-center justify-center gap-3 lg:hidden">
+    <div className="flex items-center justify-center gap-3">
       <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e63946]">
         <svg
           className="h-4 w-4 text-white"

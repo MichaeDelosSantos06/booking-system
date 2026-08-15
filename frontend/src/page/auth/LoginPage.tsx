@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
 import LoginBranding from "../../components/LoginBranding";
 import { FiAlertCircle, FiEye, FiEyeOff } from "react-icons/fi";
-import IconLogo from "../../components/IconLogo";
+import IconLogo from "../../components/ui/IconLogo";
 
 const LoginPage = () => {
   const {
@@ -48,7 +48,9 @@ const LoginPage = () => {
         className="flex w-full flex-1 flex-col justify-center space-y-6 rounded-2xl border border-slate-200 bg-white px-6 shadow-xl shadow-slate-200/50 sm:p-10 md:px-50 lg:px-25 xl:px-32 2xl:px-40"
       >
         {/* Mobile / Medium Branding */}
-        <IconLogo />
+        <div className="lg:hidden">
+          <IconLogo />
+        </div>
         {/* Header */}
         <div className="mb-8 flex flex-col items-center space-y-1 sm:mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
