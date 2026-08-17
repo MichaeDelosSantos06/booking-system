@@ -53,6 +53,29 @@ const UserController = {
       message: "Logout Successfully!",
     });
   }),
+
+  getUsers: asyncHandler(async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = typeof req.query.search === "string" ? req.query.search : "";
+
+    const user = await UserService.getUsers(page, limit, search);
+    return res.status(200).json({
+      success: true,
+      message: "User Retrieve Succesfully!",
+      user,
+      pagination: user.pagination,
+    });
+  }),
+
+  fetchNewUserByWeek: asyncHandler(async (req: Request, res: Response) => {
+    const count = await UserService.fetchNewUserByWeek();
+    return res.status(200).json({
+      success: true,
+      message: "Count Retrieve",
+      user: count,
+    });
+  }),
 };
 
 export default UserController;

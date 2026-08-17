@@ -21,6 +21,22 @@ const UserService = {
     const result = await api.post("/user/logout");
     return result.data;
   },
+
+  getUsers: async (page: number, limit: number, search: string) => {
+    const result = await api.get("/user/get-users", {
+      params: {
+        page,
+        limit,
+        search,
+      },
+    });
+    return result.data;
+  },
+
+  getNewUserByWeek: async () => {
+    const result = await api.get("/user/get-user-count");
+    return result.data;
+  },
 };
 
 export default UserService;

@@ -4,7 +4,11 @@ import RegistrationPage from "../page/auth/RegistrationPage";
 import AdminLayout from "../components/layout/AdminLayout";
 import ForgotPasswordPage from "../page/auth/ForgotPasswordPage";
 import ResetPasswordPage from "../page/auth/resetPasswordPage";
-import Dashboard from "../page/Dashboard";
+import Dashboard from "../page/admin/Dashboard";
+import MemberPage from "../page/admin/MembersPage";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+import MemberRoute from "./MemberRoute";
 
 export const router = createBrowserRouter([
   {
@@ -16,10 +20,6 @@ export const router = createBrowserRouter([
     element: <RegistrationPage />,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
     path: "/forgot-password",
     element: <ForgotPasswordPage />,
   },
@@ -27,12 +27,39 @@ export const router = createBrowserRouter([
     path: "/reset-password",
     element: <ResetPasswordPage />,
   },
+
+  // Authenticated
   {
-    element: <AdminLayout />,
+    element: <ProtectedRoute />,
     children: [
+      // Regular User
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        element: <MemberRoute />,
+        children: [
+          {
+            // Member layout
+          },
+        ],
+      },
+
+      // Admin
+      {
+        element: <AdminRoute />,
+        children: [
+          {
+            element: <AdminLayout />,
+            children: [
+              {
+                path: "/dashboard",
+                element: <Dashboard />,
+              },
+              {
+                path: "/members",
+                element: <MemberPage />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

@@ -3,6 +3,7 @@ import type { CreateUserDto, LoginDto } from "../types/user.type.js";
 import { AppError } from "../utils/appError.js";
 import bcrypt from "bcrypt";
 import { generateAccessToken } from "../utils/jwt.js";
+import { fetchUserByWeek } from "../utils/newUserByWeek.js";
 
 const UserService = {
   registerUser: async (data: CreateUserDto) => {
@@ -77,6 +78,35 @@ const UserService = {
     }
 
     return user;
+  },
+
+  getUsers: async (page = 1, limit = 8, search = "") => {
+    const currentPage = Math.max(1, page);
+    const pageSize = Math.min(Math.max(1, limit), 50);
+    const searchTerm = search.trim();
+
+    const { users, total } = await UserRepository.getUsers(
+      currentPage,
+      pageSize,
+      searchTerm || undefined
+    );
+
+    return {
+      users,
+      total,
+      pagination: {
+        page: currentPage,
+        limit: pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
+      },
+    };
+  },
+
+  fetchNewUserByWeek: async () => {
+    const { startOfWeek, endOfWeek } = fetchUserByWeek();
+
+    return UserRepository.fetchNewUserByWeek(startOfWeek, endOfWeek);
   },
 };
 

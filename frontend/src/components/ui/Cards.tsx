@@ -1,6 +1,9 @@
 import { UsersRound } from "lucide-react";
+import useUsers from "../../hooks/useUsers";
 
 const Cards = () => {
+  const { users, weeklyUser } = useUsers();
+
   return (
     <div className="mt-2 grid w-full grid-cols-2 gap-3 p-3 font-poppins sm:gap-4 sm:p-4 xl:grid-cols-4">
       {/* Total Members */}
@@ -11,10 +14,11 @@ const Cards = () => {
           <UsersRound size={18} strokeWidth={1.7} className="sm:h-5 sm:w-5" />
         </div>
 
-        <h1 className="text-xl font-semibold sm:text-2xl">100</h1>
+        <h1 className="text-xl font-semibold sm:text-2xl">{users.length}</h1>
 
         <p className="text-[9px] sm:text-[11px]">
-          <span className="font-bold text-green-500">+3</span> this week
+          <span className="font-bold text-green-500">+{weeklyUser}</span> this
+          week
         </p>
       </div>
 

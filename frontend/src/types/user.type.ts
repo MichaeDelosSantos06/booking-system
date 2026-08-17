@@ -2,7 +2,14 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  contact: string;
+  createdAt: string;
+  bookings: number;
+  status: "Active" | "Inactive";
   role: "Admin" | "Member";
+  _count: {
+    bookings: number;
+  };
 }
 
 export interface LoginDto {
