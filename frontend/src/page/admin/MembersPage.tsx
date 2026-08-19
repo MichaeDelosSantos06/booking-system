@@ -1,6 +1,6 @@
 import useUsers from "../../hooks/useUsers";
 import SearchInput from "../../components/ui/SearchInput";
-import MembersTable from "../../components/ui/MembersTable";
+import MembersTable from "../../feature/classes/components/MembersTable";
 
 const MemberPage = () => {
   const { users, error, loading, pagination, search, setSearch, fetchUsers } =

@@ -1,6 +1,6 @@
-import type { User } from "../../types/user.type";
-import type { Pagination as PaginationType } from "../../types/pagination.type";
-import Pagination from "./Pagination";
+import type { User } from "../../../types/user.type";
+import type { Pagination as PaginationType } from "../../../types/pagination.type";
+import Pagination from "../../../components/ui/Pagination";
 
 interface MembersTableProps {
   users: User[];

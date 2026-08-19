@@ -8,6 +8,8 @@ model User {
   role         Role     @default(Member)
   createdAt    DateTime @default(now())
 
-  bookings Booking[]
+  bookings            Booking[]
   passwordResetTokens PasswordResetToken[]
+
+  @@index([role])
 }
