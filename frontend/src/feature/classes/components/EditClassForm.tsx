@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImageIcon, Upload } from "lucide-react";
-
-import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
 import useFetchTrainer from "../../../hooks/useFetchTrainer";
 import ClassService from "../../../services/class.service";
-
+import { toast } from "sonner";
 import type {
   CreateClassFormData,
-  CreateClassFormProps,
+  EditClassFormProps,
 } from "../../../types/class.types";
+import axios from "axios";
 
 const inputClass =
   "h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-100";
@@ -23,36 +23,48 @@ const labelClass =
 
 const errorClass = "mt-1.5 text-xs font-medium text-red-600";
 
-const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+const EditClassForm = ({
+  onSuccess,
+  editData,
+  onClose,
+}: EditClassFormProps) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateClassFormData>({
-    defaultValues: {
-      className: "",
-      description: "",
-      category: "Cardio",
-      difficulty: "Beginner",
-      trainerId: undefined,
-      duration: 60,
-      status: "Active",
-    },
-  });
+  } = useForm<CreateClassFormData>();
 
   const { trainer } = useFetchTrainer();
+
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    editData?.imageUrl ?? null
+  );
+
+  useEffect(() => {
+    if (!editData || trainer.length === 0) return;
+
+    reset({
+      className: editData.className,
+      description: editData.description,
+      category: editData.category,
+      difficulty: editData.difficulty,
+      duration: editData.duration,
+      trainerId: editData.trainerId,
+      status: editData.status,
+    });
+
+    setImagePreview(editData.imageUrl ?? null);
+  }, [editData, trainer, reset]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
-    // 5MB limit
     if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5MB.");
       event.target.value = "";
-      setImagePreview(null);
       return;
     }
 
@@ -61,7 +73,9 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
     setImagePreview(previewUrl);
   };
 
-  const onSubmit = async (data: CreateClassFormData) => {
+  const handleEdit = async (data: CreateClassFormData) => {
+    if (!editData) return;
+
     try {
       const formData = new FormData();
 
@@ -79,20 +93,24 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
         formData.append("classImage", file);
       }
 
-      await ClassService.createClass(formData);
+      await ClassService.updateClass(editData.id, formData);
 
-      await onRefetch();
+      await onSuccess();
 
-      onSuccess();
+      toast.success("Class updated successfully");
     } catch (error) {
-      console.error("Failed to create class:", error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Something went wrong.");
+      } else {
+        toast.error("Something went wrong.");
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Class Name + Class Image */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <form onSubmit={handleSubmit(handleEdit)} className="space-y-5">
+      {/* Class Name + Image */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Class Name */}
         <div>
           <label htmlFor="className" className={labelClass}>
@@ -119,12 +137,12 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
           <label className={labelClass}>Class Image</label>
 
           <div className="flex h-10 overflow-hidden rounded-lg border border-slate-300 bg-white transition-all duration-200 hover:border-slate-400 focus-within:border-slate-500 focus-within:ring-2 focus-within:ring-slate-100">
-            {/* Image Preview */}
+            {/* Image */}
             <div className="relative h-full w-10 shrink-0 overflow-hidden bg-slate-100">
               {imagePreview ? (
                 <img
                   src={imagePreview}
-                  alt="Class preview"
+                  alt={editData?.className ?? "Class preview"}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -151,7 +169,6 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
               <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-600">
                 {imagePreview ? "Change image" : "Upload image"}
               </span>
-
               <span className="shrink-0 rounded-md bg-slate-950 px-2.5 py-1.5 text-[10px] font-semibold text-white shadow-sm transition-all duration-200 group-hover:bg-slate-800">
                 Browse
               </span>
@@ -181,7 +198,7 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
 
         <textarea
           id="description"
-          rows={2}
+          rows={3}
           placeholder="Briefly describe the class..."
           className="w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-100"
           {...register("description", {
@@ -195,8 +212,7 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
       </div>
 
       {/* Category + Difficulty */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {/* Category */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="category" className={labelClass}>
             Category
@@ -215,7 +231,6 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
           </select>
         </div>
 
-        {/* Difficulty */}
         <div>
           <label htmlFor="difficulty" className={labelClass}>
             Difficulty
@@ -234,7 +249,7 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
       </div>
 
       {/* Duration + Trainer */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Duration */}
         <div>
           <label htmlFor="duration" className={labelClass}>
@@ -317,7 +332,7 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
       <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 pt-4">
         <Button
           type="button"
-          onClick={onSuccess}
+          onClick={onClose}
           disabled={isSubmitting}
           className="flex h-10 min-w-[90px] items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -329,11 +344,11 @@ const CreateClassForm = ({ onSuccess, onRefetch }: CreateClassFormProps) => {
           disabled={isSubmitting}
           className="flex h-10 min-w-[120px] items-center justify-center rounded-lg bg-slate-950 px-5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isSubmitting ? "Creating..." : "Create Class"}
+          {isSubmitting ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </form>
   );
 };
 
-export default CreateClassForm;
+export default EditClassForm;

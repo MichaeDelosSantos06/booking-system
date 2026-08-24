@@ -22,5 +22,25 @@ router.get(
   authorize,
   ClassController.fetchClasses,
 );
+router.get(
+  "/class/search-class",
+  tokenAuth,
+  authorize,
+  ClassController.searchClasses,
+);
+router.delete(
+  "/class/delete-class/:id",
+  tokenAuth,
+  authorize,
+  ClassController.deleteClassById,
+);
+router.patch(
+  "/class/update-class/:id",
+  tokenAuth,
+  authorize,
+  upload.single("classImage"),
+  validate(createClassSchema),
+  ClassController.updateClass,
+);
 
 export default router;

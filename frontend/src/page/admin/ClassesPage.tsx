@@ -1,38 +1,90 @@
 import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
 
 import Button from "../../components/ui/Button";
 import SearchInput from "../../components/ui/SearchInput";
 import ClassModal from "../../feature/classes/components/ClassModal";
 import ClassTable from "../../feature/classes/components/ClassTable";
+import useFetchClasses from "../../hooks/useFetchClasses";
+import ClassService from "../../services/class.service";
+import DeleteModal from "../../feature/classes/components/DeleteModal";
+import EditModal from "../../feature/classes/components/ClassEditModal";
+import type { ClassResponseDto } from "../../types/class.types";
+import { Plus } from "lucide-react";
 
 const ClassPage = () => {
-  const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selectClassId, setSelectClassId] = useState<number | null>(null);
+  const [editModal, setEditModal] = useState(false);
+  const [editData, setEditData] = useState<ClassResponseDto | null>(null);
+
+  const {
+    classes,
+    error,
+    loading,
+    search,
+    setSearch,
+    pagination,
+    fetchClasses,
+    refetch,
+  } = useFetchClasses();
+
+  const handleDelete = (id: number) => {
+    setSelectClassId(id);
+    setDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectClassId === null) return;
+
+    try {
+      await ClassService.deleteClassById(selectClassId);
+
+      setDeleteModal(false);
+      setSelectClassId(null);
+
+      await refetch();
+    } catch (error) {
+      console.error("Failed to delete class:", error);
+    }
+  };
+
+  const handleEdit = (data: ClassResponseDto) => {
+    setEditData(data);
+    setEditModal(true);
+  };
+
+  const onSuccess = async () => {
+    await refetch();
+    setEditModal(false);
+  };
 
   return (
-    <div className="min-h-full space-y-6 p-12">
+    <div className="min-h-full space-y-6 p-4 sm:p-6 md:p-8 lg:p-12">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
             Classes
           </h1>
+
           <p className="mt-1 text-sm text-slate-500">
             Manage your fitness classes and trainers.
           </p>
         </div>
 
-        <Button onClick={() => setModalOpen(true)}>
-          <span className="flex items-center gap-2">
-            <Plus size={18} />
-            Add Class
-          </span>
+        <Button
+          onClick={() => setModalOpen(true)}
+          type="button"
+          className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] sm:w-auto"
+        >
+          <Plus size={16} strokeWidth={2.2} />
+          <span>Add Class</span>
         </Button>
       </div>
 
       {/* Search */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
         <SearchInput
           value={search}
           placeholder="Search classes or trainers..."
@@ -40,90 +92,50 @@ const ClassPage = () => {
         />
       </div>
 
-      {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        {/* Desktop / Tablet */}
-        <div className="hidden md:block">
-          <div className="overflow-x-auto">
-            <ClassTable />
+      {/* Classes */}
+      <div className="hidden md:block">
+        {error && classes.length === 0 && (
+          <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-5 py-4">
+            <p className="text-sm font-medium text-red-600">{error}</p>
           </div>
-        </div>
+        )}
 
-        {/* Mobile */}
-        <div className="divide-y divide-slate-100 md:hidden">
-          <div className="p-4">
-            {/* Class header */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[10px] font-medium text-slate-400">
-                  IMAGE
-                </div>
-
-                <div className="min-w-0">
-                  <h2 className="truncate text-sm font-semibold text-slate-900">
-                    Yoga Flow
-                  </h2>
-                  <p className="text-xs text-slate-500">Beginner</p>
-                </div>
-              </div>
-
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                Active
-              </span>
-            </div>
-
-            {/* Details */}
-            <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3">
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                  Category
-                </p>
-                <p className="mt-1 text-sm font-medium text-slate-700">
-                  Flexibility
-                </p>
-              </div>
-
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                  Trainer
-                </p>
-                <p className="mt-1 truncate text-sm font-medium text-slate-700">
-                  Kyla Marie
-                </p>
-              </div>
-
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                  Duration
-                </p>
-                <p className="mt-1 text-sm font-medium text-slate-700">
-                  60 min
-                </p>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="mt-4 flex gap-2">
-              <Button>
-                <span className="flex w-full items-center justify-center gap-1.5">
-                  <Pencil size={15} />
-                  Edit
-                </span>
-              </Button>
-
-              <Button>
-                <span className="flex w-full items-center justify-center gap-1.5">
-                  <Trash2 size={15} />
-                  Delete
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
+        <ClassTable
+          classes={classes}
+          loading={loading}
+          pagination={pagination}
+          onPageChange={fetchClasses}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+        />
       </div>
 
-      <ClassModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <ClassModal
+        isOpen={modalOpen}
+        onRefetch={refetch}
+        onClose={() => setModalOpen(false)}
+      />
+
+      <DeleteModal
+        isOpen={deleteModal}
+        onClose={() => {
+          setDeleteModal(false);
+          setSelectClassId(null);
+        }}
+
+        onConfirm={handleDeleteConfirm}
+      />
+
+      <EditModal
+        isOpen={editModal}
+        editData={editData}
+        onEdit={handleEdit}
+        onSuccess={onSuccess}
+        onClose={() => {
+          setEditData(null);
+          setEditModal(false);
+        }}
+      />
     </div>
   );
 };

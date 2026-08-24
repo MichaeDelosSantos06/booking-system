@@ -5,9 +5,10 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: ReactNode;
+  mode?: "create" | "edit";
 }
 
-const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+const Modal = ({ isOpen, onClose, title, children, mode }: ModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -19,7 +20,11 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             <div>
               <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
               <p className="mt-0.5 text-xs text-slate-500">
-                Add a new fitness class
+                {mode === "create"
+                  ? "Add a new fitness class"
+                  : mode === "edit"
+                    ? "Manage your fitness classes and their trainers."
+                    : null}
               </p>
             </div>
           )}
