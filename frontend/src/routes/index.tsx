@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import MemberRoute from "./MemberRoute";
 import ClassPage from "../page/admin/ClassesPage";
+import TrainerPage from "../page/admin/TrainerPage";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
               {
                 path: "/classes",
                 element: <ClassPage />,
+              },
+              {
+                path: "/trainers",
+                element: <TrainerPage />,
               },
             ],
           },

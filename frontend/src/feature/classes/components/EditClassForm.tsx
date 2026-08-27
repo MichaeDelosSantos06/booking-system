@@ -35,7 +35,7 @@ const EditClassForm = ({
     formState: { errors, isSubmitting },
   } = useForm<CreateClassFormData>();
 
-  const { trainer } = useFetchTrainer();
+  const { trainer } = useFetchTrainer("Active");
 
   const [imagePreview, setImagePreview] = useState<string | null>(
     editData?.imageUrl ?? null
@@ -227,7 +227,7 @@ const EditClassForm = ({
             <option value="Cardio">Cardio</option>
             <option value="Flexibility">Flexibility</option>
             <option value="Combat">Combat</option>
-            <option value="Group Fitness">Group Fitness</option>
+            <option value="GroupFitness">Group Fitness</option>
           </select>
         </div>
 
@@ -303,11 +303,12 @@ const EditClassForm = ({
           >
             <option value="">Select trainer</option>
 
-            {trainer.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
+            {trainer.length !== 0 &&
+              trainer.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
           </select>
 
           {errors.trainerId && (

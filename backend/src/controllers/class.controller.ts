@@ -57,6 +57,26 @@ const ClassController = {
       pagination: result.pagination,
     });
   }),
+
+  // Get Inactive Class
+  getInactiveClass: asyncHandler(async (req: Request, res: Response) => {
+    const classes = await ClassService.getInactiveClass();
+    return res.status(200).json({
+      sucess: true,
+      message: "Inactive Class Retrieve",
+      classes,
+    });
+  }),
+
+  // count classes
+  getActiveClass: asyncHandler(async (req: Request, res: Response) => {
+    const classes = await ClassService.getActiveClass();
+    return res.status(200).json({
+      success: true,
+      message: "Classes Count Retrieve",
+      classes,
+    });
+  }),
 };
 
 export default ClassController;

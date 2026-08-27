@@ -43,4 +43,16 @@ router.patch(
   ClassController.updateClass,
 );
 
+router.get(
+  "/class/get-active-class",
+  tokenAuth,
+  authorize,
+  ClassController.getActiveClass,
+);
+router.get(
+  "/class/get-inactive-class",
+  tokenAuth,
+  authorize,
+  ClassController.getInactiveClass,
+);
 export default router;

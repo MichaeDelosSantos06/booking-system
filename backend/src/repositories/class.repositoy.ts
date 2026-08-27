@@ -165,6 +165,24 @@ const ClassRepository = {
       },
     });
   },
+
+  // Get Inactive Class
+  getInactiveClass: async () => {
+    return prisma.class.count({
+      where: {
+        status: "Inactive",
+      },
+    });
+  },
+
+  // Get Total Classes
+  getActiveClass: async () => {
+    return prisma.class.count({
+      where: {
+        status: "Active",
+      },
+    });
+  },
 };
 
 export default ClassRepository;

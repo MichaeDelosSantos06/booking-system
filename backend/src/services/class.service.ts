@@ -113,6 +113,16 @@ const ClassService = {
 
     return ClassRepository.updateClass(id, data, imageUrl, imageId);
   },
+
+  // Get Inactive Class
+  getInactiveClass: async () => {
+    return ClassRepository.getInactiveClass();
+  },
+
+  // Count Classes
+  getActiveClass: async () => {
+    return ClassRepository.getActiveClass();
+  },
 };
 
 export default ClassService;

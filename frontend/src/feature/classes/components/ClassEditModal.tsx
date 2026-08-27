@@ -7,14 +7,13 @@ const EditModal = ({
   onClose,
   editData,
   onSuccess,
-  onEdit,
 }: EditModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Class" mode={"edit"}>
       <EditClassForm
         editData={editData}
         onSuccess={onSuccess}
-        onEdit={onEdit}
+
         onClose={onClose}
       />
     </Modal>

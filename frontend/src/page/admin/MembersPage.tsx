@@ -34,7 +34,7 @@ const MemberPage = () => {
     <div className="flex min-h-0 flex-1 flex-col px-4 py-5 font-poppins sm:px-6 sm:py-6 lg:px-10 lg:py-8">
       {/* Header */}
       <div className="mb-6 shrink-0">
-        <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl">
+        <h1 className="text-xl font-semibold tracking-tight text-gray-900 sm:text-2xl">
           Members
         </h1>
 

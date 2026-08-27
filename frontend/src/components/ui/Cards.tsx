@@ -1,10 +1,10 @@
 import { UsersRound } from "lucide-react";
 import useUsers from "../../hooks/useUsers";
-import useFetchClasses from "../../hooks/useFetchClasses";
+import useDashboard from "../../hooks/useDashboard";
 
 const Cards = () => {
   const { users, weeklyUser } = useUsers();
-  const { classes } = useFetchClasses();
+  const { inactive, totalClasses } = useDashboard();
 
   return (
     <div className="mt-2 grid w-full grid-cols-2 gap-3 p-3 font-poppins sm:gap-4 sm:p-4 xl:grid-cols-4">
@@ -32,10 +32,10 @@ const Cards = () => {
           <UsersRound size={18} strokeWidth={1.7} className="sm:h-5 sm:w-5" />
         </div>
 
-        <h1 className="text-xl font-semibold sm:text-2xl">{classes.length}</h1>
+        <h1 className="text-xl font-semibold sm:text-2xl">{totalClasses}</h1>
 
         <p className="text-[9px] sm:text-[11px]">
-          <span className="font-bold text-green-500">+2</span> this week
+          <span className="font-bold text-green-500">{inactive}</span> Inactive
         </p>
       </div>
 

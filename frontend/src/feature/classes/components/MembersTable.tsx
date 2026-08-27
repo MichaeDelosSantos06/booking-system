@@ -1,5 +1,6 @@
 import type { User } from "../../../types/user.type";
 import type { Pagination as PaginationType } from "../../../types/pagination.type";
+
 import Pagination from "../../../components/ui/Pagination";
 
 interface MembersTableProps {
@@ -14,43 +15,43 @@ const MembersTable = ({
   onPageChange,
 }: MembersTableProps) => {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       {/* Table area */}
-      <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
+      <div className="w-full overflow-x-auto overflow-y-hidden">
         <table className="w-full min-w-[760px] table-fixed text-left">
           <colgroup>
-            <col className="w-[27%]" />
+            <col className="w-[22%]" />
             <col className="w-[20%]" />
-            <col className="w-[12%]" />
+            <col className="w-[15%]" />
             <col className="w-[12%]" />
             <col className="w-[8%]" />
-            <col className="w-[7%]" />
+            <col className="w-[10%]" />
           </colgroup>
 
           {/* Header */}
-          <thead className="sticky top-0 z-10 border-b border-gray-200 bg-gray-50">
+          <thead className="sticky top-0 z-10 bg-black text-white">
             <tr>
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Name
               </th>
 
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Email
               </th>
 
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Phone
               </th>
 
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Member Since
               </th>
 
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Bookings
               </th>
 
-              <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500 sm:px-4">
+              <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Status
               </th>
             </tr>
@@ -65,8 +66,8 @@ const MembersTable = ({
                   className="transition-colors hover:bg-gray-50/80"
                 >
                   {/* Name */}
-                  <td className="px-3 py-3 sm:px-4">
-                    <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="ml-1 flex min-w-0 items-center gap-2 sm:ml-2 sm:gap-3 md:ml-4">
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-500/50 text-[10px] font-semibold text-red-500 sm:h-8 sm:w-8 sm:text-xs">
                         {user.name.charAt(0).toUpperCase()}
                       </div>
@@ -81,7 +82,7 @@ const MembersTable = ({
                   </td>
 
                   {/* Email */}
-                  <td className="overflow-hidden px-3 py-3 sm:px-4">
+                  <td className="overflow-hidden px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
                     <span
                       className="block truncate text-[11px] text-gray-600 sm:text-xs"
                       title={user.email}
@@ -91,7 +92,7 @@ const MembersTable = ({
                   </td>
 
                   {/* Phone */}
-                  <td className="overflow-hidden px-3 py-3 sm:px-4">
+                  <td className="overflow-hidden px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
                     <span
                       className="block truncate text-[11px] text-gray-600 sm:text-xs"
                       title={user.contact}
@@ -101,7 +102,7 @@ const MembersTable = ({
                   </td>
 
                   {/* Member Since */}
-                  <td className="px-3 py-3 sm:px-4">
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
                     <span className="whitespace-nowrap text-[11px] text-gray-600 sm:text-xs">
                       {new Date(user.createdAt).toLocaleDateString("en-US", {
                         month: "short",
@@ -112,14 +113,14 @@ const MembersTable = ({
                   </td>
 
                   {/* Bookings */}
-                  <td className="px-3 py-3 sm:px-4">
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
                     <span className="inline-flex min-w-7 items-center justify-center rounded-md bg-gray-100 px-1.5 py-1 text-[10px] font-semibold text-gray-700 sm:px-2 sm:text-xs">
                       {user._count.bookings}
                     </span>
                   </td>
 
                   {/* Status */}
-                  <td className="px-3 py-3 sm:px-4">
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
                     <span
                       className={`inline-flex items-center rounded-full px-1.5 py-1 text-[9px] font-medium sm:px-2 sm:text-[10px] ${
                         user.status === "Active"
@@ -141,18 +142,20 @@ const MembersTable = ({
                 </tr>
               ))
             ) : (
-              <tr>
+              <tr className="h-[260px] sm:h-[320px] md:h-[360px] lg:h-[400px]">
                 <td
                   colSpan={6}
-                  className="h-48 px-4 text-center align-middle sm:h-64"
+                  className="px-3 text-center align-middle sm:px-4 md:px-6"
                 >
-                  <p className="text-sm font-medium text-gray-900">
-                    No members found
-                  </p>
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="text-xs font-semibold text-gray-900 sm:text-sm">
+                      No members found
+                    </p>
 
-                  <p className="mt-1 text-xs text-gray-500">
-                    Try adjusting your search.
-                  </p>
+                    <p className="mt-1 max-w-[220px] text-[10px] leading-relaxed text-gray-500 sm:max-w-none sm:text-xs">
+                      Try adjusting your search.
+                    </p>
+                  </div>
                 </td>
               </tr>
             )}
@@ -160,7 +163,7 @@ const MembersTable = ({
         </table>
       </div>
 
-      {/* Pagination stays fixed */}
+      {/* Pagination */}
       <div className="shrink-0 border-t border-gray-100">
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       </div>

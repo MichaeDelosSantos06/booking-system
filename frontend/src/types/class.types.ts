@@ -32,14 +32,14 @@ export interface ClassResponseDto {
 }
 
 export interface CreateClassFormProps {
-  onSuccess: () => void;
-  onRefetch(): Promise<void>;
+  onSuccess: () => Promise<void>;
+  onClose: () => void;
 }
 
 export interface CreateClassModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRefetch: () => Promise<void>;
+  onSuccess: () => Promise<void>;
 }
 
 export interface ClassTableProps {
@@ -62,13 +62,11 @@ export interface EditModalProps {
   onClose: () => void;
   editData: ClassResponseDto | null;
   onSuccess: () => Promise<void>;
-  onEdit: (data: ClassResponseDto) => void;
 }
 
 export interface EditClassFormProps {
   onSuccess: () => Promise<void>;
   editData: ClassResponseDto | null;
-  onEdit: (data: ClassResponseDto) => void;
   onClose: () => void;
 }
 
@@ -89,3 +87,53 @@ export interface ClassListResponseDto {
   class: ClassResponseDto[];
   pagination: Pagination;
 }
+
+export const categoryConfig = [
+  {
+    value: "GroupFitness",
+    label: "Group Fitness",
+    className: "bg-blue-100 text-blue-700",
+  },
+  { value: "Cardio", label: "Cardio", className: "bg-red-100 text-red-700" },
+  {
+    value: "Strength",
+    label: "Strength",
+    className: "bg-orange-100 text-orange-700",
+  },
+  {
+    value: "Flexibility",
+    label: "Flexibility",
+    className: "bg-green-100 text-green-700",
+  },
+  {
+    value: "Combat",
+    label: "Combat",
+    className: "bg-purple-100 text-purple-700",
+  },
+] satisfies {
+  value: ClassCategory;
+  label: string;
+  className: string;
+}[];
+
+export const difficultyConfig = [
+  {
+    value: "Beginner",
+    label: "Beginner",
+    className: "bg-green-100 text-green-500",
+  },
+  {
+    value: "Intermediate",
+    label: "Intermediate",
+    className: "bg-orange-100 text-orange-500",
+  },
+  {
+    value: "Advance",
+    label: "Advance",
+    className: "bg-red-100 text-red-500",
+  },
+] satisfies {
+  value: ClassDifficulty;
+  label: string;
+  className: string;
+}[];

@@ -39,10 +39,8 @@ const ClassPage = () => {
 
     try {
       await ClassService.deleteClassById(selectClassId);
-
       setDeleteModal(false);
       setSelectClassId(null);
-
       await refetch();
     } catch (error) {
       console.error("Failed to delete class:", error);
@@ -54,49 +52,60 @@ const ClassPage = () => {
     setEditModal(true);
   };
 
+  const onCreateSuccess = async () => {
+    await refetch();
+    setModalOpen(false);
+  };
+
   const onSuccess = async () => {
     await refetch();
     setEditModal(false);
   };
 
   return (
-    <div className="min-h-full space-y-6 p-4 sm:p-6 md:p-8 lg:p-12">
+    <div className="min-h-full p-3 sm:p-5 md:p-6 lg:p-8 xl:p-12">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
             Classes
           </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
             Manage your fitness classes and trainers.
           </p>
         </div>
-
-        <Button
-          onClick={() => setModalOpen(true)}
-          type="button"
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] sm:w-auto"
-        >
-          <Plus size={16} strokeWidth={2.2} />
-          <span>Add Class</span>
-        </Button>
       </div>
 
       {/* Search */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
-        <SearchInput
-          value={search}
-          placeholder="Search classes or trainers..."
-          onChange={setSearch}
-        />
+      <div className="mt-5 mb-6 flex flex-col gap-3 sm:mt-6 sm:mb-7 sm:flex-row sm:items-center sm:justify-between md:mt-7 md:mb-9">
+        <div className="w-full sm:w-[55%] md:w-[45%]">
+          <SearchInput
+            value={search}
+            placeholder="Search classes or trainers..."
+            onChange={setSearch}
+          />
+        </div>
+
+        <div className="w-full sm:w-auto">
+          <Button
+            onClick={() => setModalOpen(true)}
+            type="button"
+            className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] sm:h-10 sm:w-auto sm:px-5 sm:text-sm"
+          >
+            <Plus size={15} strokeWidth={2.2} />
+            <span>Add Class</span>
+          </Button>
+        </div>
       </div>
 
       {/* Classes */}
-      <div className="hidden md:block">
+      <div>
         {error && classes.length === 0 && (
-          <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-5 py-4">
-            <p className="text-sm font-medium text-red-600">{error}</p>
+          <div className="mb-3 rounded-xl border border-red-100 bg-red-50 px-3 py-3 sm:mb-4 sm:px-5 sm:py-4">
+            <p className="text-xs font-medium text-red-600 sm:text-sm">
+              {error}
+            </p>
           </div>
         )}
 
@@ -112,7 +121,7 @@ const ClassPage = () => {
 
       <ClassModal
         isOpen={modalOpen}
-        onRefetch={refetch}
+        onSuccess={onCreateSuccess}
         onClose={() => setModalOpen(false)}
       />
 
@@ -122,14 +131,12 @@ const ClassPage = () => {
           setDeleteModal(false);
           setSelectClassId(null);
         }}
-
         onConfirm={handleDeleteConfirm}
       />
 
       <EditModal
         isOpen={editModal}
         editData={editData}
-        onEdit={handleEdit}
         onSuccess={onSuccess}
         onClose={() => {
           setEditData(null);
