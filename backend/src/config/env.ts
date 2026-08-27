@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
+import type { StringValue } from "ms";
 
 dotenv.config();
 
 const requiredEnvVars = [
   "DIRECT_DATABASE_URL",
   "CLIENT_URL",
+  "JWT_EXPIRES_IN",
   "JWT_SECRET",
   "SMTP_HOST",
   "SMTP_PORT",
@@ -28,7 +30,9 @@ export const env = {
 
   DIRECT_DATABASE_URL: process.env.DIRECT_DATABASE_URL!,
   CLIENT_URL: process.env.CLIENT_URL!,
-  JWT_SECRET: process.env.JWT_SECRET!,
+
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN as StringValue,
+  JWT_SECRET: process.env.JWT_SECRET as StringValue,
 
   SMTP_HOST: process.env.SMTP_HOST!,
   SMTP_PORT: Number(process.env.SMTP_PORT),
