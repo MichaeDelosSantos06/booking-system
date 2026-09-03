@@ -22,5 +22,11 @@ router.get(
   authorize,
   UserController.fetchNewUserByWeek,
 );
+router.get(
+  "/user/get-total-user",
+  tokenAuth,
+  authorize,
+  UserController.getTotalUser,
+);
 
 export default router;

@@ -11,6 +11,7 @@ import AdminRoute from "./AdminRoute";
 import MemberRoute from "./MemberRoute";
 import ClassPage from "../page/admin/ClassesPage";
 import TrainerPage from "../page/admin/TrainerPage";
+import SchedulePage from "../page/admin/SchedulePage";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
               {
                 path: "/trainers",
                 element: <TrainerPage />,
+              },
+              {
+                path: "/schedule",
+                element: <SchedulePage />,
               },
             ],
           },

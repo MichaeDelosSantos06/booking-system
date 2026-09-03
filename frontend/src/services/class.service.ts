@@ -1,5 +1,6 @@
 import { api } from "../api/axios";
 import type { GetClassesParams } from "../types/class.types";
+import type { Status } from "../types/trainer.type";
 
 const ClassService = {
   createClass: async (data: FormData) => {
@@ -7,8 +8,12 @@ const ClassService = {
     return result.data;
   },
 
-  fetchClasses: async () => {
-    const result = await api.get("/class/fetch-class");
+  fetchClasses: async (status?: Status) => {
+    const result = await api.get("/class/fetch-class", {
+      params: {
+        status,
+      },
+    });
     return result.data;
   },
 

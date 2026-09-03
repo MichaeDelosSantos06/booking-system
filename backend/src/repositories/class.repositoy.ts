@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma.js";
 import type { CreateClassDto } from "../types/class.type.js";
 import type { ClassWhereInput } from "../generated/prisma/models/Class.js";
+import { Status } from "../generated/prisma/enums.js";
 
 const ClassRepository = {
   addClass: async (
@@ -52,8 +53,10 @@ const ClassRepository = {
     });
   },
 
-  fetchClasses: async () => {
+  fetchClasses: async (status?: Status) => {
     return prisma.class.findMany({
+      where: { ...(status ? { status } : undefined) },
+
       select: {
         id: true,
         className: true,

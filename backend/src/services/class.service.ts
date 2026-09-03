@@ -3,6 +3,7 @@ import TrainerRepository from "../repositories/trainer.repositoy.js";
 import type { CreateClassDto, UploadedImage } from "../types/class.type.js";
 import { AppError } from "../utils/appError.js";
 import { uploadImage } from "./cloudinary.service.js";
+import { Status } from "../generated/prisma/enums.js";
 
 const ClassService = {
   addClass: async (data: CreateClassDto, image?: UploadedImage) => {
@@ -33,8 +34,8 @@ const ClassService = {
     return ClassRepository.addClass(data, imageUrl, imageId);
   },
 
-  fetchClasses: async () => {
-    const classes = await ClassRepository.fetchClasses();
+  fetchClasses: async (status?: Status) => {
+    const classes = await ClassRepository.fetchClasses(status);
     if (!classes) {
       throw new AppError("No Classes Found.", 404);
     }

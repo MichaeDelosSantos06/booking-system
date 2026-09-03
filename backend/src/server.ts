@@ -20,6 +20,7 @@ import userRoute from "./routes/user.route.js";
 import passwordResetRoute from "./routes/passwordReset.routes.js";
 import classRoutes from "./routes/class.route.js";
 import trainerRoutes from "./routes/trainer.route.js";
+import scheduleRoute from "./routes/schedule.route.js";
 
 app.use(helmet());
 app.use(
@@ -48,6 +49,7 @@ app.use("/api", userRoute);
 app.use("/api", passwordResetRoute);
 app.use("/api", classRoutes);
 app.use("/api", trainerRoutes);
+app.use("/api", scheduleRoute);
 
 app.use(notFound);
 app.use(errorHandler);

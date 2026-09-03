@@ -95,6 +95,14 @@ export const UserRepository = {
       },
     });
   },
+
+  getTotalUser: async () => {
+    return prisma.user.count({
+      where: {
+        role: "Member",
+      },
+    });
+  },
 };
 
 export default UserRepository;

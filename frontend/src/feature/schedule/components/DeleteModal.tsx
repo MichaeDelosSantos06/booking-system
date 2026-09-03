@@ -3,11 +3,11 @@ import { AlertTriangle, Trash2 } from "lucide-react";
 import Modal from "../../../components/ui/Modal";
 import Button from "../../../components/ui/Button";
 
-import type { DeleteClassModal } from "../../../types/class.types";
+import type { DeleteSchedModal } from "../../../types/schedule.type";
 
-const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteClassModal) => {
+const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteSchedModal) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Delete Class">
+    <Modal isOpen={isOpen} onClose={onClose} title="Delete Schedule">
       <div className="space-y-4 sm:space-y-5">
         {/* Warning */}
         <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50/70 p-3 sm:gap-3 sm:p-4">
@@ -25,8 +25,8 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteClassModal) => {
             </p>
 
             <p className="mt-1 text-[10px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
-              Deleting this class will permanently remove its information from
-              FitBook.
+              Deleting this schedule will permanently remove its information
+              from FitBook.
             </p>
           </div>
         </div>
@@ -51,7 +51,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteClassModal) => {
               strokeWidth={2}
               className="sm:h-[15px] sm:w-[15px]"
             />
-            Delete Class
+            Delete Schdule
           </Button>
         </div>
       </div>

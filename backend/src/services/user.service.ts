@@ -88,7 +88,7 @@ const UserService = {
     const { users, total } = await UserRepository.getUsers(
       currentPage,
       pageSize,
-      searchTerm || undefined
+      searchTerm || undefined,
     );
 
     return {
@@ -107,6 +107,10 @@ const UserService = {
     const { startOfWeek, endOfWeek } = fetchUserByWeek();
 
     return UserRepository.fetchNewUserByWeek(startOfWeek, endOfWeek);
+  },
+
+  getTotalUser: async () => {
+    return UserRepository.getTotalUser();
   },
 };
 

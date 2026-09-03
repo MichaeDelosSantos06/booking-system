@@ -17,7 +17,7 @@ router.post(
   ClassController.addClass,
 );
 router.get(
-  "/class/fetch-class",
+  "/class/fetch-class/",
   tokenAuth,
   authorize,
   ClassController.fetchClasses,

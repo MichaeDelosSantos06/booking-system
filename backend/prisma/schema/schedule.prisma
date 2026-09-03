@@ -3,6 +3,7 @@ model Schedule {
   classId   Int
   trainerId Int
   location  Location
+  date      DateTime
   startAt   DateTime
   endAt     DateTime
   capacity  Int
@@ -11,4 +12,9 @@ model Schedule {
 
   class   Class   @relation(fields: [classId], references: [id])
   trainer Trainer @relation(fields: [trainerId], references: [id])
+
+  @@index([status, date])
+  @@index([location])
+  @@index([classId])
+  @@index([trainerId])
 }

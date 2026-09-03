@@ -76,6 +76,15 @@ const UserController = {
       user: count,
     });
   }),
+
+  getTotalUser: asyncHandler(async (req: Request, res: Response) => {
+    const totalUser = await UserService.getTotalUser();
+    return res.status(200).json({
+      success: true,
+      message: "Retrieve total user siccessfully",
+      totalUser,
+    });
+  }),
 };
 
 export default UserController;
