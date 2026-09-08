@@ -9,9 +9,11 @@ model Schedule {
   capacity  Int
   status    ScheduleStat @default(Open)
   createdAt DateTime     @default(now())
+  deletedAt DateTime?
 
-  class   Class   @relation(fields: [classId], references: [id])
-  trainer Trainer @relation(fields: [trainerId], references: [id])
+  class    Class     @relation(fields: [classId], references: [id])
+  trainer  Trainer   @relation(fields: [trainerId], references: [id])
+  bookings Booking[]
 
   @@index([status, date])
   @@index([location])

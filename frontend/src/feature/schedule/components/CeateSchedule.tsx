@@ -36,10 +36,10 @@ const CreateSchedule = ({
     handleSubmit,
     register,
     reset,
-    formState: { errors },
+    watch,
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(createScheduleSchema),
-    mode: "onBlur",
     defaultValues: {
       classId: "",
       trainerId: "",
@@ -50,6 +50,24 @@ const CreateSchedule = ({
       capacity: "",
     },
   });
+
+  //  Prevent to choose past TIME & DATE
+  const selectedDate = watch("date");
+  const selectedStartTime = watch("startTime");
+
+  const now = new Date();
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  const minStartTime =
+    selectedDate === today
+      ? `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
+      : undefined;
+
+  const minEndTime = selectedStartTime || undefined;
 
   const onSubmit = async (data: CreateScheduleFormData) => {
     try {
@@ -134,6 +152,7 @@ const CreateSchedule = ({
             <Input
               id="date"
               type="date"
+              min={today}
               className={inputClass}
               {...register("date")}
             />
@@ -150,6 +169,7 @@ const CreateSchedule = ({
             <Input
               id="startTime"
               type="time"
+              min={minStartTime}
               className={inputClass}
               {...register("startTime")}
             />
@@ -168,6 +188,7 @@ const CreateSchedule = ({
             <Input
               id="endTime"
               type="time"
+              min={minEndTime}
               className={inputClass}
               {...register("endTime")}
             />
@@ -228,6 +249,7 @@ const CreateSchedule = ({
         <div className="flex flex-col-reverse gap-2.5 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
           {/* Cancel */}
           <Button
+            disabled={isSubmitting}
             type="button"
             onClick={handleCancel}
             className="h-10 w-full rounded-lg border border-slate-300 bg-slate-100 px-5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-slate-400 hover:bg-slate-200 hover:text-slate-900 active:scale-[0.98] sm:w-auto sm:min-w-[100px] flex items-center justify-center"
@@ -237,6 +259,7 @@ const CreateSchedule = ({
 
           {/* Create */}
           <Button
+            disabled={isSubmitting}
             type="submit"
             className="h-10 w-full rounded-lg bg-slate-950 px-5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 active:scale-[0.98] sm:w-auto sm:min-w-[120px] flex items-center justify-center"
           >

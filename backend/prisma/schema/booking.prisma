@@ -1,14 +1,15 @@
 model Booking {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  classId   Int
-  trainerId Int
-  bookedAt  DateTime @default(now())
-  status    Status   @default(Active)
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  classId    Int
+  trainerId  Int
+  scheduleId Int
+  bookedAt   DateTime @default(now())
+  status     BookingStatus  @default(Confirmed)
 
-  user    User    @relation(fields: [userId], references: [id])
-  class   Class   @relation(fields: [classId], references: [id])
-  trainer Trainer @relation(fields: [trainerId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  trainer  Trainer  @relation(fields: [trainerId], references: [id])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
 
-  @@unique([userId, classId])
+  @@unique([userId, scheduleId])
 }

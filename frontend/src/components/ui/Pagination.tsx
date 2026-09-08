@@ -10,7 +10,7 @@ const Pagination = ({ pagination, onPageChange }: PaginationProps) => {
   const { page, totalPages } = pagination;
 
   return (
-    <div className="flex h-14 shrink-0 items-center justify-between border-t border-gray-100 bg-white px-4">
+    <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3">
       <p className="text-xs text-gray-500">
         Page <span className="font-semibold text-gray-800">{page}</span> of{" "}
         <span className="font-semibold text-gray-800">{totalPages}</span>

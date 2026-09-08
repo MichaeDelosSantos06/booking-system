@@ -5,7 +5,7 @@ import { useCallback } from "react";
 
 import type { ScheduleResponseDto } from "../types/schedule.type";
 
-const useFetchSchdule = () => {
+const useFetchAvailableSchedule = () => {
   const [schedule, setSchdule] = useState<ScheduleResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,8 +15,8 @@ const useFetchSchdule = () => {
     setError(null);
 
     try {
-      const schedule = await ScheduleService.getSchedule();
-      setSchdule(schedule.schedule);
+      const schedule = await ScheduleService.getAllSchedule();
+      setSchdule(schedule.availableSched);
     } catch (error) {
       console.error(error);
       setError("Faild to load schdule");
@@ -37,4 +37,4 @@ const useFetchSchdule = () => {
   };
 };
 
-export default useFetchSchdule;
+export default useFetchAvailableSchedule;

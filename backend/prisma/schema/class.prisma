@@ -6,11 +6,11 @@ model Class {
   imageUrl    String?
   imageId     String?
   duration    Int
+  deletedAt   DateTime?
   category    Category   @default(Cardio)
   difficulty  Difficulty @default(Beginner)
   status      Status     @default(Active)
 
   trainer   Trainer    @relation(fields: [trainerId], references: [id])
-  bookings  Booking[]
   schedules Schedule[]
 }

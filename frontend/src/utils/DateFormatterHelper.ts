@@ -4,3 +4,11 @@ export const formatTime = (date: string) => {
     minute: "2-digit",
   });
 };
+
+export const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};

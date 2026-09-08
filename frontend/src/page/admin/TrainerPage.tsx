@@ -1,5 +1,4 @@
 import { Plus, Users, RefreshCw, AlertCircle } from "lucide-react";
-
 import { useState } from "react";
 
 import Button from "../../components/ui/Button";
@@ -18,16 +17,16 @@ const TrainerPage = () => {
   );
 
   const { refetch, trainer, error, loading } = useFetchTrainer();
+
   console.log("Trainer: ", trainer);
 
-  // handle closing and refeching of create
+  // Handle closing and refreshing of create
   const onSuccess = async () => {
     await refetch();
     setModalIsOpen(false);
   };
 
-  // get data from the card
-  // being pass to the table/card where ever the data is displayed, then use to capture the mapped item/data when click becuase it is callBack function, use in edit button.
+  // Get trainer data from the card
   const getTrainerData = (data: TrainerResponseDto) => {
     setTrainerData(data);
     setEditModal(true);
@@ -43,7 +42,7 @@ const TrainerPage = () => {
     await refetch();
   };
 
-  // handle refetch and closing of EDIT MODAL
+  // Handle refresh and closing of edit modal
   const onSuccessEdit = async () => {
     await refetch();
     setEditModal(false);
@@ -54,16 +53,63 @@ const TrainerPage = () => {
   ).length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col px-4 py-5 sm:px-6 sm:py-6 lg:px-12 lg:py-12">
+    <div
+      className="
+        m-4
+        flex
+        h-full
+        min-h-0
+        flex-col
+        sm:m-6
+        md:m-8
+        lg:m-10
+        xl:m-12
+      "
+    >
       {/* Page Header */}
-      <div className="mb-5 flex shrink-0 flex-col gap-4 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        className="
+          mb-4
+          flex
+          shrink-0
+          flex-col
+          gap-3
+          sm:mb-5
+          sm:gap-4
+          md:mb-6
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+        "
+      >
         {/* Title + Summary */}
         <div className="min-w-0">
-          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-            Manage Trainers
-          </h1>
+          <div className="flex items-center gap-2">
+            <span className="h-5 w-1 shrink-0 rounded-full bg-red-600 sm:h-6" />
 
-          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+            <h1
+              className="
+                text-xl
+                font-bold
+                tracking-tight
+                text-slate-950
+                sm:text-2xl
+                md:text-3xl
+              "
+            >
+              Manage Trainers
+            </h1>
+          </div>
+
+          <p
+            className="
+              mt-1
+              text-xs
+              text-slate-500
+              sm:mt-1.5
+              sm:text-sm
+            "
+          >
             {activeTrainerCount} active trainers
             <span className="mx-1 text-slate-300">•</span>
             {trainer.length} total
@@ -73,9 +119,47 @@ const TrainerPage = () => {
         {/* Add Trainer */}
         <Button
           onClick={() => setModalIsOpen(true)}
-          className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md sm:h-10 sm:w-auto sm:text-sm"
+          className="
+            flex
+            h-9
+            w-full
+            items-center
+            justify-center
+            gap-1.5
+            rounded-lg
+            bg-slate-950
+            px-3
+            text-[11px]
+            font-semibold
+            text-white
+            shadow-sm
+            transition-all
+            duration-200
+            hover:bg-slate-800
+            hover:shadow-md
+            active:scale-[0.98]
+
+            sm:h-9
+            sm:w-auto
+            sm:gap-2
+            sm:px-4
+            sm:text-xs
+
+            md:h-10
+            md:px-5
+            md:text-sm
+          "
         >
-          <Plus size={15} strokeWidth={2} />
+          <Plus
+            size={13}
+            strokeWidth={2}
+            className="
+              sm:h-[14px]
+              sm:w-[14px]
+              md:h-[15px]
+              md:w-[15px]
+            "
+          />
           Add Trainer
         </Button>
       </div>
@@ -84,42 +168,97 @@ const TrainerPage = () => {
       <div className="min-h-0 flex-1 overflow-y-auto pr-1">
         {/* Loading */}
         {loading && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div
+            className="
+              grid
+              grid-cols-1
+              gap-3
+              sm:grid-cols-2
+              sm:gap-4
+              xl:grid-cols-3
+              2xl:grid-cols-4
+            "
+          >
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                className="
+                  overflow-hidden
+                  rounded-xl
+                  border
+                  border-slate-200
+                  bg-white
+                  shadow-sm
+                  sm:rounded-2xl
+                "
               >
                 {/* Header Skeleton */}
-                <div className="flex items-center gap-3 border-b border-slate-100 p-4 sm:p-5">
-                  <div className="h-10 w-10 shrink-0 animate-pulse rounded-full bg-slate-200" />
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-2.5
+                    border-b
+                    border-slate-100
+                    p-3
+                    sm:gap-3
+                    sm:p-4
+                    md:p-5
+                  "
+                >
+                  <div
+                    className="
+                      h-8
+                      w-8
+                      shrink-0
+                      animate-pulse
+                      rounded-full
+                      bg-slate-200
+                      sm:h-10
+                      sm:w-10
+                    "
+                  />
 
-                  <div className="min-w-0 flex-1 space-y-2">
-                    <div className="h-3.5 w-28 animate-pulse rounded bg-slate-200" />
-                    <div className="h-3 w-20 animate-pulse rounded bg-slate-100" />
+                  <div className="min-w-0 flex-1 space-y-1.5 sm:space-y-2">
+                    <div className="h-3 w-24 animate-pulse rounded bg-slate-200 sm:h-3.5 sm:w-28" />
+                    <div className="h-2.5 w-16 animate-pulse rounded bg-slate-100 sm:h-3 sm:w-20" />
                   </div>
 
-                  <div className="h-5 w-14 animate-pulse rounded-full bg-slate-100" />
+                  <div className="h-4 w-12 animate-pulse rounded-full bg-slate-100 sm:h-5 sm:w-14" />
                 </div>
 
                 {/* Body Skeleton */}
-                <div className="space-y-4 p-4 sm:p-5">
+                <div className="space-y-3 p-3 sm:space-y-4 sm:p-4 md:p-5">
                   {[1, 2, 3].map((row) => (
-                    <div key={row} className="flex items-center gap-3">
-                      <div className="h-8 w-8 animate-pulse rounded-lg bg-slate-100" />
+                    <div
+                      key={row}
+                      className="flex items-center gap-2.5 sm:gap-3"
+                    >
+                      <div className="h-7 w-7 animate-pulse rounded-lg bg-slate-100 sm:h-8 sm:w-8" />
 
-                      <div className="flex-1 space-y-1.5">
-                        <div className="h-2.5 w-16 animate-pulse rounded bg-slate-100" />
-                        <div className="h-3 w-28 animate-pulse rounded bg-slate-200" />
+                      <div className="flex-1 space-y-1 sm:space-y-1.5">
+                        <div className="h-2.5 w-14 animate-pulse rounded bg-slate-100 sm:w-16" />
+                        <div className="h-3 w-24 animate-pulse rounded bg-slate-200 sm:w-28" />
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Footer Skeleton */}
-                <div className="flex gap-2 border-t border-slate-100 bg-slate-50/70 p-3">
-                  <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
-                  <div className="h-8 flex-1 animate-pulse rounded-lg bg-slate-200" />
+                <div
+                  className="
+                    flex
+                    gap-1.5
+                    border-t
+                    border-slate-100
+                    bg-slate-50/70
+                    p-2.5
+                    sm:gap-2
+                    sm:p-3
+                  "
+                >
+                  <div className="h-7 flex-1 animate-pulse rounded-lg bg-slate-200 sm:h-8" />
+                  <div className="h-7 flex-1 animate-pulse rounded-lg bg-slate-200 sm:h-8" />
                 </div>
               </div>
             ))}
@@ -128,13 +267,38 @@ const TrainerPage = () => {
 
         {/* Error */}
         {!loading && error && (
-          <div className="flex min-h-[320px] items-center justify-center">
-            <div className="flex max-w-md flex-col items-center text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-red-100 bg-red-50">
+          <div
+            className="
+              flex
+              min-h-[260px]
+              items-center
+              justify-center
+              sm:min-h-[300px]
+              md:min-h-[320px]
+            "
+          >
+            <div className="flex max-w-md flex-col items-center px-4 text-center">
+              <div
+                className="
+                  mb-3
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-xl
+                  border
+                  border-red-100
+                  bg-red-50
+                  sm:mb-4
+                  sm:h-12
+                  sm:w-12
+                "
+              >
                 <AlertCircle
-                  size={22}
+                  size={19}
                   strokeWidth={1.8}
-                  className="text-red-500"
+                  className="text-red-500 sm:h-[22px] sm:w-[22px]"
                 />
               </div>
 
@@ -142,16 +306,55 @@ const TrainerPage = () => {
                 Unable to load trainers
               </h2>
 
-              <p className="mt-1.5 max-w-sm text-xs leading-5 text-slate-500 sm:text-sm">
+              <p
+                className="
+                  mt-1
+                  max-w-sm
+                  text-xs
+                  leading-5
+                  text-slate-500
+                  sm:mt-1.5
+                  sm:text-sm
+                "
+              >
                 We couldn't retrieve the trainer list right now. Please try
                 again.
               </p>
 
               <Button
                 onClick={refetch}
-                className="mt-5 flex h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900 sm:h-10 sm:text-sm"
+                className="
+                  mt-4
+                  flex
+                  h-9
+                  items-center
+                  justify-center
+                  gap-1.5
+                  rounded-lg
+                  border
+                  border-slate-200
+                  bg-white
+                  px-3
+                  text-[11px]
+                  font-semibold
+                  text-slate-700
+                  shadow-sm
+                  transition-all
+                  hover:bg-slate-50
+                  hover:text-slate-900
+                  sm:mt-5
+                  sm:h-10
+                  sm:gap-2
+                  sm:px-4
+                  sm:text-xs
+                  md:text-sm
+                "
               >
-                <RefreshCw size={14} strokeWidth={2} />
+                <RefreshCw
+                  size={13}
+                  strokeWidth={2}
+                  className="sm:h-[14px] sm:w-[14px]"
+                />
                 Try Again
               </Button>
             </div>
@@ -160,26 +363,93 @@ const TrainerPage = () => {
 
         {/* Empty State */}
         {!loading && !error && trainer.length === 0 && (
-          <div className="flex min-h-[320px] items-center justify-center">
-            <div className="flex max-w-md flex-col items-center text-center">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
-                <Users size={25} strokeWidth={1.7} className="text-slate-500" />
+          <div
+            className="
+              flex
+              min-h-[260px]
+              items-center
+              justify-center
+              sm:min-h-[300px]
+              md:min-h-[320px]
+            "
+          >
+            <div className="flex max-w-md flex-col items-center px-4 text-center">
+              <div
+                className="
+                  mb-3
+                  flex
+                  h-12
+                  w-12
+                  items-center
+                  justify-center
+                  rounded-xl
+                  border
+                  border-slate-200
+                  bg-slate-50
+                  sm:mb-4
+                  sm:h-14
+                  sm:w-14
+                  sm:rounded-2xl
+                "
+              >
+                <Users
+                  size={22}
+                  strokeWidth={1.7}
+                  className="text-slate-500 sm:h-[25px] sm:w-[25px]"
+                />
               </div>
 
               <h2 className="text-sm font-semibold text-slate-900 sm:text-base">
                 No trainers yet
               </h2>
 
-              <p className="mt-1.5 max-w-sm text-xs leading-5 text-slate-500 sm:text-sm">
+              <p
+                className="
+                  mt-1
+                  max-w-sm
+                  text-xs
+                  leading-5
+                  text-slate-500
+                  sm:mt-1.5
+                  sm:text-sm
+                "
+              >
                 Your trainer directory is currently empty. Add your first
                 trainer to get started.
               </p>
 
               <Button
                 onClick={() => setModalIsOpen(true)}
-                className="mt-5 flex h-9 items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 text-xs font-semibold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-md sm:h-10 sm:text-sm"
+                className="
+                  mt-4
+                  flex
+                  h-9
+                  items-center
+                  justify-center
+                  gap-1.5
+                  rounded-lg
+                  bg-slate-950
+                  px-3
+                  text-[11px]
+                  font-semibold
+                  text-white
+                  shadow-sm
+                  transition-all
+                  hover:bg-slate-800
+                  hover:shadow-md
+                  sm:mt-5
+                  sm:h-10
+                  sm:gap-2
+                  sm:px-4
+                  sm:text-xs
+                  md:text-sm
+                "
               >
-                <Plus size={14} strokeWidth={2} />
+                <Plus
+                  size={13}
+                  strokeWidth={2}
+                  className="sm:h-[14px] sm:w-[14px]"
+                />
                 Add Trainer
               </Button>
             </div>
@@ -197,14 +467,14 @@ const TrainerPage = () => {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Create Trainer Modal */}
       <CreateTrainerForm
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
         onSuccess={onSuccess}
       />
 
-      {/* Edit Modal */}
+      {/* Edit Trainer Modal */}
       <EditTrainerForm
         isOpen={editModal}
         editData={trainerData}

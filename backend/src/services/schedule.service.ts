@@ -4,6 +4,8 @@ import ClassRepository from "../repositories/class.repositoy.js";
 import TrainerRepository from "../repositories/trainer.repositoy.js";
 import { AppError } from "../utils/appError.js";
 import ScheduleRepository from "../repositories/schedule.repository.js";
+import prisma from "../lib/prisma.js";
+import BookingRepository from "../repositories/booking.repository.js";
 
 const ScheduleService = {
   createSchedule: async (data: CreateScheduleDto) => {
@@ -46,6 +48,15 @@ const ScheduleService = {
       );
     }
 
+    // check if the creating schdule is in past time
+    if (startAt <= new Date()) {
+      throw new AppError("Schedule must be in the future", 400);
+    }
+
+    if (endAt <= startAt) {
+      throw new AppError("End time must be after start time", 400);
+    }
+
     return ScheduleRepository.createSchedule({
       date: dateValue,
       classId: data.classId,
@@ -55,6 +66,15 @@ const ScheduleService = {
       location: data.location,
       capacity: data.capacity,
     });
+  },
+
+  getAllSchedule: async () => {
+    const availableSched = await ScheduleRepository.getAllSchedule();
+    if (!availableSched) {
+      throw new AppError("No available shcdule", 404);
+    }
+
+    return availableSched;
   },
 
   getTodaySchedule: async () => {
@@ -96,13 +116,17 @@ const ScheduleService = {
     };
   },
 
+  // mark bookings as cancelled thru delettion of schdule
   deleteById: async (id: number) => {
     const schedule = await ScheduleRepository.findById(id);
     if (!schedule) {
       throw new AppError("Id not found!", 404);
     }
 
-    return ScheduleRepository.deleteById(id);
+    return prisma.$transaction(async (tx) => {
+      await ScheduleRepository.deleteById(tx, id);
+      await BookingRepository.updateStatusByScheduleDelete(tx, id);
+    });
   },
 };
 

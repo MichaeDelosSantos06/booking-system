@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 type UpcomingClass = {
   id: number;
   name: string;
@@ -80,12 +82,13 @@ const UpcomingClasses = () => {
           </p>
         </div>
 
-        <button
+        <Link
+          to="/bookings"
           type="button"
           className="ml-3 shrink-0 cursor-pointer rounded-lg px-2.5 py-1.5 text-[10px] font-medium text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 sm:px-3 sm:text-xs"
         >
           View all
-        </button>
+        </Link>
       </div>
 
       {/* Table */}

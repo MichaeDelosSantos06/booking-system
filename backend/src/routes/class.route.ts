@@ -16,12 +16,7 @@ router.post(
   validate(createClassSchema),
   ClassController.addClass,
 );
-router.get(
-  "/class/fetch-class/",
-  tokenAuth,
-  authorize,
-  ClassController.fetchClasses,
-);
+router.get("/class/fetch-class/", tokenAuth, ClassController.fetchClasses);
 router.get(
   "/class/search-class",
   tokenAuth,

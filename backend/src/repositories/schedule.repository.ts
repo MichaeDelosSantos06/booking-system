@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { Prisma } from "../generated/prisma/client.js";
 import type {
   CreateScheduleData,
   ScheduleSearchFilters,
@@ -34,6 +35,7 @@ const ScheduleRepository = {
   updateExpiredSchedules: async () => {
     return prisma.schedule.updateMany({
       where: {
+        deletedAt: null,
         status: "Open",
         endAt: {
           lt: new Date(),
@@ -52,6 +54,7 @@ const ScheduleRepository = {
   ) => {
     return prisma.schedule.findFirst({
       where: {
+        deletedAt: null,
         trainerId,
         startAt: {
           lt: endAt,
@@ -77,6 +80,7 @@ const ScheduleRepository = {
   ) => {
     return prisma.schedule.findFirst({
       where: {
+        deletedAt: null,
         location,
         startAt: {
           lt: endAt,
@@ -96,15 +100,20 @@ const ScheduleRepository = {
   },
 
   getTodaySchedule: async () => {
+    // set/get the exact date today in exact time e.g., 12:00 AM
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // get the today's date and add +1 day
     const tommorrow = new Date(today);
+    // .getDate() only gets the day of month as a number.
     tommorrow.setDate(tommorrow.getDate() + 1);
 
     return prisma.schedule.count({
       where: {
-        createdAt: {
+        deletedAt: null,
+        date: {
+          // get the TIMESTAMP in the middle of today's date and less than tomorrow
           gte: today,
           lt: tommorrow,
         },
@@ -142,6 +151,7 @@ const ScheduleRepository = {
     }
 
     const where: ScheduleWhereInput = {
+      deletedAt: null,
       ...(orConditions.length > 0 ? { OR: orConditions } : {}),
       ...(filters?.status ? { status: filters.status } : {}),
       ...(filters?.location ? { location: filters.location } : {}),
@@ -182,6 +192,12 @@ const ScheduleRepository = {
             },
           },
 
+          _count: {
+            select: {
+              bookings: true,
+            },
+          },
+
           trainer: {
             select: {
               id: true,
@@ -210,9 +226,71 @@ const ScheduleRepository = {
     });
   },
 
-  deleteById: async (id: number) => {
-    return prisma.schedule.delete({
+  // delete schedule
+  deleteById: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.schedule.update({
+      where: { id, deletedAt: null },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  },
+
+  deleteByClass: async (tx: Prisma.TransactionClient, classId: number) => {
+    return tx.schedule.updateMany({
+      where: {
+        classId,
+        deletedAt: null,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  },
+
+  getAllSchedule: async () => {
+    return prisma.schedule.findMany({
+      where: { deletedAt: null },
+      select: {
+        id: true,
+        location: true,
+        startAt: true,
+        endAt: true,
+        capacity: true,
+        status: true,
+        date: true,
+        deletedAt: true,
+
+        class: {
+          select: {
+            id: true,
+            className: true,
+            category: true,
+            imageUrl: true,
+            description: true,
+            difficulty: true,
+            duration: true,
+          },
+        },
+
+        trainer: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  },
+
+  updateCapacity: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.schedule.update({
       where: { id },
+      data: {
+        capacity: {
+          decrement: 1,
+        },
+      },
     });
   },
 };

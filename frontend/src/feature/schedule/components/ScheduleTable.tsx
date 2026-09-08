@@ -78,23 +78,29 @@ const ScheduleTable = ({
                 /*
                  * CAPACITY CALCULATION
                  *
-                 * item.capacity = maximum allowed
+                 * item.capacity = REMAINING slots (the backend decrements the
+                 *                 `capacity` column by 1 on every booking)
                  * item.booked = number of people already booked
+                 *
+                 * The original/maximum capacity is derived as capacity + booked,
+                 * so the booking count is never subtracted from capacity again
+                 * (otherwise each booking would be counted twice).
                  */
 
-                const maxCapacity = item.capacity;
+                const booked = item._count.bookings ?? 0;
 
-                const booked = item.booked ?? 0;
+                // `capacity` from the DB is already the remaining slots.
+                const remaining = Math.max(item.capacity, 0);
+
+                // Original (maximum) capacity, derived from the remaining slots.
+                const maxCapacity = item.capacity + booked;
 
                 // Make sure booked never goes below 0
                 // or above the maximum capacity.
                 const currentBooked = Math.min(
                   Math.max(booked, 0),
-                  maxCapacity
+                  Math.max(maxCapacity, 0)
                 );
-
-                // How many slots are still available
-                const remaining = maxCapacity - currentBooked;
 
                 // How full the schedule is
                 const percentage =
@@ -208,7 +214,7 @@ const ScheduleTable = ({
 
                         {/* Remaining Slots */}
                         <span className="min-w-[22px] text-right text-[10px] font-semibold text-slate-700 sm:text-xs">
-                          {remaining}
+                          {remaining} <span>left</span>
                         </span>
                       </div>
                     </td>

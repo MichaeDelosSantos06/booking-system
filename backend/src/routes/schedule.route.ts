@@ -16,6 +16,12 @@ router.post(
 );
 
 router.get(
+  "/schedule/get-all-schedule",
+  tokenAuth,
+  ScheduleController.getAllSchedule,
+);
+
+router.get(
   "/schedule/get-schedule",
   tokenAuth,
   authorize,

@@ -23,10 +23,18 @@ export interface ScheduleResponseDto {
   class: {
     className: string;
     category: string;
+    imageUrl: string;
+    description: string;
+    difficulty: string;
+    duration: string;
   };
   trainer: {
     name: string;
   };
+  _count: {
+    bookings: number;
+  };
+
   startAt: string;
   endAt: string;
   location: Location;
@@ -56,6 +64,11 @@ export interface DeleteSchedModal {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+}
+
+export interface BrowseClassDto {
+  classes: ScheduleResponseDto[];
+  isLoading: boolean;
 }
 
 export type Location =

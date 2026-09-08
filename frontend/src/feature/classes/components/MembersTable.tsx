@@ -1,4 +1,5 @@
 import type { User } from "../../../types/user.type";
+
 import type { Pagination as PaginationType } from "../../../types/pagination.type";
 
 import Pagination from "../../../components/ui/Pagination";
@@ -15,9 +16,26 @@ const MembersTable = ({
   onPageChange,
 }: MembersTableProps) => {
   return (
-    <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div
+      className="
+        flex
+        h-[420px]
+        w-full
+        min-h-0
+        flex-col
+        overflow-hidden
+        rounded-xl
+        border
+        border-gray-200
+        bg-white
+        shadow-sm
+        sm:h-[480px]
+        sm:rounded-2xl
+        md:h-[540px]
+      "
+    >
       {/* Table area */}
-      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[760px] table-fixed text-left">
           <colgroup>
             <col className="w-[22%]" />
@@ -142,12 +160,12 @@ const MembersTable = ({
                 </tr>
               ))
             ) : (
-              <tr className="h-[260px] sm:h-[320px] md:h-[360px] lg:h-[400px]">
+              <tr>
                 <td
                   colSpan={6}
-                  className="px-3 text-center align-middle sm:px-4 md:px-6"
+                  className="h-full px-3 text-center align-middle sm:px-4 md:px-6"
                 >
-                  <div className="flex flex-col items-center justify-center">
+                  <div className="flex min-h-[260px] flex-col items-center justify-center sm:min-h-[320px] md:min-h-[360px]">
                     <p className="text-xs font-semibold text-gray-900 sm:text-sm">
                       No members found
                     </p>
@@ -164,7 +182,7 @@ const MembersTable = ({
       </div>
 
       {/* Pagination */}
-      <div className="shrink-0 border-t border-gray-100">
+      <div className="shrink-0 border-t border-gray-100 bg-white">
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       </div>
     </div>

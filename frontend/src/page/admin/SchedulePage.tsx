@@ -5,12 +5,9 @@ import { CalendarPlus } from "lucide-react";
 import CreateSchedule from "../../feature/schedule/components/CeateSchedule";
 import ScheduleTable from "../../feature/schedule/components/ScheduleTable";
 import DeleteModal from "../../feature/classes/components/DeleteModal";
-
 import Button from "../../components/ui/Button";
 import SearchInput from "../../components/ui/SearchInput";
-
 import ScheduleService from "../../services/schedule.service";
-
 import useFetchSchedules from "../../hooks/useFetchSchedules";
 import useFetchTrainer from "../../hooks/useFetchTrainer";
 import useFetchActiveClasses from "../../hooks/useFetchStatusClasses";
@@ -22,6 +19,7 @@ const SchedulePage = () => {
 
   const { schedule, refetch, search, setSearch, pagination, fetchSchedules } =
     useFetchSchedules();
+
   const { trainer } = useFetchTrainer("Active");
   const { classes } = useFetchActiveClasses("Active");
 
@@ -29,13 +27,16 @@ const SchedulePage = () => {
     setOnDeleteId(id);
     setDeleteModal(true);
   };
+
   const handleDeleteConfirm = async () => {
     if (onDeleteId === null) return;
 
     try {
       await ScheduleService.deleteSchedule(onDeleteId);
+
       setDeleteModal(false);
       setOnDeleteId(null);
+
       await refetch();
     } catch (error) {
       console.error("Failed to delete class:", error);
@@ -48,23 +49,80 @@ const SchedulePage = () => {
   };
 
   return (
-    <div className="min-h-full p-3 sm:p-5 md:p-6 lg:p-8 xl:p-12">
+    <div
+      className="
+        m-4
+        flex
+        flex-col
+        gap-4
+        sm:m-6
+        sm:gap-5
+        md:m-8
+        md:gap-6
+        lg:m-10
+        lg:gap-5
+        xl:m-12
+      "
+    >
       {/* Page Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+      <header>
+        <div className="flex items-center gap-2">
+          <span className="h-5 w-1 rounded-full bg-red-600 sm:h-6" />
+
+          <h1
+            className="
+              text-xl
+              font-bold
+              tracking-tight
+              text-slate-950
+              sm:text-2xl
+              md:text-3xl
+            "
+          >
             Schedules
           </h1>
-
-          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-            Manage class schedules, trainers, locations, and capacity.
-          </p>
         </div>
-      </div>
 
-      {/* Search */}
-      <div className="mt-5 mb-6 flex flex-col gap-3 sm:mt-6 sm:mb-7 sm:flex-row sm:items-center sm:justify-between md:mt-7 md:mb-9">
-        <div className="w-full sm:w-[55%] md:w-[45%]">
+        <p
+          className="
+            mt-1
+            text-xs
+            text-slate-500
+            sm:mt-1.5
+            sm:text-sm
+          "
+        >
+          Manage class schedules, trainers, locations, and capacity.
+        </p>
+      </header>
+
+      {/* Search & Create */}
+
+      {/* Search & Create */}
+      <div
+        className="
+    mt-1
+    flex
+    flex-col
+    gap-2.5
+    sm:mt-2
+    sm:flex-row
+    sm:items-center
+    sm:justify-between
+    sm:gap-3
+    md:mt-3
+  "
+      >
+        {/* Search */}
+        <div
+          className="
+      w-full
+      sm:w-[50%]
+      md:w-[42%]
+      lg:w-[40%]
+      xl:w-[38%]
+    "
+        >
           <SearchInput
             value={search}
             placeholder="Search for Schedule..."
@@ -72,20 +130,60 @@ const SchedulePage = () => {
           />
         </div>
 
+        {/* Create */}
         <div className="w-full sm:w-auto">
           <Button
             onClick={() => setIsCreateModalOpen(true)}
             type="button"
-            className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-4 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] sm:h-10 sm:w-auto sm:px-5 sm:text-sm"
+            className="
+        flex
+        h-9
+        w-full
+        items-center
+        justify-center
+        gap-1.5
+        rounded-lg
+        bg-slate-950
+        px-3
+        text-[11px]
+        font-semibold
+        text-white
+        shadow-sm
+        transition-all
+        duration-200
+        hover:bg-slate-800
+        hover:shadow-md
+        active:scale-[0.98]
+
+        sm:h-9.5
+        sm:w-auto
+        sm:gap-2
+        sm:px-4
+        sm:text-xs
+
+        md:h-10
+        md:px-5
+        md:text-sm
+      "
           >
-            <CalendarPlus size={15} strokeWidth={2.2} />
+            <CalendarPlus
+              size={13}
+              strokeWidth={2.2}
+              className="
+          sm:h-[14px]
+          sm:w-[14px]
+          md:h-[15px]
+          md:w-[15px]
+        "
+            />
+
             <span>Create</span>
           </Button>
         </div>
       </div>
 
       {/* Schedules */}
-      <div>
+      <div className="min-w-0 w-full">
         <ScheduleTable
           schedule={schedule}
           onDelete={onDelete}
@@ -110,7 +208,6 @@ const SchedulePage = () => {
           setOnDeleteId(null);
           setDeleteModal(false);
         }}
-
         onConfirm={handleDeleteConfirm}
       />
     </div>

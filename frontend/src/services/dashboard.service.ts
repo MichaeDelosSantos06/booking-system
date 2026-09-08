@@ -20,6 +20,11 @@ const DashboardService = {
     const result = await api.get("/schedule/get-schedule");
     return result.data;
   },
+
+  getDashboardBookingCount: async () => {
+    const result = await api.get("/booking/dashboard-booking-stat");
+    return result.data;
+  },
 };
 
 export default DashboardService;

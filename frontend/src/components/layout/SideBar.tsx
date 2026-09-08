@@ -46,7 +46,11 @@ const SideBar = () => {
               FITBOOK
             </span>
 
-            <p className="font-poppins text-[10px]">ADMIN PORTAL</p>
+            {user?.role === "Admin" ? (
+              <p className="font-poppins text-[10px]">ADMIN PORTAL</p>
+            ) : (
+              <p className="font-poppins text-[10px]">MEMBER PORTAL</p>
+            )}
           </div>
         </div>
       </div>
@@ -69,97 +73,161 @@ const SideBar = () => {
       </div>
 
       {/* Navigation */}
+
       <div className="px-6 pt-3 font-poppins">
         <div className="mb-4 text-xs opacity-50 ml-6">
           <p>NAVIGATION</p>
         </div>
 
         {/* Links */}
-        <div className="flex flex-col gap-2">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <ChartNoAxesColumnIncreasing size={20} strokeWidth={1.7} />
-            <span>Dashboard</span>
-          </NavLink>
 
-          <NavLink
-            to="/classes"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <BriefcaseBusiness size={20} strokeWidth={1.7} />
-            <span>Classes</span>
-          </NavLink>
+        {user?.role === "Admin" ? (
+          // Admin
+          <div className="flex flex-col gap-2">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <ChartNoAxesColumnIncreasing size={20} strokeWidth={1.7} />
+              <span>Dashboard</span>
+            </NavLink>
 
-          <NavLink
-            to="/trainers"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <UsersRound size={20} strokeWidth={1.7} />
-            <span>Trainers</span>
-          </NavLink>
+            <NavLink
+              to="/classes"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <BriefcaseBusiness size={20} strokeWidth={1.7} />
+              <span>Classes</span>
+            </NavLink>
 
-          <NavLink
-            to="/schedule"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <CalendarDays size={20} strokeWidth={1.7} />
-            <span>Schedule</span>
-          </NavLink>
+            <NavLink
+              to="/trainers"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <UsersRound size={20} strokeWidth={1.7} />
+              <span>Trainers</span>
+            </NavLink>
 
-          <NavLink
-            to="/bookings"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <ClipboardList size={20} strokeWidth={1.7} />
-            <span>Bookings</span>
-          </NavLink>
+            <NavLink
+              to="/schedules"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <CalendarDays size={20} strokeWidth={1.7} />
+              <span>Schedule</span>
+            </NavLink>
 
-          <NavLink
-            to="/members"
-            className={({ isActive }) =>
-              `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`
-            }
-          >
-            <UserRound size={20} strokeWidth={1.7} />
-            <span>Members</span>
-          </NavLink>
-        </div>
+            <NavLink
+              to="/bookings"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <ClipboardList size={20} strokeWidth={1.7} />
+              <span>Bookings</span>
+            </NavLink>
+
+            <NavLink
+              to="/members"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <UserRound size={20} strokeWidth={1.7} />
+              <span>Members</span>
+            </NavLink>
+          </div>
+        ) : (
+          // Member
+          <div className="flex flex-col gap-2">
+            <NavLink
+              to="/member-dashboard"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <ChartNoAxesColumnIncreasing size={20} strokeWidth={1.7} />
+              <span>Dashboard</span>
+            </NavLink>
+
+            <NavLink
+              to="/browse-classes"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <BriefcaseBusiness size={20} strokeWidth={1.7} />
+              <span>Classes</span>
+            </NavLink>
+
+            <NavLink
+              to="/my-bookings"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <ClipboardList size={20} strokeWidth={1.7} />
+              <span>Bookings</span>
+            </NavLink>
+
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-red-500 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`
+              }
+            >
+              <UserRound size={20} strokeWidth={1.7} />
+              <span>Profile</span>
+            </NavLink>
+          </div>
+        )}
       </div>
 
       {/* Logout */}

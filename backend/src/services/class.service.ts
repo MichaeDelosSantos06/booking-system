@@ -4,6 +4,9 @@ import type { CreateClassDto, UploadedImage } from "../types/class.type.js";
 import { AppError } from "../utils/appError.js";
 import { uploadImage } from "./cloudinary.service.js";
 import { Status } from "../generated/prisma/enums.js";
+import prisma from "../lib/prisma.js";
+import ScheduleRepository from "../repositories/schedule.repository.js";
+import BookingRepository from "../repositories/booking.repository.js";
 
 const ClassService = {
   addClass: async (data: CreateClassDto, image?: UploadedImage) => {
@@ -72,7 +75,11 @@ const ClassService = {
       throw new AppError("Class not found", 404);
     }
 
-    return ClassRepository.deleteDataById(id);
+    return prisma.$transaction(async (tx) => {
+      await BookingRepository.updateStatusByClassDelete(tx, id);
+      await ScheduleRepository.deleteByClass(tx, id);
+      await ClassRepository.deleteDataById(tx, id);
+    });
   },
 
   updateClass: async (

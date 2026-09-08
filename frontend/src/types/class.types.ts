@@ -29,6 +29,18 @@ export interface ClassResponseDto {
   trainer: {
     name: string;
   };
+  schedules: {
+    date: string;
+    startAt: string;
+    endAt: string;
+    location: string;
+    capacity: string;
+  }[];
+}
+
+export interface BrowseClassDto {
+  classes: ClassResponseDto[];
+  isLoading: boolean;
 }
 
 export interface CreateClassFormProps {
@@ -137,3 +149,30 @@ export const difficultyConfig = [
   label: string;
   className: string;
 }[];
+
+interface Schedule {
+  id: number;
+  date: string;
+  startAt: string;
+  endAt: string;
+  location: string;
+  capacity: number;
+  deletedAt: string;
+  bookings: {
+    id: number;
+    userId: number;
+  }[];
+}
+
+export interface ViewScheduleState {
+  schedules: Schedule[];
+  imageUrl: string;
+  trainer: string;
+  className: string;
+  category: ClassCategory;
+  difficulty: ClassDifficulty;
+  description: string;
+  duration: number;
+  trainerId: number;
+  classId: number;
+}

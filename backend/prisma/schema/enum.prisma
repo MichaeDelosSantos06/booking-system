@@ -47,3 +47,9 @@ enum Location {
   BoxingRing
   OutdoorCourt
 }
+
+enum BookingStatus {
+  Completed
+  Confirmed
+  Cancelled
+}

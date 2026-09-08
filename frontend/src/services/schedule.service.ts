@@ -18,6 +18,11 @@ const ScheduleService = {
     return result.data;
   },
 
+  getAllSchedule: async () => {
+    const result = await api.get("/schedule/get-all-schedule");
+    return result.data;
+  },
+
   deleteSchedule: async (id: number) => {
     const result = await api.post(`/schedule/delete/${id}`);
     return result.data;

@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { Prisma } from "../generated/prisma/client.js";
 import type { CreateClassDto } from "../types/class.type.js";
 import type { ClassWhereInput } from "../generated/prisma/models/Class.js";
 import { Status } from "../generated/prisma/enums.js";
@@ -53,9 +54,14 @@ const ClassRepository = {
     });
   },
 
+  // use by user to browse Active/Available Class
   fetchClasses: async (status?: Status) => {
     return prisma.class.findMany({
-      where: { ...(status ? { status } : undefined) },
+      where: {
+        status: "Active",
+        deletedAt: null,
+        ...(status ? { status } : undefined),
+      },
 
       select: {
         id: true,
@@ -67,6 +73,24 @@ const ClassRepository = {
         imageUrl: true,
         difficulty: true,
         trainerId: true,
+
+        schedules: {
+          where: { deletedAt: null },
+          select: {
+            id: true,
+            date: true,
+            startAt: true,
+            endAt: true,
+            location: true,
+            capacity: true,
+            bookings: {
+              select: {
+                id: true,
+                userId: true,
+              },
+            },
+          },
+        },
 
         trainer: {
           select: {
@@ -81,27 +105,38 @@ const ClassRepository = {
   searchClasses: async (page: number, limit: number, search?: string) => {
     const skip = (page - 1) * limit;
 
-    const where: ClassWhereInput = search
-      ? {
-          OR: [
-            { className: { contains: search, mode: "insensitive" } },
-            {
-              trainer: {
-                is: {
-                  name: { contains: search, mode: "insensitive" },
+    const where: ClassWhereInput = {
+      deletedAt: null,
+
+      ...(search
+        ? {
+            OR: [
+              {
+                className: {
+                  contains: search,
+                  mode: "insensitive",
                 },
               },
-            },
-          ],
-        }
-      : {};
+              {
+                trainer: {
+                  is: {
+                    name: {
+                      contains: search,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+    };
 
     const [classes, total] = await prisma.$transaction([
       prisma.class.findMany({
         skip,
         take: limit,
         where,
-
         select: {
           id: true,
           className: true,
@@ -126,7 +161,9 @@ const ClassRepository = {
         },
       }),
 
-      prisma.class.count({ where }),
+      prisma.class.count({
+        where,
+      }),
     ]);
 
     return {
@@ -135,9 +172,12 @@ const ClassRepository = {
     };
   },
 
-  deleteDataById: async (id: number) => {
-    return prisma.class.delete({
-      where: { id },
+  deleteDataById: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.class.update({
+      where: { deletedAt: null, id },
+      data: {
+        deletedAt: new Date(),
+      },
     });
   },
 
@@ -148,7 +188,7 @@ const ClassRepository = {
     imageId?: string | null,
   ) => {
     return prisma.class.update({
-      where: { id },
+      where: { deletedAt: null, id },
       data: {
         className: data.className,
         description: data.description,
@@ -183,6 +223,14 @@ const ClassRepository = {
     return prisma.class.count({
       where: {
         status: "Active",
+      },
+    });
+  },
+
+  getSchedInClass: async () => {
+    return prisma.class.findMany({
+      select: {
+        id: true,
       },
     });
   },

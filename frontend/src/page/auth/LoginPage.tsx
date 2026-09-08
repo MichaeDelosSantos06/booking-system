@@ -6,7 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
 import { loginSchema } from "../../schema/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import LoginBranding from "../../components/LoginBranding";
 import { FiAlertCircle, FiEye, FiEyeOff } from "react-icons/fi";
 import IconLogo from "../../components/ui/IconLogo";
@@ -22,20 +22,29 @@ const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login, user } = useAuth();
 
   const onSubmit = async (data: LoginDto) => {
     setErrorMessage(null);
 
     try {
       await login(data);
-      navigate("/dashboard");
+      setIsLoggedIn(true);
     } catch {
       setErrorMessage("Invalid email or password");
     }
   };
+
+  if (isLoggedIn && user) {
+    return (
+      <Navigate
+        to={user.role === "Admin" ? "/dashboard" : "/member-dashboard"}
+        replace
+      />
+    );
+  }
 
   return (
     <div className="flex min-h-screen">

@@ -1,22 +1,27 @@
 import { CalendarPlus, ClipboardList, UserPlus, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const QuickActions = () => {
   const actions = [
     {
       label: "Add Class",
       icon: CalendarPlus,
+      to: "/classes",
     },
     {
       label: "Create Schedule",
       icon: ClipboardList,
+      to: "/schedules",
     },
     {
       label: "Add Trainer",
       icon: UserPlus,
+      to: "/trainers",
     },
     {
       label: "View Bookings",
       icon: Users,
+      to: "/bookings",
     },
   ];
 
@@ -37,19 +42,63 @@ const QuickActions = () => {
           const Icon = action.icon;
 
           return (
-            <button
+            <Link
               key={action.label}
-              type="button"
-              className="group flex min-w-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 transition-all duration-200 hover:border-red-200 hover:bg-red-50/50 hover:shadow-sm"
+              to={action.to}
+              className="
+                group
+                flex
+                min-w-0
+                cursor-pointer
+                items-center
+                justify-center
+                gap-2
+                rounded-lg
+                border
+                border-gray-200
+                bg-white
+                px-3
+                py-2
+                transition-all
+                duration-200
+                hover:border-red-200
+                hover:bg-red-50/50
+                hover:shadow-sm
+              "
             >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-gray-100 text-gray-500 transition-colors duration-200 group-hover:bg-red-100 group-hover:text-red-500">
+              <div
+                className="
+                  flex
+                  h-7
+                  w-7
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-md
+                  bg-gray-100
+                  text-gray-500
+                  transition-colors
+                  duration-200
+                  group-hover:bg-red-100
+                  group-hover:text-red-500
+                "
+              >
                 <Icon size={15} strokeWidth={1.8} />
               </div>
 
-              <span className="truncate text-[10px] font-medium text-gray-700 transition-colors group-hover:text-red-600">
+              <span
+                className="
+                  truncate
+                  text-[10px]
+                  font-medium
+                  text-gray-700
+                  transition-colors
+                  group-hover:text-red-600
+                "
+              >
                 {action.label}
               </span>
-            </button>
+            </Link>
           );
         })}
       </div>

@@ -12,6 +12,14 @@ import MemberRoute from "./MemberRoute";
 import ClassPage from "../page/admin/ClassesPage";
 import TrainerPage from "../page/admin/TrainerPage";
 import SchedulePage from "../page/admin/SchedulePage";
+import BookingPage from "../page/admin/BookingPage";
+
+// Member
+import MemberLayout from "../components/layout/MemberLayout";
+import MemberDashboardPage from "../page/member/DashboardPage";
+import BrowseClassesPage from "../page/member/BrowseClassesPage";
+import ViewSchdulePage from "../page/member/ViewSchedulePage";
+import MyBookingPage from "../page/member/MyBookingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +48,26 @@ export const router = createBrowserRouter([
         element: <MemberRoute />,
         children: [
           {
-            // Member layout
+            element: <MemberLayout />,
+            children: [
+              {
+                // Member layout
+                path: "/member-dashboard",
+                element: <MemberDashboardPage />,
+              },
+              {
+                path: "/browse-classes",
+                element: <BrowseClassesPage />,
+              },
+              {
+                path: "/view-schedule",
+                element: <ViewSchdulePage />,
+              },
+              {
+                path: "/my-bookings",
+                element: <MyBookingPage />,
+              },
+            ],
           },
         ],
       },
@@ -69,8 +96,12 @@ export const router = createBrowserRouter([
                 element: <TrainerPage />,
               },
               {
-                path: "/schedule",
+                path: "/schedules",
                 element: <SchedulePage />,
+              },
+              {
+                path: "/bookings",
+                element: <BookingPage />,
               },
             ],
           },
