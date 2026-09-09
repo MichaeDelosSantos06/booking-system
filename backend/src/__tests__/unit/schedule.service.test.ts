@@ -17,6 +17,7 @@ vi.mock("../../repositories/schedule.repository.js", () => ({
     getAllSchedule: vi.fn(),
     getTodaySchedule: vi.fn(),
     updateExpiredSchedules: vi.fn(),
+    updateSchduleByFull: vi.fn(),
     searchSchedules: vi.fn(),
     findById: vi.fn(),
     deleteById: vi.fn(),

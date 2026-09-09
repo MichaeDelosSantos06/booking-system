@@ -8,20 +8,9 @@ const MemberPage = () => {
   const { users, error, loading, pagination, search, setSearch, fetchUsers } =
     useUsers();
 
-  // Only show the full-page spinner while there is nothing to render yet
-  // (initial load). Refetching/search keeps the table visible and smooth.
-  if (loading && users.length === 0) {
-    return (
-      <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
-        <div className="flex flex-col items-center gap-2.5 sm:gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-gray-900 sm:h-7 sm:w-7" />
-          <p className="text-xs text-gray-500 sm:text-sm">Loading members...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
+  // Only show the error when loading has finished.
+  // During refetch/search, keep the existing UI visible.
+  if (error && !loading) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
         <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 sm:px-5 sm:py-4">
@@ -48,17 +37,42 @@ const MemberPage = () => {
     >
       {/* Header */}
       <header className="mb-4 shrink-0 sm:mb-5 md:mb-6">
-        <div className="flex items-center gap-2">
-          <span className="h-5 w-1 shrink-0 rounded-full bg-red-600 sm:h-6" />
+        {loading ? (
+          <div className="animate-pulse" aria-hidden="true">
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-1 shrink-0 rounded-full bg-slate-200 sm:h-6" />
 
-          <h1 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl md:text-3xl">
-            Members
-          </h1>
-        </div>
+              <div
+                className="
+                  h-6
+                  w-28
+                  rounded-md
+                  bg-slate-200
+                  sm:h-7
+                  sm:w-32
+                  md:h-9
+                  md:w-36
+                "
+              />
+            </div>
 
-        <p className="mt-1 text-xs text-slate-500 sm:mt-1.5 sm:text-sm">
-          Manage and view all registered gym members.
-        </p>
+            <div className="mt-2 h-3 w-64 rounded bg-slate-100 sm:h-3.5 sm:w-80" />
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-5 w-1 shrink-0 rounded-full bg-red-600 sm:h-6" />
+
+              <h1 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl md:text-3xl">
+                Members
+              </h1>
+            </div>
+
+            <p className="mt-1 text-xs text-slate-500 sm:mt-1.5 sm:text-sm">
+              Manage and view all registered gym members.
+            </p>
+          </>
+        )}
       </header>
 
       {/* Search Toolbar */}
@@ -89,16 +103,35 @@ const MemberPage = () => {
             value={search}
             onChange={setSearch}
             placeholder="Search members..."
+            loading={loading}
           />
         </div>
 
-        <p className="px-1 text-[11px] text-gray-500 sm:text-xs">
-          {search
-            ? `${pagination.total} result${
-                pagination.total !== 1 ? "s" : ""
-              } found`
-            : `${pagination.total} member${pagination.total !== 1 ? "s" : ""}`}
-        </p>
+        {/* Member Count */}
+        {loading ? (
+          <div
+            className="
+              h-3
+              w-20
+              animate-pulse
+              rounded
+              bg-slate-100
+              sm:h-3.5
+              sm:w-24
+            "
+            aria-hidden="true"
+          />
+        ) : (
+          <p className="px-1 text-[11px] text-gray-500 sm:text-xs">
+            {search
+              ? `${pagination.total} result${
+                  pagination.total !== 1 ? "s" : ""
+                } found`
+              : `${pagination.total} member${
+                  pagination.total !== 1 ? "s" : ""
+                }`}
+          </p>
+        )}
       </div>
 
       {/* Members Table */}
@@ -106,6 +139,7 @@ const MemberPage = () => {
         users={users}
         pagination={pagination}
         onPageChange={fetchUsers}
+        loading={loading}
       />
     </div>
   );

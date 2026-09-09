@@ -70,6 +70,15 @@ const ScheduleController = {
       message: "Deleted Successfully!",
     });
   }),
+
+  getUpcomingSchedule: asyncHandler(async (req: Request, res: Response) => {
+    const upcomingSched = await ScheduleService.getUpcomingSchedule();
+    return res.status(200).json({
+      success: true,
+      message: "Upcoming Schedule Retrieve",
+      upcomingSched,
+    });
+  }),
 };
 
 export default ScheduleController;

@@ -9,6 +9,7 @@ import ClassService from "../../services/class.service";
 import DeleteModal from "../../feature/classes/components/DeleteModal";
 import EditModal from "../../feature/classes/components/ClassEditModal";
 import type { ClassResponseDto } from "../../types/class.types";
+
 import { Plus } from "lucide-react";
 
 const ClassPage = () => {
@@ -39,8 +40,10 @@ const ClassPage = () => {
 
     try {
       await ClassService.deleteClassById(selectClassId);
+
       setDeleteModal(false);
       setSelectClassId(null);
+
       await refetch();
     } catch (error) {
       console.error("Failed to delete class:", error);
@@ -80,34 +83,72 @@ const ClassPage = () => {
     >
       {/* Page Header */}
       <header>
-        <div className="flex items-center gap-2">
-          <span className="h-5 w-1 rounded-full bg-red-600 sm:h-6" />
+        {loading ? (
+          <div className="animate-pulse">
+            {/* Title Skeleton */}
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-1 rounded-full bg-slate-200 sm:h-6" />
 
-          <h1
-            className="
-              text-xl
-              font-bold
-              tracking-tight
-              text-slate-950
-              sm:text-2xl
-              md:text-3xl
-            "
-          >
-            Classes
-          </h1>
-        </div>
+              <div
+                className="
+                  h-6
+                  w-24
+                  rounded-md
+                  bg-slate-200
+                  sm:h-7
+                  sm:w-28
+                  md:h-9
+                  md:w-32
+                "
+              />
+            </div>
 
-        <p
-          className="
-            mt-1
-            text-xs
-            text-slate-500
-            sm:mt-1.5
-            sm:text-sm
-          "
-        >
-          Manage your fitness classes and trainers.
-        </p>
+            {/* Description Skeleton */}
+            <div
+              className="
+                mt-2
+                h-3
+                w-64
+                rounded
+                bg-slate-100
+                sm:mt-2.5
+                sm:h-3.5
+                sm:w-72
+              "
+            />
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-5 w-1 rounded-full bg-red-600 sm:h-6" />
+
+              <h1
+                className="
+                  text-xl
+                  font-bold
+                  tracking-tight
+                  text-slate-950
+                  sm:text-2xl
+                  md:text-3xl
+                "
+              >
+                Classes
+              </h1>
+            </div>
+
+            <p
+              className="
+                mt-1
+                text-xs
+                text-slate-500
+                sm:mt-1.5
+                sm:text-sm
+              "
+            >
+              Manage your fitness classes and trainers.
+            </p>
+          </>
+        )}
       </header>
 
       {/* Search & Create */}
@@ -137,54 +178,77 @@ const ClassPage = () => {
             value={search}
             placeholder="Search classes or trainers..."
             onChange={setSearch}
+            loading={loading}
           />
         </div>
 
         {/* Add Class */}
         <div className="w-full sm:w-auto">
-          <Button
-            onClick={() => setModalOpen(true)}
-            type="button"
-            className="
-              flex
-              h-9
-              w-full
-              items-center
-              justify-center
-              gap-2
-              rounded-lg
-              bg-slate-950
-              px-4
-              text-xs
-              font-semibold
-              text-white
-              shadow-sm
-              transition-all
-              duration-200
-              hover:bg-slate-800
-              hover:shadow-md
-              active:scale-[0.98]
-              sm:h-10
-              sm:w-auto
-              sm:px-5
-              sm:text-sm
-            "
-          >
-            <Plus
-              size={14}
-              strokeWidth={2.2}
-              className="sm:h-[15px] sm:w-[15px]"
-            />
+          {loading ? (
+            <div
+              className="
+                h-9
+                w-full
+                animate-pulse
+                rounded-lg
+                bg-slate-200
+                shadow-sm
+                sm:h-10
+                sm:w-[125px]
+                sm:rounded-xl
+              "
+              aria-hidden="true"
+            >
+              <div className="flex h-full items-center justify-center gap-2">
+                <div className="h-3.5 w-3.5 rounded bg-slate-300 sm:h-4 sm:w-4" />
+                <div className="h-3 w-14 rounded bg-slate-300 sm:h-3.5 sm:w-16" />
+              </div>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setModalOpen(true)}
+              type="button"
+              className="
+                flex
+                h-9
+                w-full
+                items-center
+                justify-center
+                gap-2
+                rounded-lg
+                bg-slate-950
+                px-4
+                text-xs
+                font-semibold
+                text-white
+                shadow-sm
+                transition-all
+                duration-200
+                hover:bg-slate-800
+                hover:shadow-md
+                active:scale-[0.98]
+                sm:h-10
+                sm:w-auto
+                sm:px-5
+                sm:text-sm
+              "
+            >
+              <Plus
+                size={14}
+                strokeWidth={2.2}
+                className="sm:h-[15px] sm:w-[15px]"
+              />
 
-            <span>Add Class</span>
-          </Button>
+              <span>Add Class</span>
+            </Button>
+          )}
         </div>
       </div>
 
       {/* Classes */}
       <div className="min-w-0 w-full">
         {/* Error */}
-        {error && classes.length === 0 && (
+        {!loading && error && classes.length === 0 && (
           <div
             className="
               mb-3
@@ -214,6 +278,7 @@ const ClassPage = () => {
           </div>
         )}
 
+        {/* Class Table */}
         <ClassTable
           classes={classes}
           loading={loading}

@@ -39,5 +39,11 @@ router.post(
   authorize,
   ScheduleController.deleteById,
 );
+router.get(
+  "/schedule/upcoming",
+  tokenAuth,
+  authorize,
+  ScheduleController.getUpcomingSchedule,
+);
 
 export default router;

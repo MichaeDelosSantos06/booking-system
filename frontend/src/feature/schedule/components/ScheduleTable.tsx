@@ -1,4 +1,4 @@
-import { formatTime } from "../../../utils/DateFormatterHelper";
+import { formatTime, formatDate } from "../../../utils/DateFormatterHelper";
 
 import Button from "../../../components/ui/Button";
 import Pagination from "../../../components/ui/Pagination";
@@ -13,13 +13,211 @@ const ScheduleTable = ({
   onDelete,
   pagination,
   onPageChange,
+  loading = false,
 }: TablePropsDto) => {
+  if (loading) {
+    return (
+      <div
+        className="
+          flex
+          h-[500px]
+          min-h-0
+          w-full
+          animate-pulse
+          flex-col
+          overflow-hidden
+          rounded-xl
+          border
+          border-slate-200
+          bg-white
+          shadow-sm
+          sm:h-[530px]
+          sm:rounded-2xl
+          md:h-[550px]
+        "
+        aria-hidden="true"
+      >
+        {/* Table Area */}
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <table
+            className="
+              w-full
+              min-w-[900px]
+              table-fixed
+              text-left
+              sm:min-w-[1000px]
+              md:min-w-[1100px]
+            "
+          >
+            {/* Keep exact same column proportions */}
+            <colgroup>
+              <col className="w-[18%]" />
+              <col className="w-[18%]" />
+              <col className="w-[20%]" />
+              <col className="w-[18%]" />
+              <col className="w-[15%]" />
+              <col className="w-[12%]" />
+              <col className="w-[11%]" />
+            </colgroup>
+
+            {/* Header Skeleton */}
+            <thead className="border-b border-slate-200 bg-black">
+              <tr>
+                {[
+                  "Class",
+                  "Trainer",
+                  "Date & Time",
+                  "Location",
+                  "Capacity",
+                  "Status",
+                  "Actions",
+                ].map((header, index) => (
+                  <th
+                    key={header}
+                    className={`
+                      px-2
+                      py-2.5
+                      sm:px-3
+                      sm:py-3
+                      md:px-4
+                      md:py-3.5
+                      ${index >= 4 ? "text-center" : "text-left"}
+                    `}
+                  >
+                    <div
+                      className={`
+                        h-2.5
+                        rounded
+                        bg-slate-700
+                        sm:h-3
+                        ${
+                          index === 0
+                            ? "w-10 sm:w-12"
+                            : index === 1
+                              ? "w-12 sm:w-14"
+                              : index === 2
+                                ? "w-20 sm:w-24"
+                                : index === 3
+                                  ? "w-14 sm:w-16"
+                                  : index === 4
+                                    ? "mx-auto w-14 sm:w-16"
+                                    : index === 5
+                                      ? "mx-auto w-11 sm:w-13"
+                                      : "mx-auto w-12 sm:w-14"
+                        }
+                      `}
+                    />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            {/* Body Skeleton */}
+            <tbody className="divide-y divide-slate-100">
+              {Array.from({ length: 7 }).map((_, rowIndex) => (
+                <tr key={rowIndex} className="h-[58px] sm:h-[64px] md:h-[72px]">
+                  {/* Class */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="ml-1 sm:ml-1.5 md:ml-2">
+                      <div className="h-3.5 w-24 rounded bg-slate-200 sm:h-4 sm:w-28 md:w-32" />
+                      <div className="mt-1.5 h-2.5 w-14 rounded bg-slate-100 sm:h-3 sm:w-16" />
+                    </div>
+                  </td>
+
+                  {/* Trainer */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="h-3 w-20 rounded bg-slate-200 sm:h-3.5 sm:w-24 md:w-28" />
+                  </td>
+
+                  {/* Date & Time */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="h-3.5 w-20 rounded bg-slate-200 sm:h-4 sm:w-24 md:w-28" />
+                      <div className="h-2.5 w-24 rounded bg-slate-100 sm:h-3 sm:w-28" />
+                    </div>
+                  </td>
+
+                  {/* Location */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="h-3 w-20 rounded bg-slate-200 sm:h-3.5 sm:w-24 md:w-28" />
+                  </td>
+
+                  {/* Capacity */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="w-full">
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <div className="h-2.5 w-8 rounded bg-slate-200 sm:h-3 sm:w-10" />
+                        <div className="h-2 w-10 rounded bg-slate-100 sm:w-12" />
+                      </div>
+
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 sm:h-2">
+                        <div className="h-full w-[45%] rounded-full bg-slate-300" />
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-2 py-2.5 text-center sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="mx-auto h-5 w-12 rounded-full bg-slate-100 sm:h-6 sm:w-14" />
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
+                    <div className="flex justify-center">
+                      <div className="h-7 w-12 rounded-md bg-slate-100 sm:h-8 sm:w-14 sm:rounded-lg md:h-9 md:w-16" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="flex h-[52px] shrink-0 items-center justify-between border-t border-slate-100 px-3 sm:h-[56px] sm:px-4">
+          <div className="h-3 w-20 rounded bg-slate-100 sm:w-24" />
+
+          <div className="flex items-center gap-1.5">
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+            <div className="h-7 w-7 rounded-md bg-slate-200 sm:h-8 sm:w-8" />
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-[500px] min-h-0 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[530px] sm:rounded-2xl md:h-[550px]">
+    <div
+      className="
+        flex
+        h-[500px]
+        min-h-0
+        w-full
+        flex-col
+        overflow-hidden
+        rounded-xl
+        border
+        border-slate-200
+        bg-white
+        shadow-sm
+        sm:h-[530px]
+        sm:rounded-2xl
+        md:h-[550px]
+      "
+    >
       {/* Table Area */}
       <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
-        <table className="w-full min-w-[900px] table-fixed text-left sm:min-w-[1000px] md:min-w-[1100px]">
-          {/* Responsive column widths */}
+        <table
+          className="
+            w-full
+            min-w-[900px]
+            table-fixed
+            text-left
+            sm:min-w-[1000px]
+            md:min-w-[1100px]
+          "
+        >
           <colgroup>
             <col className="w-[18%]" />
             <col className="w-[18%]" />
@@ -75,45 +273,19 @@ const ScheduleTable = ({
                   (option) => option.value === item.class.category
                 );
 
-                /*
-                 * CAPACITY CALCULATION
-                 *
-                 * item.capacity = REMAINING slots (the backend decrements the
-                 *                 `capacity` column by 1 on every booking)
-                 * item.booked = number of people already booked
-                 *
-                 * The original/maximum capacity is derived as capacity + booked,
-                 * so the booking count is never subtracted from capacity again
-                 * (otherwise each booking would be counted twice).
-                 */
-
                 const booked = item._count.bookings ?? 0;
 
-                // `capacity` from the DB is already the remaining slots.
                 const remaining = Math.max(item.capacity, 0);
 
-                // Original (maximum) capacity, derived from the remaining slots.
-                const maxCapacity = item.capacity + booked;
+                const maxCapacity = Math.max(item.capacity + booked, 0);
 
-                // Make sure booked never goes below 0
-                // or above the maximum capacity.
                 const currentBooked = Math.min(
                   Math.max(booked, 0),
-                  Math.max(maxCapacity, 0)
+                  maxCapacity
                 );
 
-                // How full the schedule is
                 const percentage =
                   maxCapacity > 0 ? (currentBooked / maxCapacity) * 100 : 0;
-
-                /*
-                 * PROGRESS COLOR
-                 *
-                 * 0 bookings  = gray
-                 * < 60%       = green
-                 * 60% - 84%    = orange
-                 * 85%+        = red
-                 */
 
                 let progressColor = "bg-slate-300";
 
@@ -139,12 +311,10 @@ const ScheduleTable = ({
                           className="flex flex-col truncate text-[11px] font-semibold leading-4 text-slate-900 sm:text-xs sm:leading-5 md:text-sm"
                           title={item.class.className}
                         >
-                          {/* Class Name */}
                           <span className="truncate">
                             {item.class.className}
                           </span>
 
-                          {/* Category */}
                           <span className="font-poppins truncate text-[11px] font-normal leading-4 text-slate-500 opacity-[.6]">
                             {category?.label}
                           </span>
@@ -167,20 +337,9 @@ const ScheduleTable = ({
                       <div className="flex min-w-0 flex-col gap-0.5">
                         <span
                           className="truncate text-[10px] font-semibold text-slate-800 sm:text-xs md:text-sm"
-                          title={new Date(item.date).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
+                          title={formatDate(item.date)}
                         >
-                          {new Date(item.date).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {formatDate(item.date)}
                         </span>
 
                         <span className="truncate text-[9px] text-slate-400 sm:text-[10px] md:text-xs">
@@ -201,9 +360,19 @@ const ScheduleTable = ({
 
                     {/* Capacity */}
                     <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4">
-                      <div className="flex items-center gap-2">
-                        {/* Progress Bar */}
-                        <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-slate-200">
+                      <div className="w-full">
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <span className="text-[9px] font-semibold text-slate-700 sm:text-[10px]">
+                            {currentBooked}/{maxCapacity}
+                          </span>
+
+                          <span className="text-[8px] text-slate-400 sm:text-[9px]">
+                            {remaining} {remaining === 1 ? "spot" : "spots"}{" "}
+                            left
+                          </span>
+                        </div>
+
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 sm:h-2">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
                             style={{
@@ -211,11 +380,6 @@ const ScheduleTable = ({
                             }}
                           />
                         </div>
-
-                        {/* Remaining Slots */}
-                        <span className="min-w-[22px] text-right text-[10px] font-semibold text-slate-700 sm:text-xs">
-                          {remaining} <span>left</span>
-                        </span>
                       </div>
                     </td>
 
@@ -226,10 +390,14 @@ const ScheduleTable = ({
                           <span className="h-1 w-1 shrink-0 rounded-full bg-emerald-500 sm:h-1.5 sm:w-1.5" />
                           Open
                         </span>
+                      ) : item.status === "Full" ? (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-red-50 px-1.5 py-0.5 text-[8px] font-semibold text-red-600 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-red-500 sm:h-1.5 sm:w-1.5" />
+                          Full
+                        </span>
                       ) : (
                         <span className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[8px] font-semibold text-slate-500 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
                           <span className="h-1 w-1 shrink-0 rounded-full bg-slate-400 sm:h-1.5 sm:w-1.5" />
-
                           {item.status}
                         </span>
                       )}
@@ -292,7 +460,7 @@ const ScheduleTable = ({
         </table>
       </div>
 
-      {/* Pagination stays fixed */}
+      {/* Pagination */}
       <div className="shrink-0 border-t border-slate-100">
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       </div>

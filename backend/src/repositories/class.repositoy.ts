@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma.js";
 import { Prisma } from "../generated/prisma/client.js";
-import type { CreateClassDto } from "../types/class.type.js";
+import type { CreateClassDto, ClassSearchFilters } from "../types/class.type.js";
 import type { ClassWhereInput } from "../generated/prisma/models/Class.js";
 import { Status } from "../generated/prisma/enums.js";
 
@@ -81,6 +81,7 @@ const ClassRepository = {
             date: true,
             startAt: true,
             endAt: true,
+            status: true,
             location: true,
             capacity: true,
             bookings: {
@@ -102,7 +103,12 @@ const ClassRepository = {
     });
   },
 
-  searchClasses: async (page: number, limit: number, search?: string) => {
+  searchClasses: async (
+    page: number,
+    limit: number,
+    search?: string,
+    filters?: ClassSearchFilters,
+  ) => {
     const skip = (page - 1) * limit;
 
     const where: ClassWhereInput = {
@@ -130,6 +136,10 @@ const ClassRepository = {
             ],
           }
         : {}),
+
+      ...(filters?.category ? { category: filters.category } : {}),
+      ...(filters?.difficulty ? { difficulty: filters.difficulty } : {}),
+      ...(filters?.status ? { status: filters.status } : {}),
     };
 
     const [classes, total] = await prisma.$transaction([
@@ -152,6 +162,25 @@ const ClassRepository = {
             select: {
               id: true,
               name: true,
+            },
+          },
+
+          schedules: {
+            where: { deletedAt: null },
+            select: {
+              id: true,
+              date: true,
+              startAt: true,
+              endAt: true,
+              status: true,
+              location: true,
+              capacity: true,
+              bookings: {
+                select: {
+                  id: true,
+                  userId: true,
+                },
+              },
             },
           },
         },

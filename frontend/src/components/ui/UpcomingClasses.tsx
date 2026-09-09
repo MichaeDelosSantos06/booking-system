@@ -1,73 +1,125 @@
 import { Link } from "react-router-dom";
 
-type UpcomingClass = {
-  id: number;
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  booked: number;
-  capacity: number;
-};
+import type { UpcomingScheduleData } from "../../types/schedule.type";
 
-const mockClasses: UpcomingClass[] = [
-  {
-    id: 1,
-    name: "Zumba Party",
-    date: "Aug 19, 2026",
-    time: "10:00 AM - 11:00 AM",
-    location: "Studio B",
-    booked: 20,
-    capacity: 25,
-  },
-  {
-    id: 2,
-    name: "Boxing Fundamentals",
-    date: "Aug 19, 2026",
-    time: "2:00 PM - 3:00 PM",
-    location: "Studio A",
-    booked: 16,
-    capacity: 20,
-  },
-  {
-    id: 3,
-    name: "Strength Training",
-    date: "Aug 20, 2026",
-    time: "9:00 AM - 10:00 AM",
-    location: "Gym Floor",
-    booked: 12,
-    capacity: 15,
-  },
-  {
-    id: 4,
-    name: "Yoga Flow",
-    date: "Aug 20, 2026",
-    time: "5:00 PM - 6:00 PM",
-    location: "Studio B",
-    booked: 8,
-    capacity: 20,
-  },
-  {
-    id: 5,
-    name: "HIIT Training",
-    date: "Aug 21, 2026",
-    time: "7:00 AM - 8:00 AM",
-    location: "Studio A",
-    booked: 18,
-    capacity: 20,
-  },
-  {
-    id: 6,
-    name: "Functional Training",
-    date: "Aug 21, 2026",
-    time: "4:00 PM - 5:00 PM",
-    location: "Gym Floor",
-    booked: 10,
-    capacity: 15,
-  },
-];
+import { formatDate, formatTime } from "../../utils/DateFormatterHelper";
 
-const UpcomingClasses = () => {
+const UpcomingClasses = ({ schedules, loading }: UpcomingScheduleData) => {
+  if (loading) {
+    return (
+      <div
+        className="
+          w-full
+          animate-pulse
+          overflow-hidden
+          rounded-2xl
+          border
+          border-gray-200
+          bg-white
+          font-poppins
+          shadow-sm
+        "
+        aria-hidden="true"
+      >
+        {/* Header Skeleton */}
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            border-b
+            border-gray-100
+            px-4
+            py-4
+            sm:px-5
+            sm:py-5
+            lg:px-6
+          "
+        >
+          <div className="min-w-0">
+            <div className="h-4 w-32 rounded bg-slate-200 sm:h-5 sm:w-40" />
+
+            <div className="mt-1.5 h-2.5 w-44 rounded bg-slate-100 sm:mt-2 sm:h-3 sm:w-52" />
+          </div>
+
+          {/* View All Skeleton */}
+          <div className="ml-3 h-6 w-12 shrink-0 rounded-lg bg-slate-100 sm:w-14" />
+        </div>
+
+        {/* Table Skeleton */}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[700px]">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50/70">
+                <th className="px-4 py-3 text-left sm:px-5 lg:px-6">
+                  <div className="h-2.5 w-12 rounded bg-slate-200" />
+                </th>
+
+                <th className="px-4 py-3 text-left sm:px-5 lg:px-6">
+                  <div className="h-2.5 w-20 rounded bg-slate-200" />
+                </th>
+
+                <th className="px-4 py-3 text-left sm:px-5 lg:px-6">
+                  <div className="h-2.5 w-16 rounded bg-slate-200" />
+                </th>
+
+                <th className="w-[200px] px-4 py-3 text-left sm:w-[220px] sm:px-5 lg:px-6">
+                  <div className="h-2.5 w-12 rounded bg-slate-200" />
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-100 last:border-0"
+                >
+                  {/* Class */}
+                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                    <div className="h-3.5 w-28 rounded bg-slate-200 sm:h-4 sm:w-36" />
+                  </td>
+
+                  {/* Date & Time */}
+                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                    <div className="h-3 w-20 rounded bg-slate-200 sm:h-3.5 sm:w-24" />
+
+                    <div className="mt-1.5 h-2.5 w-24 rounded bg-slate-100 sm:w-28" />
+                  </td>
+
+                  {/* Location */}
+                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                    <div className="h-6 w-20 rounded-lg bg-slate-100 sm:w-24" />
+                  </td>
+
+                  {/* Slots */}
+                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                    <div className="w-full max-w-[220px]">
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <div className="h-2.5 w-10 rounded bg-slate-200" />
+
+                        <div className="h-2 w-14 rounded bg-slate-100" />
+                      </div>
+
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 sm:h-2">
+                        <div
+                          className="h-full rounded-full bg-slate-200"
+                          style={{
+                            width: `${[35, 60, 45, 75, 50][index]}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-gray-200 bg-white font-poppins shadow-sm">
       {/* Header */}
@@ -83,7 +135,7 @@ const UpcomingClasses = () => {
         </div>
 
         <Link
-          to="/bookings"
+          to="/schedules"
           type="button"
           className="ml-3 shrink-0 cursor-pointer rounded-lg px-2.5 py-1.5 text-[10px] font-medium text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 sm:px-3 sm:text-xs"
         >
@@ -115,70 +167,100 @@ const UpcomingClasses = () => {
           </thead>
 
           <tbody>
-            {mockClasses.map((item) => {
-              const percentage = Math.min(
-                (item.booked / item.capacity) * 100,
-                100
-              );
+            {schedules.length > 0 ? (
+              schedules.map((item) => {
+                const booked = item._count.bookings ?? 0;
 
-              const remaining = item.capacity - item.booked;
+                const remaining = Math.max(item.capacity, 0);
 
-              return (
-                <tr
-                  key={item.id}
-                  className="border-b border-gray-100 last:border-0 transition-colors hover:bg-gray-50/60"
-                >
-                  {/* Class */}
-                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
-                    <p className="whitespace-nowrap text-xs font-medium text-gray-900 sm:text-sm">
-                      {item.name}
-                    </p>
-                  </td>
+                const maxCapacity = Math.max(item.capacity + booked, 0);
 
-                  {/* Date & Time */}
-                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
-                    <p className="whitespace-nowrap text-[10px] font-medium text-gray-700 sm:text-xs">
-                      {item.date}
-                    </p>
+                const currentBooked = Math.min(
+                  Math.max(booked, 0),
+                  maxCapacity
+                );
 
-                    <p className="mt-1 whitespace-nowrap text-[9px] text-gray-400 sm:text-[10px]">
-                      {item.time}
-                    </p>
-                  </td>
+                const percentage =
+                  maxCapacity > 0 ? (currentBooked / maxCapacity) * 100 : 0;
 
-                  {/* Location */}
-                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
-                    <span className="whitespace-nowrap rounded-lg bg-gray-100 px-2.5 py-1.5 text-[9px] font-medium text-gray-600 sm:px-3 sm:text-[10px]">
-                      {item.location}
-                    </span>
-                  </td>
+                let progressColor = "bg-slate-300";
 
-                  {/* Slots */}
-                  <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
-                    <div className="w-full max-w-[220px]">
-                      <div className="mb-1.5 flex items-center justify-between">
-                        <span className="text-[9px] font-semibold text-gray-700 sm:text-[10px]">
-                          {item.booked}/{item.capacity}
-                        </span>
+                if (currentBooked > 0) {
+                  if (percentage < 60) {
+                    progressColor = "bg-green-500";
+                  } else if (percentage < 85) {
+                    progressColor = "bg-orange-500";
+                  } else {
+                    progressColor = "bg-red-500";
+                  }
+                }
 
-                        <span className="text-[8px] text-gray-400 sm:text-[9px]">
-                          {remaining} {remaining === 1 ? "spot" : "spots"} left
-                        </span>
+                return (
+                  <tr
+                    key={item.id}
+                    className="border-b border-gray-100 transition-colors last:border-0 hover:bg-gray-50/60"
+                  >
+                    {/* Class */}
+                    <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                      <p className="whitespace-nowrap text-xs font-medium text-gray-900 sm:text-sm">
+                        {item.class.className}
+                      </p>
+                    </td>
+
+                    {/* Date & Time */}
+                    <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                      <p className="whitespace-nowrap text-[10px] font-medium text-gray-700 sm:text-xs">
+                        {formatDate(item.date)}
+                      </p>
+
+                      <p className="mt-1 whitespace-nowrap text-[9px] text-gray-400 sm:text-[10px]">
+                        {formatTime(item.startAt)} - {formatTime(item.endAt)}
+                      </p>
+                    </td>
+
+                    {/* Location */}
+                    <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                      <span className="whitespace-nowrap rounded-lg bg-gray-100 px-2.5 py-1.5 text-[9px] font-medium text-gray-600 sm:px-3 sm:text-[10px]">
+                        {item.location}
+                      </span>
+                    </td>
+
+                    {/* Slots */}
+                    <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
+                      <div className="w-full max-w-[220px]">
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <span className="text-[9px] font-semibold text-gray-700 sm:text-[10px]">
+                            {currentBooked}/{maxCapacity}
+                          </span>
+
+                          <span className="text-[8px] text-gray-400 sm:text-[9px]">
+                            {remaining} {remaining === 1 ? "spot" : "spots"}{" "}
+                            left
+                          </span>
+                        </div>
+
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 sm:h-2">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${progressColor}`}
+                            style={{
+                              width: `${percentage}%`,
+                            }}
+                          />
+                        </div>
                       </div>
-
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 sm:h-2">
-                        <div
-                          className="h-full rounded-full bg-red-500 transition-all duration-300"
-                          style={{
-                            width: `${percentage}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={4}>
+                  <div className="flex h-32 items-center justify-center text-xs text-gray-400 sm:h-36">
+                    No upcoming classes available
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -20,7 +20,6 @@ router.get("/class/fetch-class/", tokenAuth, ClassController.fetchClasses);
 router.get(
   "/class/search-class",
   tokenAuth,
-  authorize,
   ClassController.searchClasses,
 );
 router.delete(

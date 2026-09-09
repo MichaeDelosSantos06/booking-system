@@ -6,7 +6,10 @@ import {
 
 import type { CreateBookingData } from "../../../backend/src/schema/booking.schema.js";
 import type { BookingWhereInput } from "../../../backend/src/generated/prisma/models/Booking.js";
-import type { BookingSearchFilters } from "../../../backend/src/types/booking.type.js";
+import type {
+  BookingSearchFilters,
+  BookingsPerDay,
+} from "../../../backend/src/types/booking.type.js";
 
 const BookingRepository = {
   createBooking: async (
@@ -323,13 +326,29 @@ const BookingRepository = {
     });
   },
 
-  gerStatBookingForGraph: async () => {
-    return prisma.booking.groupBy({
-      by: ["bookedAt"],
-      _count: {
-        _all: true,
-      },
-    });
+  gerStatBookingForGraph: async (
+    startDate: Date,
+    endDate: Date,
+  ): Promise<BookingsPerDay[]> => {
+    const result = await prisma.$queryRaw<{ date: Date; total: bigint }[]>`
+      SELECT
+      days.date,
+      COUNT(b.id) AS total
+    FROM generate_series(
+      ${startDate},
+      ${endDate},
+      INTERVAL '1 day'
+    ) AS days(date)
+    LEFT JOIN "Booking" b
+      ON DATE(b."bookedAt") = DATE(days.date)
+    GROUP BY days.date
+    ORDER BY days.date ASC;
+    `;
+
+    return result.map((item) => ({
+      date: item.date,
+      total: Number(item.total),
+    }));
   },
 };
 

@@ -27,6 +27,11 @@ const ScheduleService = {
     const result = await api.post(`/schedule/delete/${id}`);
     return result.data;
   },
+
+  getUpcomingSchedule: async () => {
+    const result = await api.get("/schedule/upcoming");
+    return result.data;
+  },
 };
 
 export default ScheduleService;

@@ -183,7 +183,12 @@ describe("ClassService.searchClasses", () => {
 
     const result = await ClassService.searchClasses();
 
-    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(1, 5, undefined);
+    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(
+      1,
+      5,
+      undefined,
+      undefined,
+    );
     expect(result).toEqual({
       classes: [],
       total: 0,
@@ -199,7 +204,12 @@ describe("ClassService.searchClasses", () => {
 
     const result = await ClassService.searchClasses(-2, 100, "  pilates ");
 
-    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(1, 50, "pilates");
+    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(
+      1,
+      50,
+      "pilates",
+      undefined,
+    );
     expect(result.pagination).toEqual({ page: 1, limit: 50, total: 55, totalPages: 2 });
   });
 
@@ -211,7 +221,31 @@ describe("ClassService.searchClasses", () => {
 
     await ClassService.searchClasses(1, 5, "   ");
 
-    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(1, 5, undefined);
+    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(
+      1,
+      5,
+      undefined,
+      undefined,
+    );
+  });
+
+  it("should forward category, difficulty and status filters", async () => {
+    vi.mocked(ClassRepository.searchClasses).mockResolvedValue({
+      classes: [{ id: 1 }] as never,
+      total: 1,
+    });
+
+    await ClassService.searchClasses(1, 5, "yoga", {
+      category: "Flexibility",
+      difficulty: "Beginner",
+      status: "Active",
+    });
+
+    expect(ClassRepository.searchClasses).toHaveBeenCalledWith(1, 5, "yoga", {
+      category: "Flexibility",
+      difficulty: "Beginner",
+      status: "Active",
+    });
   });
 });
 

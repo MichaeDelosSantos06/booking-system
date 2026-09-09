@@ -1,4 +1,3 @@
-import Button from "../ui/Button";
 import {
   ChartNoAxesColumnIncreasing,
   BriefcaseBusiness,
@@ -9,23 +8,83 @@ import {
   LogOut,
 } from "lucide-react";
 
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import { useNavigate } from "react-router-dom";
+import Button from "../ui/Button";
+
+import { useAuth } from "../../hooks/useAuth";
 
 const SideBar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  // logout + navigate
+
   const onLogout = () => {
     logout();
     navigate("/");
   };
 
+  const adminNavigation = [
+    {
+      to: "/dashboard",
+      label: "Dashboard",
+      icon: ChartNoAxesColumnIncreasing,
+    },
+    {
+      to: "/classes",
+      label: "Classes",
+      icon: BriefcaseBusiness,
+    },
+    {
+      to: "/trainers",
+      label: "Trainers",
+      icon: UsersRound,
+    },
+    {
+      to: "/schedules",
+      label: "Schedule",
+      icon: CalendarDays,
+    },
+    {
+      to: "/bookings",
+      label: "Bookings",
+      icon: ClipboardList,
+    },
+    {
+      to: "/members",
+      label: "Members",
+      icon: UserRound,
+    },
+  ];
+
+  const memberNavigation = [
+    {
+      to: "/member-dashboard",
+      label: "Dashboard",
+      icon: ChartNoAxesColumnIncreasing,
+    },
+    {
+      to: "/browse-classes",
+      label: "Classes",
+      icon: BriefcaseBusiness,
+    },
+    {
+      to: "/my-bookings",
+      label: "Bookings",
+      icon: ClipboardList,
+    },
+    {
+      to: "/profile",
+      label: "Profile",
+      icon: UserRound,
+    },
+  ];
+
+  const navigation =
+    user?.role === "Admin" ? adminNavigation : memberNavigation;
+
   return (
-    <div className="flex w-[280px] min-h-screen flex-col gap-6 bg-black px-1 pt-10 text-white">
-      {/* Heading */}
+    <aside className="flex min-h-screen w-[280px] flex-col gap-6 bg-black px-1 pt-10 text-white">
+      {/* Brand */}
       <div className="mb-5 flex flex-col items-start px-8">
         <div className="flex items-center justify-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e63946]">
@@ -46,16 +105,14 @@ const SideBar = () => {
               FITBOOK
             </span>
 
-            {user?.role === "Admin" ? (
-              <p className="font-poppins text-[10px]">ADMIN PORTAL</p>
-            ) : (
-              <p className="font-poppins text-[10px]">MEMBER PORTAL</p>
-            )}
+            <p className="font-poppins text-[10px]">
+              {user?.role === "Admin" ? "ADMIN PORTAL" : "MEMBER PORTAL"}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* User/Admin Info */}
+      {/* User Info */}
       <div className="flex justify-center">
         <div className="flex w-[220px] items-center gap-3 rounded-xl bg-gray-500/30 p-2 font-poppins leading-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500/40">
@@ -73,180 +130,65 @@ const SideBar = () => {
       </div>
 
       {/* Navigation */}
-
-      <div className="px-6 pt-3 font-poppins">
-        <div className="mb-4 text-xs opacity-50 ml-6">
+      <nav className="px-6 pt-3 font-poppins">
+        <div className="mb-4 ml-6 text-xs opacity-50">
           <p>NAVIGATION</p>
         </div>
 
-        {/* Links */}
+        <div className="flex flex-col gap-2">
+          {navigation.map((item) => {
+            const Icon = item.icon;
 
-        {user?.role === "Admin" ? (
-          // Admin
-          <div className="flex flex-col gap-2">
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <ChartNoAxesColumnIncreasing size={20} strokeWidth={1.7} />
-              <span>Dashboard</span>
-            </NavLink>
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                    isActive
+                      ? "bg-red-500 text-white"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                  }`
+                }
+              >
+                <Icon size={20} strokeWidth={1.7} />
 
-            <NavLink
-              to="/classes"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <BriefcaseBusiness size={20} strokeWidth={1.7} />
-              <span>Classes</span>
-            </NavLink>
-
-            <NavLink
-              to="/trainers"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <UsersRound size={20} strokeWidth={1.7} />
-              <span>Trainers</span>
-            </NavLink>
-
-            <NavLink
-              to="/schedules"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <CalendarDays size={20} strokeWidth={1.7} />
-              <span>Schedule</span>
-            </NavLink>
-
-            <NavLink
-              to="/bookings"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <ClipboardList size={20} strokeWidth={1.7} />
-              <span>Bookings</span>
-            </NavLink>
-
-            <NavLink
-              to="/members"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <UserRound size={20} strokeWidth={1.7} />
-              <span>Members</span>
-            </NavLink>
-          </div>
-        ) : (
-          // Member
-          <div className="flex flex-col gap-2">
-            <NavLink
-              to="/member-dashboard"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <ChartNoAxesColumnIncreasing size={20} strokeWidth={1.7} />
-              <span>Dashboard</span>
-            </NavLink>
-
-            <NavLink
-              to="/browse-classes"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <BriefcaseBusiness size={20} strokeWidth={1.7} />
-              <span>Classes</span>
-            </NavLink>
-
-            <NavLink
-              to="/my-bookings"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <ClipboardList size={20} strokeWidth={1.7} />
-              <span>Bookings</span>
-            </NavLink>
-
-            <NavLink
-              to="/profile"
-              className={({ isActive }) =>
-                `flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                  isActive
-                    ? "bg-red-500 text-white"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`
-              }
-            >
-              <UserRound size={20} strokeWidth={1.7} />
-              <span>Profile</span>
-            </NavLink>
-          </div>
-        )}
-      </div>
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
 
       {/* Logout */}
-      <div className="mt-auto mb-10 flex justify-center items-center flex-col">
-        <div className=" w-[90%] flex flex-col gap-2">
+      <div className="mt-auto mb-10 flex flex-col items-center">
+        <div className="flex w-[90%] flex-col gap-2">
           <div className="flex justify-center">
             <hr className="w-[90%] border-gray-500/20" />
           </div>
 
           <Button
             onClick={onLogout}
-            className="flex cursor-pointer w-full items-center gap-3 rounded-xl pl-7 font-poppins text-white/70 hover:bg-white/10 hover:text-white"
+            className="
+              flex
+              w-full
+              cursor-pointer
+              items-center
+              gap-3
+              rounded-xl
+              pl-7
+              font-poppins
+              text-white/70
+              hover:bg-white/10
+              hover:text-white
+            "
           >
             <LogOut size={20} strokeWidth={1.7} />
             Logout
           </Button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

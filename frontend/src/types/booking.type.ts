@@ -88,6 +88,7 @@ export interface BookingTableProps {
   pagination: Pagination;
   onPageChange: (page: number) => void;
   handleCancel: (bookingId: number) => void;
+  loading: boolean;
 }
 
 export interface BookingDataResponseDto {
@@ -120,4 +121,16 @@ export interface RecentBookingResponseDto {
 
 export interface RecentBookingDto {
   bookings: RecentBookingResponseDto[];
+  loading: boolean;
+}
+
+// graph stat Dto
+export interface BookingGraphStat {
+  date: string;
+  total: number;
+}
+
+export interface GraphResponseDto {
+  bookingStat: BookingGraphStat[];
+  loading: boolean;
 }

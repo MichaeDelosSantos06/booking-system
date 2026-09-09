@@ -1,11 +1,20 @@
 import AvailableClasses from "../../feature/member/components/AvailableClasses";
-import useFetchActiveClasses from "../../hooks/useFetchStatusClasses";
+import useFetchBrowseClasses from "../../hooks/useFetchBrowseClasses";
 import SearchInput from "../../components/ui/SearchInput";
 import { useNavigate } from "react-router-dom";
+import type { ClassCategory, ClassDifficulty } from "../../types/class.types";
 
 const BrowseClassesPage = () => {
-  const { loading, classes } = useFetchActiveClasses("Active");
-  console.log(classes);
+  const {
+    classes,
+    loading,
+    search,
+    setSearch,
+    category,
+    setCategory,
+    difficulty,
+    setDifficulty,
+  } = useFetchBrowseClasses();
 
   const navigate = useNavigate();
 
@@ -31,28 +40,49 @@ const BrowseClassesPage = () => {
   };
 
   return (
-    <div className="m-12">
-      {/* Page Header */}
-      <header className="mb-6">
-        <div className="flex items-center gap-2">
-          <span className="h-6 w-1 rounded-full bg-red-600" />
+    <div className="m-12 flex h-full min-h-0 flex-col font-poppins">
+      {/* ============================================================
+          PAGE HEADER
+      ============================================================ */}
+      <header className="shrink-0 pb-5">
+        {loading ? (
+          <div className="animate-pulse" aria-hidden="true">
+            <div className="flex items-center gap-2">
+              <span className="h-6 w-1 rounded-full bg-slate-200" />
 
-          <h1 className="text-2xl font-bold tracking-tight text-gray-950">
-            Browse Classes
-          </h1>
-        </div>
+              <div className="h-7 w-44 rounded-md bg-slate-200 sm:h-8" />
+            </div>
 
-        <p className="mt-1.5 text-sm text-gray-500">
-          Discover classes that match your fitness goals and book your next
-          session.
-        </p>
+            <div className="mt-2 h-4 w-full max-w-2xl rounded bg-slate-100" />
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-6 w-1 rounded-full bg-red-600" />
+
+              <h1 className="text-2xl font-bold tracking-tight text-gray-950">
+                Browse Classes
+              </h1>
+            </div>
+
+            <p className="mt-1.5 text-sm text-gray-500">
+              Discover classes that match your fitness goals and book your next
+              session.
+            </p>
+          </>
+        )}
       </header>
 
-      {/* Search & Filters */}
+      {/* ============================================================
+          SEARCH & FILTERS
+      ============================================================ */}
       <section
         className="
-          mb-6 rounded-xl
-          border border-gray-200
+          mb-5
+          shrink-0
+          rounded-xl
+          border
+          border-gray-200
           bg-white
           p-3
           shadow-[0_1px_6px_rgba(0,0,0,0.04)]
@@ -61,72 +91,137 @@ const BrowseClassesPage = () => {
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
           {/* Search */}
           <div className="min-w-0 flex-1">
-            <SearchInput placeholder="Search classes, trainers..." />
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search classes, trainers..."
+              loading={loading}
+            />
           </div>
 
           {/* Filters */}
           <div className="flex flex-col gap-2 sm:flex-row">
-            <select
-              name="category"
-              id="category"
-              defaultValue=""
-              className="
-                h-9 w-full rounded-lg
-                border border-gray-200
-                bg-gray-50
-                px-3
-                text-xs font-medium text-gray-700
-                outline-none
-                transition-all
-                hover:border-gray-300
-                focus:border-red-500
-                focus:bg-white
-                focus:ring-2 focus:ring-red-100
-                sm:w-40
-              "
-            >
-              <option value="">All Categories</option>
-              <option value="Cardio">Cardio</option>
-              <option value="Strength">Strength</option>
-              <option value="Flexibility">Flexibility</option>
-              <option value="Combat">Combat</option>
-              <option value="GroupFitness">Group Fitness</option>
-            </select>
+            {loading ? (
+              <>
+                <div
+                  className="
+                    h-9
+                    w-full
+                    animate-pulse
+                    rounded-lg
+                    bg-slate-100
+                    sm:w-40
+                  "
+                  aria-hidden="true"
+                />
 
-            <select
-              name="difficulty"
-              id="difficulty"
-              defaultValue=""
-              className="
-                h-9 w-full rounded-lg
-                border border-gray-200
-                bg-gray-50
-                px-3
-                text-xs font-medium text-gray-700
-                outline-none
-                transition-all
-                hover:border-gray-300
-                focus:border-red-500
-                focus:bg-white
-                focus:ring-2 focus:ring-red-100
-                sm:w-32
-              "
-            >
-              <option value="">All Levels</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advance">Advanced</option>
-            </select>
+                <div
+                  className="
+                    h-9
+                    w-full
+                    animate-pulse
+                    rounded-lg
+                    bg-slate-100
+                    sm:w-32
+                  "
+                  aria-hidden="true"
+                />
+              </>
+            ) : (
+              <>
+                {/* Category */}
+                <select
+                  name="category"
+                  id="category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as ClassCategory)}
+                  className="
+                    h-9
+                    w-full
+                    rounded-lg
+                    border
+                    border-gray-200
+                    bg-gray-50
+                    px-3
+                    text-xs
+                    font-medium
+                    text-gray-700
+                    outline-none
+                    transition-all
+                    hover:border-gray-300
+                    focus:border-red-500
+                    focus:bg-white
+                    focus:ring-2
+                    focus:ring-red-100
+                    sm:w-40
+                  "
+                >
+                  <option value="">All Categories</option>
+                  <option value="Cardio">Cardio</option>
+                  <option value="Strength">Strength</option>
+                  <option value="Flexibility">Flexibility</option>
+                  <option value="Combat">Combat</option>
+                  <option value="GroupFitness">Group Fitness</option>
+                </select>
+
+                {/* Difficulty */}
+                <select
+                  name="difficulty"
+                  id="difficulty"
+                  value={difficulty}
+                  onChange={(e) =>
+                    setDifficulty(e.target.value as ClassDifficulty)
+                  }
+                  className="
+                    h-9
+                    w-full
+                    rounded-lg
+                    border
+                    border-gray-200
+                    bg-gray-50
+                    px-3
+                    text-xs
+                    font-medium
+                    text-gray-700
+                    outline-none
+                    transition-all
+                    hover:border-gray-300
+                    focus:border-red-500
+                    focus:bg-white
+                    focus:ring-2
+                    focus:ring-red-100
+                    sm:w-32
+                  "
+                >
+                  <option value="">All Levels</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advance">Advanced</option>
+                </select>
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Classes */}
-      <AvailableClasses
-        classes={classes}
-        isLoading={loading}
-        viewSched={handleClick}
-      />
+      {/* ============================================================
+          SCROLLABLE CLASSES AREA
+      ============================================================ */}
+      <main
+        className="
+          scrollbar-hide
+          min-h-0
+          flex-1
+          overflow-y-auto
+          pb-6
+        "
+      >
+        <AvailableClasses
+          classes={classes}
+          isLoading={loading}
+          viewSched={handleClick}
+        />
+      </main>
     </div>
   );
 };

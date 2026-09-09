@@ -99,6 +99,7 @@ const BookingService = {
     const pageSize = Math.min(Math.max(1, limit), 50);
     const searchTerm = search.trim();
 
+    await BookingRepository.markAsCompleted();
     const { bookings, total } = await BookingRepository.retrieveBookingForAdmin(
       currentPage,
       pageSize,
@@ -135,7 +136,11 @@ const BookingService = {
   },
 
   gerStatBookingForGraph: async () => {
-    return BookingRepository.gerStatBookingForGraph();
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 6);
+
+    return BookingRepository.gerStatBookingForGraph(startDate, endDate);
   },
 };
 

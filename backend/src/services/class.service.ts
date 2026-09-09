@@ -1,6 +1,10 @@
 import ClassRepository from "../repositories/class.repositoy.js";
 import TrainerRepository from "../repositories/trainer.repositoy.js";
-import type { CreateClassDto, UploadedImage } from "../types/class.type.js";
+import type {
+  CreateClassDto,
+  ClassSearchFilters,
+  UploadedImage,
+} from "../types/class.type.js";
 import { AppError } from "../utils/appError.js";
 import { uploadImage } from "./cloudinary.service.js";
 import { Status } from "../generated/prisma/enums.js";
@@ -46,7 +50,12 @@ const ClassService = {
     return classes;
   },
 
-  searchClasses: async (page = 1, limit = 5, search = "") => {
+  searchClasses: async (
+    page = 1,
+    limit = 5,
+    search = "",
+    filters?: ClassSearchFilters,
+  ) => {
     const currentPage = Math.max(1, page);
     const pageSize = Math.min(Math.max(1, limit), 50);
     const searchTerm = search.trim();
@@ -55,6 +64,7 @@ const ClassService = {
       currentPage,
       pageSize,
       searchTerm || undefined,
+      filters,
     );
 
     return {

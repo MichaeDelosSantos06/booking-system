@@ -13,7 +13,7 @@ export interface ScheduleFormProps {
   classes: ClassResponseDto[];
 }
 
-type Status = "Open" | "Past";
+type Status = "Open" | "Past" | "Full";
 
 export type CreateScheduleFormData = z.infer<typeof createScheduleSchema>;
 
@@ -58,6 +58,7 @@ export interface TablePropsDto {
   onDelete: (id: number) => void;
   pagination: Pagination;
   onPageChange: (page: number) => void;
+  loading: boolean;
 }
 
 export interface DeleteSchedModal {
@@ -121,3 +122,24 @@ export const locationConfig = [
   label: string;
   className: string;
 }[];
+
+// upcoming schedule
+export interface UpcomingScheduleResponse {
+  id: number;
+  date: string;
+  startAt: string;
+  endAt: string;
+  location: Location;
+  capacity: number;
+  _count: {
+    bookings: number;
+  };
+  class: {
+    className: string;
+  };
+}
+
+export interface UpcomingScheduleData {
+  schedules: UpcomingScheduleResponse[];
+  loading: boolean;
+}

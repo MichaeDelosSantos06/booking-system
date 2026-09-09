@@ -1,10 +1,15 @@
 import BookingTable from "../../feature/bookings/components/BookingTable";
+
 import SearchInput from "../../components/ui/SearchInput";
 import Input from "../../components/ui/Input";
+
 import useFetchAdminBookings from "../../hooks/useFetchBookingAdmin";
+
 import type { BookingStatus } from "../../types/booking.type";
+
 import { CalendarDays } from "lucide-react";
 import { useState } from "react";
+
 import BookingService from "../../services/booking.service";
 import CancelModal from "../../feature/bookings/components/CancelModal";
 
@@ -23,10 +28,10 @@ const BookingPage = () => {
     setDate,
     fetchBookings,
     refetch,
+    loading,
   } = useFetchAdminBookings();
 
   // Cancel Logic
-
   const handleCancel = (bookingId: number) => {
     setBookingId(bookingId);
     setCancelModal(true);
@@ -67,34 +72,65 @@ const BookingPage = () => {
     >
       {/* Page Header */}
       <header>
-        <div className="flex items-center gap-2">
-          <span className="h-5 w-1 rounded-full bg-red-600 sm:h-6" />
-
-          <h1
+        {loading ? (
+          <div
             className="
-              text-xl
-              font-bold
-              tracking-tight
-              text-slate-950
-              sm:text-2xl
-              md:text-3xl
+              animate-pulse
+              space-y-2
             "
+            aria-hidden="true"
           >
-            Manage Bookings
-          </h1>
-        </div>
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-1 rounded-full bg-slate-200 sm:h-6" />
 
-        <p
-          className="
-            mt-1
-            text-xs
-            text-slate-500
-            sm:mt-1.5
-            sm:text-sm
-          "
-        >
-          View, manage, and monitor all member bookings.
-        </p>
+              <div
+                className="
+                  h-6
+                  w-44
+                  rounded-md
+                  bg-slate-200
+                  sm:h-7
+                  sm:w-52
+                  md:h-9
+                  md:w-60
+                "
+              />
+            </div>
+
+            <div className="h-3 w-64 rounded bg-slate-100 sm:h-3.5 sm:w-80" />
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-5 w-1 rounded-full bg-red-600 sm:h-6" />
+
+              <h1
+                className="
+                  text-xl
+                  font-bold
+                  tracking-tight
+                  text-slate-950
+                  sm:text-2xl
+                  md:text-3xl
+                "
+              >
+                Manage Bookings
+              </h1>
+            </div>
+
+            <p
+              className="
+                mt-1
+                text-xs
+                text-slate-500
+                sm:mt-1.5
+                sm:text-sm
+              "
+            >
+              View, manage, and monitor all member bookings.
+            </p>
+          </>
+        )}
       </header>
 
       {/* Search & Filters */}
@@ -113,96 +149,112 @@ const BookingPage = () => {
           md:p-4
         "
       >
-        <div
-          className="
-            flex
-            flex-col
-            gap-2.5
-            sm:gap-3
-            lg:flex-row
-            lg:items-center
-          "
-        >
-          {/* Search */}
-          <div className="min-w-0 flex-1">
-            <SearchInput
-              value={search}
-              onChange={setSearch}
-              placeholder="Search by member, class..."
-            />
-          </div>
-
-          {/* Filters */}
+        {loading ? (
           <div
             className="
               flex
-              w-full
+              animate-pulse
               flex-col
               gap-2.5
-              sm:flex-row
               sm:gap-3
-              lg:w-auto
+              lg:flex-row
+              lg:items-center
             "
+            aria-hidden="true"
           >
-            {/* Status Filter */}
-            <select
-              name="status"
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as BookingStatus | "")}
+            {/* Search Skeleton */}
+            <div className="min-w-0 flex-1">
+              <div
+                className="
+                  h-9
+                  w-full
+                  rounded-lg
+                  border
+                  border-slate-200
+                  bg-slate-100
+                  sm:h-10
+                "
+              />
+            </div>
+
+            {/* Filters Skeleton */}
+            <div
               className="
-                h-9
+                flex
                 w-full
-                rounded-lg
-                border
-                border-slate-200
-                bg-slate-50
-                px-2.5
-                text-xs
-                font-medium
-                text-slate-600
-                outline-none
-                transition-all
-                duration-200
-                hover:border-slate-300
-                hover:bg-white
-                focus:border-red-400
-                focus:bg-white
-                focus:ring-2
-                focus:ring-red-50
-                sm:h-10
-                sm:w-36
-                sm:px-3
-                sm:text-sm
+                flex-col
+                gap-2.5
+                sm:flex-row
+                sm:gap-3
+                lg:w-auto
               "
             >
-              <option value="">All Statuses</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-
-            {/* Date Filter */}
-            <div className="relative w-full sm:w-auto">
-              <CalendarDays
-                size={14}
-                strokeWidth={1.8}
+              {/* Status Skeleton */}
+              <div
                 className="
-                  pointer-events-none
-                  absolute
-                  left-2.5
-                  top-1/2
-                  z-10
-                  -translate-y-1/2
-                  text-slate-400
-                  sm:left-3
+                  h-9
+                  w-full
+                  rounded-lg
+                  bg-slate-100
+                  sm:h-10
+                  sm:w-36
                 "
               />
 
-              <Input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+              {/* Date Skeleton */}
+              <div
+                className="
+                  h-9
+                  w-full
+                  rounded-lg
+                  bg-slate-100
+                  sm:h-10
+                  sm:w-[170px]
+                "
+              />
+            </div>
+          </div>
+        ) : (
+          <div
+            className="
+              flex
+              flex-col
+              gap-2.5
+              sm:gap-3
+              lg:flex-row
+              lg:items-center
+            "
+          >
+            {/* Search */}
+            <div className="min-w-0 flex-1">
+              <SearchInput
+                value={search}
+                onChange={setSearch}
+                placeholder="Search by member, class..."
+                loading={loading}
+              />
+            </div>
+
+            {/* Filters */}
+            <div
+              className="
+                flex
+                w-full
+                flex-col
+                gap-2.5
+                sm:flex-row
+                sm:gap-3
+                lg:w-auto
+              "
+            >
+              {/* Status Filter */}
+              <select
+                name="status"
+                id="status"
+                value={status}
+                onChange={(e) =>
+                  setStatus(e.target.value as BookingStatus | "")
+                }
                 className="
                   h-9
                   w-full
@@ -210,8 +262,7 @@ const BookingPage = () => {
                   border
                   border-slate-200
                   bg-slate-50
-                  pl-8
-                  pr-2.5
+                  px-2.5
                   text-xs
                   font-medium
                   text-slate-600
@@ -225,15 +276,70 @@ const BookingPage = () => {
                   focus:ring-2
                   focus:ring-red-50
                   sm:h-10
-                  sm:w-[170px]
-                  sm:pl-9
-                  sm:pr-3
+                  sm:w-36
+                  sm:px-3
                   sm:text-sm
                 "
-              />
+              >
+                <option value="">All Statuses</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+
+              {/* Date Filter */}
+              <div className="relative w-full sm:w-auto">
+                <CalendarDays
+                  size={14}
+                  strokeWidth={1.8}
+                  className="
+                    pointer-events-none
+                    absolute
+                    left-2.5
+                    top-1/2
+                    z-10
+                    -translate-y-1/2
+                    text-slate-400
+                    sm:left-3
+                  "
+                />
+
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="
+                    h-9
+                    w-full
+                    rounded-lg
+                    border
+                    border-slate-200
+                    bg-slate-50
+                    pl-8
+                    pr-2.5
+                    text-xs
+                    font-medium
+                    text-slate-600
+                    outline-none
+                    transition-all
+                    duration-200
+                    hover:border-slate-300
+                    hover:bg-white
+                    focus:border-red-400
+                    focus:bg-white
+                    focus:ring-2
+                    focus:ring-red-50
+                    sm:h-10
+                    sm:w-[170px]
+                    sm:pl-9
+                    sm:pr-3
+                    sm:text-sm
+                  "
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Booking Table */}
@@ -243,6 +349,7 @@ const BookingPage = () => {
           pagination={pagination}
           onPageChange={fetchBookings}
           handleCancel={handleCancel}
+          loading={loading}
         />
       </div>
 

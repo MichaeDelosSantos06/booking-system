@@ -3,7 +3,6 @@ import type { BookingTableProps } from "../../../types/booking.type";
 import { formatDate, formatTime } from "../../../utils/DateFormatterHelper";
 
 import Button from "../../../components/ui/Button";
-
 import Pagination from "../../../components/ui/Pagination";
 
 const BookingTable = ({
@@ -11,21 +10,206 @@ const BookingTable = ({
   pagination,
   onPageChange,
   handleCancel,
+  loading = false,
 }: BookingTableProps) => {
+  if (loading) {
+    return (
+      <div
+        className="
+          flex
+          h-[410px]
+          min-h-0
+          w-full
+          animate-pulse
+          flex-col
+          overflow-hidden
+          rounded-xl
+          border
+          border-slate-200/80
+          bg-white
+          shadow-[0_4px_20px_rgba(15,23,42,0.05)]
+          sm:h-[435px]
+          sm:rounded-2xl
+          md:h-[515px]
+        "
+        aria-hidden="true"
+      >
+        {/* Table */}
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <table className="w-full min-w-[1050px] border-collapse text-left">
+            {/* Same column widths as real table */}
+            <colgroup>
+              <col className="w-[20%]" />
+              <col className="w-[15%]" />
+              <col className="w-[13%]" />
+              <col className="w-[11%]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[10%]" />
+            </colgroup>
+
+            {/* Header Skeleton */}
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-12 rounded bg-slate-200 sm:h-3 sm:w-14 md:h-3.5 md:w-16" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-10 rounded bg-slate-200 sm:h-3 sm:w-12 md:h-3.5 md:w-14" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-12 rounded bg-slate-200 sm:h-3 sm:w-14 md:h-3.5 md:w-16" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-8 rounded bg-slate-200 sm:h-3 sm:w-10 md:h-3.5 md:w-12" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-9 rounded bg-slate-200 sm:h-3 sm:w-11 md:h-3.5 md:w-12" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-12 rounded bg-slate-200 sm:h-3 sm:w-14 md:h-3.5 md:w-16" />
+                </th>
+
+                <th className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                  <div className="h-2.5 w-14 rounded bg-slate-200 sm:h-3 sm:w-16 md:h-3.5 md:w-18" />
+                </th>
+              </tr>
+            </thead>
+
+            {/* Body Skeleton */}
+            <tbody className="divide-y divide-slate-100">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <tr key={index} className="h-[52px] sm:h-[58px] md:h-[65px]">
+                  {/* Member */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 md:gap-2.5">
+                      {/* Avatar */}
+                      <div className="h-7 w-7 shrink-0 rounded-lg bg-slate-200 sm:h-8 sm:w-8 md:h-9 md:w-9 md:rounded-xl" />
+
+                      {/* Name + email */}
+                      <div className="min-w-0">
+                        <div className="h-2.5 w-20 rounded bg-slate-200 sm:h-3 sm:w-24 md:h-3.5 md:w-28" />
+
+                        <div className="mt-1.5 h-2 w-24 rounded bg-slate-100 sm:h-2.5 sm:w-28 md:w-32" />
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Class */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="h-3 w-20 rounded bg-slate-200 sm:h-3.5 sm:w-24 md:h-4 md:w-28" />
+                  </td>
+
+                  {/* Trainer */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="flex items-center gap-1.5 md:gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+
+                      <div className="h-3 w-16 rounded bg-slate-200 sm:h-3.5 sm:w-20 md:h-4 md:w-24" />
+                    </div>
+                  </td>
+
+                  {/* Date */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="h-3 w-16 rounded bg-slate-200 sm:h-3.5 sm:w-20 md:h-4 md:w-24" />
+                  </td>
+
+                  {/* Time */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="flex items-center justify-center gap-1.5">
+                      <div className="h-2.5 w-8 rounded bg-slate-200 sm:h-3 sm:w-10" />
+
+                      <div className="h-px w-2 bg-slate-200" />
+
+                      <div className="h-2.5 w-8 rounded bg-slate-200 sm:h-3 sm:w-10" />
+                    </div>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="h-5 w-16 rounded-full bg-slate-100 sm:h-6 sm:w-18 md:h-7 md:w-20" />
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
+                    <div className="flex justify-center">
+                      <div className="h-6 w-12 rounded-lg bg-slate-100 sm:h-7 sm:w-14 md:h-8 md:w-16" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div
+          className="
+            flex
+            h-[48px]
+            shrink-0
+            items-center
+            justify-between
+            border-t
+            border-slate-100
+            bg-white
+            px-3
+            sm:h-[52px]
+            sm:px-4
+            md:h-[56px]
+          "
+        >
+          {/* Pagination info */}
+          <div className="h-2.5 w-20 rounded bg-slate-100 sm:h-3 sm:w-24" />
+
+          {/* Pagination buttons */}
+          <div className="flex items-center gap-1.5">
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+
+            <div className="h-7 w-7 rounded-md bg-slate-200 sm:h-8 sm:w-8" />
+
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-[410px] min-h-0 w-full flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-[0_4px_20px_rgba(15,23,42,0.05)] sm:h-[435px] sm:rounded-2xl md:h-[515px]">
+    <div
+      className="
+        flex
+        h-[410px]
+        min-h-0
+        w-full
+        flex-col
+        overflow-hidden
+        rounded-xl
+        border
+        border-slate-200/80
+        bg-white
+        shadow-[0_4px_20px_rgba(15,23,42,0.05)]
+        sm:h-[435px]
+        sm:rounded-2xl
+        md:h-[515px]
+      "
+    >
       {/* Table */}
       <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[1050px] border-collapse text-left">
-          {/* Easy column width control */}
           <colgroup>
-            <col className="w-[20%]" /> {/* MEMBER */}
-            <col className="w-[15%]" /> {/* CLASS */}
-            <col className="w-[13%]" /> {/* TRAINER */}
-            <col className="w-[11%]" /> {/* DATE */}
-            <col className="w-[12%]" /> {/* TIME */}
-            <col className="w-[12%]" /> {/* STATUS */}
-            <col className="w-[10%]" /> {/* ACTIONS */}
+            <col className="w-[20%]" />
+            <col className="w-[15%]" />
+            <col className="w-[13%]" />
+            <col className="w-[11%]" />
+            <col className="w-[12%]" />
+            <col className="w-[12%]" />
+            <col className="w-[10%]" />
           </colgroup>
 
           {/* Header */}
@@ -71,7 +255,6 @@ const BookingTable = ({
                   {/* Member */}
                   <td className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3">
                     <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 md:gap-2.5">
-                      {/* Avatar */}
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-[9px] font-bold text-white shadow-sm sm:h-8 sm:w-8 sm:text-[10px] md:h-9 md:w-9 md:rounded-xl md:text-xs">
                         {booking.user.name?.charAt(0).toUpperCase() || "U"}
                       </div>

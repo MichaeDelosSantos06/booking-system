@@ -1,20 +1,159 @@
-import type { User } from "../../../types/user.type";
-
-import type { Pagination as PaginationType } from "../../../types/pagination.type";
-
 import Pagination from "../../../components/ui/Pagination";
-
-interface MembersTableProps {
-  users: User[];
-  pagination: PaginationType;
-  onPageChange: (page: number) => void;
-}
+import type { MembersTableProps } from "../../../types/class.types";
 
 const MembersTable = ({
   users,
   pagination,
   onPageChange,
+  loading,
 }: MembersTableProps) => {
+  if (loading) {
+    return (
+      <div
+        className="
+          flex
+          h-[420px]
+          w-full
+          min-h-0
+          animate-pulse
+          flex-col
+          overflow-hidden
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          shadow-sm
+          sm:h-[480px]
+          sm:rounded-2xl
+          md:h-[540px]
+        "
+        aria-hidden="true"
+      >
+        {/* Table area */}
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <table className="w-full min-w-[760px] table-fixed text-left">
+            <colgroup>
+              <col className="w-[22%]" />
+              <col className="w-[20%]" />
+              <col className="w-[15%]" />
+              <col className="w-[12%]" />
+              <col className="w-[8%]" />
+              <col className="w-[10%]" />
+            </colgroup>
+
+            {/* Header Skeleton */}
+            <thead className="bg-slate-900">
+              <tr>
+                {["w-10", "w-12", "w-11", "w-20", "w-12", "w-11"].map(
+                  (width, index) => (
+                    <th
+                      key={index}
+                      className="
+                      px-2.5
+                      py-3
+                      sm:px-3
+                      md:px-4
+                    "
+                    >
+                      <div
+                        className={`
+                        h-2.5
+                        rounded
+                        bg-slate-700
+                        sm:h-3
+                        ${width}
+                      `}
+                      />
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+
+            {/* Body Skeleton */}
+            <tbody className="divide-y divide-gray-100">
+              {Array.from({ length: 7 }).map((_, index) => (
+                <tr key={index} className="h-[50px] sm:h-[58px] md:h-[65px]">
+                  {/* Name */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="ml-1 flex items-center gap-2 sm:ml-2 sm:gap-3 md:ml-4">
+                      <div
+                        className="
+                          h-7
+                          w-7
+                          shrink-0
+                          rounded-full
+                          bg-slate-200
+                          sm:h-8
+                          sm:w-8
+                        "
+                      />
+
+                      <div className="min-w-0">
+                        <div className="h-2.5 w-20 rounded bg-slate-200 sm:h-3 sm:w-24" />
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Email */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="h-2.5 w-28 rounded bg-slate-200 sm:h-3 sm:w-36" />
+                  </td>
+
+                  {/* Phone */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="h-2.5 w-20 rounded bg-slate-200 sm:h-3 sm:w-24" />
+                  </td>
+
+                  {/* Member Since */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="h-2.5 w-20 rounded bg-slate-200 sm:h-3 sm:w-24" />
+                  </td>
+
+                  {/* Bookings */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="h-6 w-7 rounded-md bg-slate-100 sm:h-7 sm:w-8" />
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-2.5 py-2.5 sm:px-3 sm:py-3 md:px-4">
+                    <div className="h-5 w-14 rounded-full bg-slate-100 sm:h-6 sm:w-16" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div
+          className="
+            flex
+            h-[48px]
+            shrink-0
+            items-center
+            justify-between
+            border-t
+            border-gray-100
+            bg-white
+            px-3
+            sm:h-[52px]
+            sm:px-4
+            md:h-[56px]
+          "
+        >
+          <div className="h-2.5 w-20 rounded bg-slate-100 sm:h-3 sm:w-24" />
+
+          <div className="flex items-center gap-1.5">
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+            <div className="h-7 w-7 rounded-md bg-slate-200 sm:h-8 sm:w-8" />
+            <div className="h-7 w-7 rounded-md bg-slate-100 sm:h-8 sm:w-8" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="
@@ -52,23 +191,18 @@ const MembersTable = ({
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Name
               </th>
-
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Email
               </th>
-
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Phone
               </th>
-
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Member Since
               </th>
-
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Bookings
               </th>
-
               <th className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider sm:px-3 md:px-4">
                 Status
               </th>

@@ -1,9 +1,14 @@
-type ClassCategory =
+import type { User } from "./user.type";
+import type { Pagination as PaginationType } from "./pagination.type";
+
+export type ClassCategory =
   "Cardio" | "Strength" | "Flexibility" | "Combat" | "GroupFitness";
 
-type ClassDifficulty = "Beginner" | "Intermediate" | "Advance";
+export type ClassDifficulty = "Beginner" | "Intermediate" | "Advance";
 
-type ClassStatus = "Active" | "Inactive";
+export type ClassStatus = "Active" | "Inactive";
+
+type ScheduleStatus = "Open" | "Past" | "Full";
 
 export interface CreateClassFormData {
   className: string;
@@ -86,6 +91,9 @@ export interface GetClassesParams {
   search?: string;
   page?: number;
   limit?: number;
+  category?: ClassCategory;
+  difficulty?: ClassDifficulty;
+  status?: ClassStatus;
 }
 
 export interface Pagination {
@@ -158,6 +166,7 @@ interface Schedule {
   location: string;
   capacity: number;
   deletedAt: string;
+  status: ScheduleStatus;
   bookings: {
     id: number;
     userId: number;
@@ -175,4 +184,11 @@ export interface ViewScheduleState {
   duration: number;
   trainerId: number;
   classId: number;
+}
+
+export interface MembersTableProps {
+  users: User[];
+  pagination: PaginationType;
+  onPageChange: (page: number) => void;
+  loading: boolean;
 }

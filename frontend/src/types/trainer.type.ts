@@ -45,6 +45,7 @@ export interface TrainerCardProps {
   onEdit: (data: TrainerResponseDto) => void;
   deactivate: (id: number) => Promise<void>;
   activate: (id: number) => Promise<void>;
+  loading: boolean;
 }
 
 // UI CONFIGURATION

@@ -97,6 +97,7 @@ const ScheduleService = {
     const pageSize = Math.min(Math.max(1, limit), 50);
     const searchTerm = search.trim();
 
+    await ScheduleRepository.updateSchduleByFull();
     const { schedules, total } = await ScheduleRepository.searchSchedules(
       currentPage,
       pageSize,
@@ -127,6 +128,10 @@ const ScheduleService = {
       await ScheduleRepository.deleteById(tx, id);
       await BookingRepository.updateStatusByScheduleDelete(tx, id);
     });
+  },
+
+  getUpcomingSchedule: async () => {
+    return ScheduleRepository.getUpcomingSchedule();
   },
 };
 

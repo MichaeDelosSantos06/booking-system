@@ -11,6 +11,7 @@ enum Status {
 enum ScheduleStat {
   Open
   Past
+  Full
 }
 
 enum Difficulty {

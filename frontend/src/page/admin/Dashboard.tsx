@@ -1,19 +1,21 @@
 import CurrentDate from "../../utils/CurrentDate";
 
 import Cards from "../../components/ui/Cards";
-
 import BookingActivity from "../../components/ui/BarGraph";
-
 import UpcomingClasses from "../../components/ui/UpcomingClasses";
-
 import RecentBooking from "../../components/ui/RecentBooking";
-
 import QuickActions from "../../components/ui/QuickActions";
 
 import useRecentBooking from "../../hooks/useRecentBookings";
+import useGraphStat from "../../hooks/useGraphStat";
+import useUpcomingSchedule from "../../hooks/useUpcomingSchedule";
 
 const Dashboard = () => {
-  const { recentBook } = useRecentBooking();
+  const { recentBook, loading: recentBookingLoading } = useRecentBooking();
+
+  const { bookingStat, loading: graphLoading } = useGraphStat();
+
+  const { upcoming, loading: upcomingLoading } = useUpcomingSchedule();
 
   return (
     <div className="flex min-h-0 flex-1 flex-col font-poppins">
@@ -21,14 +23,14 @@ const Dashboard = () => {
       <header
         className="
           m-4
+          mb-2
           shrink-0
           sm:m-6
+          sm:mb-3
           md:m-8
+          md:mb-3
           lg:m-10
           xl:m-12
-          mb-2
-          sm:mb-3
-          md:mb-3
         "
       >
         <div className="flex items-center gap-2">
@@ -110,19 +112,29 @@ const Dashboard = () => {
                     xl:w-[360px]
                   "
                 >
-                  <RecentBooking bookings={recentBook} />
+                  <RecentBooking
+                    bookings={recentBook}
+                    loading={recentBookingLoading}
+                  />
                 </div>
 
                 {/* Quick Actions + Booking Activity */}
                 <div className="flex w-full min-w-0 flex-1 flex-col gap-2 sm:gap-3">
                   <QuickActions />
-                  <BookingActivity />
+
+                  <BookingActivity
+                    bookingStat={bookingStat}
+                    loading={graphLoading}
+                  />
                 </div>
               </div>
 
               {/* Upcoming Classes */}
               <div className="w-full">
-                <UpcomingClasses />
+                <UpcomingClasses
+                  schedules={upcoming}
+                  loading={upcomingLoading}
+                />
               </div>
             </div>
           </div>

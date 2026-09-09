@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import type { CreateClassDto } from "../types/class.type.js";
 import ClassService from "../services/class.service.js";
-import { Status } from "../generated/prisma/enums.js";
+import { Status, Category, Difficulty } from "../generated/prisma/enums.js";
 
 const ClassController = {
   addClass: asyncHandler(async (req: Request, res: Response) => {
@@ -50,7 +50,15 @@ const ClassController = {
     const limit = Number(req.query.limit) || 5;
     const search = typeof req.query.search === "string" ? req.query.search : "";
 
-    const result = await ClassService.searchClasses(page, limit, search);
+    const category = req.query.category as Category | undefined;
+    const difficulty = req.query.difficulty as Difficulty | undefined;
+    const status = req.query.status as Status | undefined;
+
+    const result = await ClassService.searchClasses(page, limit, search, {
+      ...(category ? { category } : {}),
+      ...(difficulty ? { difficulty } : {}),
+      ...(status ? { status } : {}),
+    });
 
     return res.status(200).json({
       success: true,

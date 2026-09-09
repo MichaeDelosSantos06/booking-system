@@ -4,3 +4,8 @@ export interface BookingSearchFilters {
   status?: BookingStatus;
   date?: Date;
 }
+
+export interface BookingsPerDay {
+  date: Date;
+  total: number;
+}

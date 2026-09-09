@@ -18,8 +18,6 @@ const TrainerPage = () => {
 
   const { refetch, trainer, error, loading } = useFetchTrainer();
 
-  console.log("Trainer: ", trainer);
-
   // Handle closing and refreshing of create
   const onSuccess = async () => {
     await refetch();
@@ -84,187 +82,149 @@ const TrainerPage = () => {
       >
         {/* Title + Summary */}
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="h-5 w-1 shrink-0 rounded-full bg-red-600 sm:h-6" />
+          {loading ? (
+            <div className="animate-pulse">
+              {/* Title Skeleton */}
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-1 shrink-0 rounded-full bg-slate-200 sm:h-6" />
 
-            <h1
-              className="
-                text-xl
-                font-bold
-                tracking-tight
-                text-slate-950
-                sm:text-2xl
-                md:text-3xl
-              "
-            >
-              Manage Trainers
-            </h1>
-          </div>
+                <div
+                  className="
+                    h-6
+                    w-36
+                    rounded-md
+                    bg-slate-200
+                    sm:h-7
+                    sm:w-44
+                    md:h-9
+                    md:w-52
+                  "
+                />
+              </div>
 
-          <p
-            className="
-              mt-1
-              text-xs
-              text-slate-500
-              sm:mt-1.5
-              sm:text-sm
-            "
-          >
-            {activeTrainerCount} active trainers
-            <span className="mx-1 text-slate-300">•</span>
-            {trainer.length} total
-          </p>
+              {/* Summary Skeleton */}
+              <div
+                className="
+                  mt-2
+                  h-3
+                  w-40
+                  rounded
+                  bg-slate-100
+                  sm:mt-2.5
+                  sm:h-3.5
+                  sm:w-48
+                "
+              />
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <span className="h-5 w-1 shrink-0 rounded-full bg-red-600 sm:h-6" />
+
+                <h1
+                  className="
+                    text-xl
+                    font-bold
+                    tracking-tight
+                    text-slate-950
+                    sm:text-2xl
+                    md:text-3xl
+                  "
+                >
+                  Manage Trainers
+                </h1>
+              </div>
+
+              <p
+                className="
+                  mt-1
+                  text-xs
+                  text-slate-500
+                  sm:mt-1.5
+                  sm:text-sm
+                "
+              >
+                {activeTrainerCount} active trainers
+                <span className="mx-1 text-slate-300">•</span>
+                {trainer.length} total
+              </p>
+            </>
+          )}
         </div>
 
         {/* Add Trainer */}
-        <Button
-          onClick={() => setModalIsOpen(true)}
-          className="
-            flex
-            h-9
-            w-full
-            items-center
-            justify-center
-            gap-1.5
-            rounded-lg
-            bg-slate-950
-            px-3
-            text-[11px]
-            font-semibold
-            text-white
-            shadow-sm
-            transition-all
-            duration-200
-            hover:bg-slate-800
-            hover:shadow-md
-            active:scale-[0.98]
-
-            sm:h-9
-            sm:w-auto
-            sm:gap-2
-            sm:px-4
-            sm:text-xs
-
-            md:h-10
-            md:px-5
-            md:text-sm
-          "
-        >
-          <Plus
-            size={13}
-            strokeWidth={2}
+        {loading ? (
+          <div
             className="
-              sm:h-[14px]
-              sm:w-[14px]
-              md:h-[15px]
-              md:w-[15px]
+              h-9
+              w-full
+              animate-pulse
+              rounded-lg
+              bg-slate-200
+              shadow-sm
+              sm:h-9
+              sm:w-[125px]
+              sm:rounded-xl
+              md:h-10
+              md:w-[140px]
             "
-          />
-          Add Trainer
-        </Button>
+            aria-hidden="true"
+          >
+            <div className="flex h-full items-center justify-center gap-2">
+              <div className="h-3.5 w-3.5 rounded bg-slate-300 md:h-4 md:w-4" />
+
+              <div className="h-3 w-16 rounded bg-slate-300 md:h-3.5 md:w-20" />
+            </div>
+          </div>
+        ) : (
+          <Button
+            onClick={() => setModalIsOpen(true)}
+            className="
+              flex
+              h-9
+              w-full
+              items-center
+              justify-center
+              gap-1.5
+              rounded-lg
+              bg-slate-950
+              px-3
+              text-[11px]
+              font-semibold
+              text-white
+              shadow-sm
+              transition-all
+              duration-200
+              hover:bg-slate-800
+              hover:shadow-md
+              active:scale-[0.98]
+              sm:h-9
+              sm:w-auto
+              sm:gap-2
+              sm:px-4
+              sm:text-xs
+              md:h-10
+              md:px-5
+              md:text-sm
+            "
+          >
+            <Plus
+              size={13}
+              strokeWidth={2}
+              className="
+                sm:h-[14px]
+                sm:w-[14px]
+                md:h-[15px]
+                md:w-[15px]
+              "
+            />
+            Add Trainer
+          </Button>
+        )}
       </div>
 
       {/* Scrollable Content */}
       <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-        {/* Loading */}
-        {loading && (
-          <div
-            className="
-              grid
-              grid-cols-1
-              gap-3
-              sm:grid-cols-2
-              sm:gap-4
-              xl:grid-cols-3
-              2xl:grid-cols-4
-            "
-          >
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="
-                  overflow-hidden
-                  rounded-xl
-                  border
-                  border-slate-200
-                  bg-white
-                  shadow-sm
-                  sm:rounded-2xl
-                "
-              >
-                {/* Header Skeleton */}
-                <div
-                  className="
-                    flex
-                    items-center
-                    gap-2.5
-                    border-b
-                    border-slate-100
-                    p-3
-                    sm:gap-3
-                    sm:p-4
-                    md:p-5
-                  "
-                >
-                  <div
-                    className="
-                      h-8
-                      w-8
-                      shrink-0
-                      animate-pulse
-                      rounded-full
-                      bg-slate-200
-                      sm:h-10
-                      sm:w-10
-                    "
-                  />
-
-                  <div className="min-w-0 flex-1 space-y-1.5 sm:space-y-2">
-                    <div className="h-3 w-24 animate-pulse rounded bg-slate-200 sm:h-3.5 sm:w-28" />
-                    <div className="h-2.5 w-16 animate-pulse rounded bg-slate-100 sm:h-3 sm:w-20" />
-                  </div>
-
-                  <div className="h-4 w-12 animate-pulse rounded-full bg-slate-100 sm:h-5 sm:w-14" />
-                </div>
-
-                {/* Body Skeleton */}
-                <div className="space-y-3 p-3 sm:space-y-4 sm:p-4 md:p-5">
-                  {[1, 2, 3].map((row) => (
-                    <div
-                      key={row}
-                      className="flex items-center gap-2.5 sm:gap-3"
-                    >
-                      <div className="h-7 w-7 animate-pulse rounded-lg bg-slate-100 sm:h-8 sm:w-8" />
-
-                      <div className="flex-1 space-y-1 sm:space-y-1.5">
-                        <div className="h-2.5 w-14 animate-pulse rounded bg-slate-100 sm:w-16" />
-                        <div className="h-3 w-24 animate-pulse rounded bg-slate-200 sm:w-28" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Footer Skeleton */}
-                <div
-                  className="
-                    flex
-                    gap-1.5
-                    border-t
-                    border-slate-100
-                    bg-slate-50/70
-                    p-2.5
-                    sm:gap-2
-                    sm:p-3
-                  "
-                >
-                  <div className="h-7 flex-1 animate-pulse rounded-lg bg-slate-200 sm:h-8" />
-                  <div className="h-7 flex-1 animate-pulse rounded-lg bg-slate-200 sm:h-8" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
         {/* Error */}
         {!loading && error && (
           <div
@@ -456,13 +416,14 @@ const TrainerPage = () => {
           </div>
         )}
 
-        {/* Data */}
-        {!loading && !error && trainer.length > 0 && (
+        {/* Trainer Cards + Skeleton */}
+        {!error && (
           <TrainerCard
             trainer={trainer}
             onEdit={getTrainerData}
             deactivate={deactivate}
             activate={activate}
+            loading={loading}
           />
         )}
       </div>

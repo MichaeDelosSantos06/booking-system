@@ -293,6 +293,55 @@ const ScheduleRepository = {
       },
     });
   },
+
+  updateSchduleByFull: async () => {
+    return prisma.schedule.updateMany({
+      where: {
+        capacity: 0,
+      },
+      data: {
+        status: ScheduleStat.Full,
+      },
+    });
+  },
+
+  getUpcomingSchedule: async () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorow = new Date(today);
+    tomorow.setDate(tomorow.getDate() + 1);
+
+    return prisma.schedule.findMany({
+      where: {
+        deletedAt: null,
+        date: {
+          gte: today,
+          lt: tomorow,
+        },
+      },
+      select: {
+        id: true,
+        date: true,
+        startAt: true,
+        endAt: true,
+        location: true,
+        capacity: true,
+
+        _count: {
+          select: {
+            bookings: true,
+          },
+        },
+
+        class: {
+          select: {
+            className: true,
+          },
+        },
+      },
+    });
+  },
 };
 
 export default ScheduleRepository;

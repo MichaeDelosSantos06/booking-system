@@ -14,9 +14,161 @@ const TrainerCard = ({
   onEdit,
   deactivate,
   activate,
+  loading = false,
 }: TrainerCardProps) => {
+  /* -------------------------------------------
+   * Premium Skeleton
+   * ----------------------------------------- */
+  if (loading) {
+    return (
+      <div
+        className="
+          grid
+          grid-cols-1
+          gap-4
+          sm:grid-cols-2
+          xl:grid-cols-3
+          2xl:grid-cols-4
+        "
+      >
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div
+            key={index}
+            className="
+              flex
+              min-w-0
+              animate-pulse
+              flex-col
+              overflow-hidden
+              rounded-xl
+              border
+              border-slate-200
+              bg-white
+              shadow-sm
+            "
+          >
+            {/* Header Skeleton */}
+            <div className="border-b border-slate-100 px-4 py-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  {/* Avatar */}
+                  <div
+                    className="
+                      h-11
+                      w-11
+                      shrink-0
+                      rounded-xl
+                      bg-slate-200
+                    "
+                  />
+
+                  {/* Name + Specialization */}
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <div className="h-3.5 w-28 rounded bg-slate-200" />
+
+                    <div className="h-3 w-20 rounded-md bg-slate-100" />
+                  </div>
+                </div>
+
+                {/* Status */}
+                <div className="h-6 w-14 shrink-0 rounded-full bg-slate-100" />
+              </div>
+            </div>
+
+            {/* Details Skeleton */}
+            <div className="flex flex-1 flex-col bg-white px-4 py-4">
+              <div className="space-y-3">
+                {/* Email */}
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <div
+                    className="
+                      h-8
+                      w-8
+                      shrink-0
+                      rounded-lg
+                      bg-slate-100
+                    "
+                  />
+
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="h-2 w-10 rounded bg-slate-100" />
+                    <div className="h-3 w-36 max-w-full rounded bg-slate-200" />
+                  </div>
+                </div>
+
+                {/* Contact */}
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <div
+                    className="
+                      h-8
+                      w-8
+                      shrink-0
+                      rounded-lg
+                      bg-slate-100
+                    "
+                  />
+
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="h-2 w-14 rounded bg-slate-100" />
+                    <div className="h-3 w-28 rounded bg-slate-200" />
+                  </div>
+                </div>
+
+                {/* Experience */}
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <div
+                    className="
+                      h-8
+                      w-8
+                      shrink-0
+                      rounded-lg
+                      bg-slate-100
+                    "
+                  />
+
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="h-2 w-16 rounded bg-slate-100" />
+                    <div className="h-3 w-20 rounded bg-slate-200" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions Skeleton */}
+            <div
+              className="
+                border-t
+                border-slate-100
+                bg-slate-50/50
+                px-4
+                py-3
+              "
+            >
+              <div className="flex gap-2">
+                <div className="h-8 flex-1 rounded-lg bg-slate-100" />
+                <div className="h-8 flex-1 rounded-lg bg-slate-100" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  /* -------------------------------------------
+   * Actual Trainer Cards
+   * ----------------------------------------- */
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div
+      className="
+        grid
+        grid-cols-1
+        gap-4
+        sm:grid-cols-2
+        xl:grid-cols-3
+        2xl:grid-cols-4
+      "
+    >
       {trainer.map((item) => {
         const isActive = item.status === "Active";
 
@@ -24,8 +176,15 @@ const TrainerCard = ({
           <div
             key={item.id}
             className={`
-              group flex min-w-0 flex-col overflow-hidden rounded-xl border
-              transition-all duration-300
+              group
+              flex
+              min-w-0
+              flex-col
+              overflow-hidden
+              rounded-xl
+              border
+              transition-all
+              duration-300
               ${
                 isActive
                   ? "border-gray-200 bg-white shadow-sm hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
@@ -36,7 +195,9 @@ const TrainerCard = ({
             {/* Header */}
             <div
               className={`
-                border-b px-4 py-4
+                border-b
+                px-4
+                py-4
                 ${isActive ? "border-gray-100" : "border-gray-300 bg-gray-200"}
               `}
             >
@@ -46,8 +207,15 @@ const TrainerCard = ({
                   <div className="relative shrink-0">
                     <div
                       className={`
-                        flex h-11 w-11 items-center justify-center rounded-xl
-                        text-base font-semibold transition-colors
+                        flex
+                        h-11
+                        w-11
+                        items-center
+                        justify-center
+                        rounded-xl
+                        text-base
+                        font-semibold
+                        transition-colors
                         ${
                           isActive
                             ? "bg-gray-900 text-white"
@@ -60,7 +228,19 @@ const TrainerCard = ({
 
                     {/* Active indicator */}
                     {isActive && (
-                      <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
+                      <span
+                        className="
+                          absolute
+                          -bottom-0.5
+                          -right-0.5
+                          h-3
+                          w-3
+                          rounded-full
+                          border-2
+                          border-white
+                          bg-green-500
+                        "
+                      />
                     )}
                   </div>
 
@@ -68,7 +248,9 @@ const TrainerCard = ({
                   <div className="min-w-0">
                     <h3
                       className={`
-                        truncate text-sm font-semibold
+                        truncate
+                        text-sm
+                        font-semibold
                         ${isActive ? "text-gray-900" : "text-gray-600"}
                       `}
                     >
@@ -77,8 +259,16 @@ const TrainerCard = ({
 
                     <span
                       className={`
-                        mt-1 inline-flex max-w-full rounded-md px-1.5 py-0.5
-                        text-[10px] font-medium uppercase tracking-wide
+                        mt-1
+                        inline-flex
+                        max-w-full
+                        rounded-md
+                        px-1.5
+                        py-0.5
+                        text-[10px]
+                        font-medium
+                        uppercase
+                        tracking-wide
                         ${
                           isActive
                             ? "bg-gray-100 text-gray-500"
@@ -94,8 +284,15 @@ const TrainerCard = ({
                 {/* Status */}
                 <span
                   className={`
-                    inline-flex shrink-0 items-center gap-1 rounded-full
-                    px-2 py-1 text-[10px] font-semibold
+                    inline-flex
+                    shrink-0
+                    items-center
+                    gap-1
+                    rounded-full
+                    px-2
+                    py-1
+                    text-[10px]
+                    font-semibold
                     ${
                       isActive
                         ? "bg-green-50 text-green-700"
@@ -105,7 +302,9 @@ const TrainerCard = ({
                 >
                   <span
                     className={`
-                      h-1.5 w-1.5 rounded-full
+                      h-1.5
+                      w-1.5
+                      rounded-full
                       ${isActive ? "bg-green-500" : "bg-gray-500"}
                     `}
                   />
@@ -118,7 +317,11 @@ const TrainerCard = ({
             {/* Details */}
             <div
               className={`
-                flex flex-1 flex-col px-4 py-4
+                flex
+                flex-1
+                flex-col
+                px-4
+                py-4
                 ${isActive ? "bg-white" : "bg-gray-200"}
               `}
             >
@@ -127,7 +330,12 @@ const TrainerCard = ({
                 <div className="flex min-w-0 items-center gap-2.5">
                   <div
                     className={`
-                      flex h-8 w-8 shrink-0 items-center justify-center
+                      flex
+                      h-8
+                      w-8
+                      shrink-0
+                      items-center
+                      justify-center
                       rounded-lg
                       ${
                         isActive
@@ -146,7 +354,9 @@ const TrainerCard = ({
 
                     <p
                       className={`
-                        truncate text-xs font-medium
+                        truncate
+                        text-xs
+                        font-medium
                         ${isActive ? "text-gray-700" : "text-gray-600"}
                       `}
                     >
@@ -159,7 +369,12 @@ const TrainerCard = ({
                 <div className="flex min-w-0 items-center gap-2.5">
                   <div
                     className={`
-                      flex h-8 w-8 shrink-0 items-center justify-center
+                      flex
+                      h-8
+                      w-8
+                      shrink-0
+                      items-center
+                      justify-center
                       rounded-lg
                       ${
                         isActive
@@ -178,7 +393,8 @@ const TrainerCard = ({
 
                     <p
                       className={`
-                        text-xs font-medium
+                        text-xs
+                        font-medium
                         ${isActive ? "text-gray-700" : "text-gray-600"}
                       `}
                     >
@@ -191,7 +407,12 @@ const TrainerCard = ({
                 <div className="flex min-w-0 items-center gap-2.5">
                   <div
                     className={`
-                      flex h-8 w-8 shrink-0 items-center justify-center
+                      flex
+                      h-8
+                      w-8
+                      shrink-0
+                      items-center
+                      justify-center
                       rounded-lg
                       ${
                         isActive
@@ -210,7 +431,8 @@ const TrainerCard = ({
 
                     <p
                       className={`
-                        text-xs font-medium
+                        text-xs
+                        font-medium
                         ${isActive ? "text-gray-700" : "text-gray-600"}
                       `}
                     >
@@ -225,7 +447,9 @@ const TrainerCard = ({
             {/* Actions */}
             <div
               className={`
-                border-t px-4 py-3
+                border-t
+                px-4
+                py-3
                 ${
                   isActive
                     ? "border-gray-100 bg-gray-50/50"
@@ -238,8 +462,17 @@ const TrainerCard = ({
                 <Button
                   onClick={() => onEdit(item)}
                   className={`
-                    flex h-8 flex-1 items-center justify-center gap-1.5
-                    rounded-lg border text-[11px] font-semibold shadow-none
+                    flex
+                    h-8
+                    flex-1
+                    items-center
+                    justify-center
+                    gap-1.5
+                    rounded-lg
+                    border
+                    text-[11px]
+                    font-semibold
+                    shadow-none
                     transition-colors
                     ${
                       isActive
@@ -263,8 +496,17 @@ const TrainerCard = ({
                   }}
                   aria-pressed={isActive}
                   className={`
-                    flex h-8 flex-1 items-center justify-center gap-1.5
-                    rounded-lg border text-[11px] font-semibold shadow-none
+                    flex
+                    h-8
+                    flex-1
+                    items-center
+                    justify-center
+                    gap-1.5
+                    rounded-lg
+                    border
+                    text-[11px]
+                    font-semibold
+                    shadow-none
                     transition-colors
                     ${
                       isActive
@@ -274,7 +516,6 @@ const TrainerCard = ({
                   `}
                 >
                   <ShieldCheck size={13} strokeWidth={2} />
-
                   {isActive ? "Deactivate" : "Activate"}
                 </Button>
               </div>
