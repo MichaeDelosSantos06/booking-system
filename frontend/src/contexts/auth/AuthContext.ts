@@ -9,6 +9,7 @@ interface AuthContextValue {
   registerUser: (data: CreateUserDto) => Promise<void>;
   login: (data: LoginDto) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(

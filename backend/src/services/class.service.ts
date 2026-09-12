@@ -42,12 +42,7 @@ const ClassService = {
   },
 
   fetchClasses: async (status?: Status) => {
-    const classes = await ClassRepository.fetchClasses(status);
-    if (!classes) {
-      throw new AppError("No Classes Found.", 404);
-    }
-
-    return classes;
+    return ClassRepository.fetchClasses(status);
   },
 
   searchClasses: async (

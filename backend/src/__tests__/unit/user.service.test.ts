@@ -15,11 +15,15 @@ vi.mock("../../repositories/user.repository.js", () => ({
     getUsers: vi.fn(),
     fetchNewUserByWeek: vi.fn(),
     getTotalUser: vi.fn(),
+    getUserInfo: vi.fn(),
+    updateProfile: vi.fn(),
+    updatePassword: vi.fn(),
   },
 }));
 
 vi.mock("../../utils/jwt.js", () => ({
   generateAccessToken: vi.fn(),
+  generateRefreshToken: vi.fn(),
 }));
 
 vi.mock("../../utils/newUserByWeek.js", () => ({
@@ -28,7 +32,7 @@ vi.mock("../../utils/newUserByWeek.js", () => ({
 
 import UserService from "../../services/user.service.js";
 import UserRepository from "../../repositories/user.repository.js";
-import { generateAccessToken } from "../../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
 import { fetchUserByWeek } from "../../utils/newUserByWeek.js";
 
 const mockedUser = {
@@ -106,10 +110,11 @@ describe("UserService.registerUser", () => {
 });
 
 describe("UserService.loginUser", () => {
-  it("should return the user with a token on valid credentials", async () => {
+  it("should return the access and refresh tokens on valid credentials", async () => {
     vi.mocked(UserRepository.findByEmail).mockResolvedValue(mockedUser as never);
     bcryptCompareMock.mockResolvedValue(true);
     vi.mocked(generateAccessToken).mockReturnValue("jwt-token");
+    vi.mocked(generateRefreshToken).mockReturnValue("refresh-token");
 
     const result = await UserService.loginUser({
       email: "michael@example.com",
@@ -124,12 +129,10 @@ describe("UserService.loginUser", () => {
       email: "michael@example.com",
       role: "Member",
     });
+    expect(generateRefreshToken).toHaveBeenCalledWith({ id: 1 });
     expect(result).toEqual({
-      id: 1,
-      name: "Michael Delos Santos",
-      email: "michael@example.com",
-      role: "Member",
-      token: "jwt-token",
+      accessToken: "jwt-token",
+      refreshToken: "refresh-token",
     });
   });
 
@@ -259,5 +262,162 @@ describe("UserService.getTotalUser", () => {
 
     expect(UserRepository.getTotalUser).toHaveBeenCalledTimes(1);
     expect(result).toBe(42);
+  });
+});
+
+describe("UserService.getUserInfo", () => {
+  it("should return the user info when the user exists", async () => {
+    const userInfo = {
+      id: 1,
+      name: "Michael Delos Santos",
+      email: "michael@example.com",
+      status: "Active",
+      contact: "09171234567",
+      createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    };
+    vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.getUserInfo).mockResolvedValue(userInfo as never);
+
+    const result = await UserService.getUserInfo(1);
+
+    expect(UserRepository.findById).toHaveBeenCalledWith(1);
+    expect(UserRepository.getUserInfo).toHaveBeenCalledWith(1);
+    expect(result).toEqual(userInfo);
+  });
+
+  it("should throw a 404 AppError when the user does not exist", async () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(null);
+
+    await expect(UserService.getUserInfo(999)).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 404,
+      message: "User not found",
+    });
+
+    expect(UserRepository.getUserInfo).not.toHaveBeenCalled();
+  });
+});
+
+describe("UserService.updateProfile", () => {
+  const updateProfilePayload = {
+    name: "Juan Dela Cruz",
+    contact: "09991234567",
+  };
+
+  it("should throw a 404 AppError when the user does not exist", async () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(null);
+
+    await expect(
+      UserService.updateProfile(999, updateProfilePayload),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 404,
+      message: "User not found",
+    });
+
+    expect(UserRepository.updateProfile).not.toHaveBeenCalled();
+  });
+
+  it("should update the name and contact when the user exists", async () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.updateProfile).mockResolvedValue({
+      id: 1,
+      name: "Juan Dela Cruz",
+      email: "michael@example.com",
+      status: "Active",
+      contact: "09991234567",
+      createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    } as never);
+
+    const result = await UserService.updateProfile(1, updateProfilePayload);
+
+    expect(UserRepository.updateProfile).toHaveBeenCalledWith(
+      1,
+      updateProfilePayload,
+    );
+    expect(result).toMatchObject({
+      name: "Juan Dela Cruz",
+      contact: "09991234567",
+    });
+  });
+});
+
+describe("UserService.changePassword", () => {
+  const changePasswordPayload = {
+    currentPassword: "OldPass1!",
+    newPassword: "NewPass1!",
+    confirmPassword: "NewPass1!",
+  };
+
+  // Mirrors the login flow: findById for the logged-in user, then
+  // findByEmail (email is unique) to fetch the registered hash.
+  const mockAccountRecord = () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.findByEmail).mockResolvedValue({
+      id: 1,
+      name: "Michael Delos Santos",
+      email: "michael@example.com",
+      passwordHash: "$2b$12$hashedcurrentpassword",
+    } as never);
+  };
+
+  it("should throw a 404 AppError when the user does not exist", async () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(null);
+
+    await expect(
+      UserService.changePassword(999, changePasswordPayload),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 404,
+      message: "User not found",
+    });
+
+    expect(UserRepository.findByEmail).not.toHaveBeenCalled();
+    expect(bcrypt.compare).not.toHaveBeenCalled();
+    expect(UserRepository.updatePassword).not.toHaveBeenCalled();
+  });
+
+  it("should throw a 400 AppError when the current password is incorrect", async () => {
+    mockAccountRecord();
+    bcryptCompareMock.mockResolvedValue(false);
+
+    await expect(
+      UserService.changePassword(1, changePasswordPayload),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 400,
+      message: "Current password is incorrect",
+    });
+
+    expect(UserRepository.findById).toHaveBeenCalledWith(1);
+    expect(UserRepository.findByEmail).toHaveBeenCalledWith(mockedUser.email);
+    expect(bcrypt.hash).not.toHaveBeenCalled();
+    expect(UserRepository.updatePassword).not.toHaveBeenCalled();
+  });
+
+  it("should hash the new password and update it when the current password matches", async () => {
+    mockAccountRecord();
+    bcryptCompareMock.mockResolvedValue(true);
+    bcryptHashMock.mockResolvedValue("new-hashed-password");
+    vi.mocked(UserRepository.updatePassword).mockResolvedValue({
+      id: 1,
+    } as never);
+
+    const result = UserService.changePassword(1, changePasswordPayload);
+
+    // Guarantees the hash / user record is never returned or leaked.
+    await expect(result).resolves.toBeUndefined();
+
+    expect(UserRepository.findById).toHaveBeenCalledWith(1);
+    expect(UserRepository.findByEmail).toHaveBeenCalledWith(mockedUser.email);
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      "OldPass1!",
+      "$2b$12$hashedcurrentpassword",
+    );
+    expect(bcrypt.hash).toHaveBeenCalledWith("NewPass1!", 12);
+    expect(UserRepository.updatePassword).toHaveBeenCalledWith(
+      1,
+      "new-hashed-password",
+    );
   });
 });

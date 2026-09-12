@@ -69,22 +69,12 @@ const ScheduleService = {
   },
 
   getAllSchedule: async () => {
-    const availableSched = await ScheduleRepository.getAllSchedule();
-    if (!availableSched) {
-      throw new AppError("No available shcdule", 404);
-    }
-
-    return availableSched;
+    return ScheduleRepository.getAllSchedule();
   },
 
   getTodaySchedule: async () => {
     await ScheduleRepository.updateExpiredSchedules();
-    const schedule = await ScheduleRepository.getTodaySchedule();
-    if (!schedule) {
-      throw new AppError("No schedule found", 404);
-    }
-
-    return schedule;
+    return ScheduleRepository.getTodaySchedule();
   },
 
   searchSchedules: async (

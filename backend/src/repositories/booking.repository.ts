@@ -57,9 +57,17 @@ const BookingRepository = {
   },
 
   // make retrive of bookings for all statuses for the user see of their booking statuses
-  retrieveAllBookings: async (userId: number, status?: BookingStatus) => {
+  retrieveAllBookings: async (
+    userId: number,
+    status?: BookingStatus,
+    take?: number,
+  ) => {
     return prisma.booking.findMany({
       where: { userId, ...(status ? { status } : undefined) },
+      orderBy: {
+        bookedAt: "desc",
+      },
+      ...(take !== undefined ? { take } : {}),
       select: {
         id: true,
         status: true,

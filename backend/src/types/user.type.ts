@@ -16,3 +16,14 @@ export interface ResetTokenDto {
   tokenHash: string;
   expiresAt: Date;
 }
+
+export interface UpdateProfileDto {
+  name: string;
+  contact: string;
+}
+
+export interface ChangePasswordDto {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

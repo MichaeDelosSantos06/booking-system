@@ -190,6 +190,24 @@ describe("BookingService.retrieveAllBookings", () => {
 
     expect(result.counts).toEqual({ all: 6, confirmed: 1, completed: 2, cancelled: 3 });
   });
+
+  it("should forward the take limit when provided", async () => {
+    vi.mocked(BookingRepository.markAsCompleted).mockResolvedValue({ count: 0 } as never);
+    vi.mocked(BookingRepository.retrieveAllBookings).mockResolvedValue([] as never);
+    vi.mocked(BookingRepository.getBookingCounts).mockResolvedValue([] as never);
+
+    const result = await BookingService.retrieveAllBookings(1, undefined, 3);
+
+    expect(BookingRepository.retrieveAllBookings).toHaveBeenCalledWith(
+      1,
+      undefined,
+      3,
+    );
+    expect(result).toEqual({
+      bookings: [],
+      counts: { all: 0, confirmed: 0, completed: 0, cancelled: 0 },
+    });
+  });
 });
 
 describe("BookingService.cancelBooking", () => {

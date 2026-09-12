@@ -34,7 +34,17 @@ const MemberCards = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div
+      className="
+        grid
+        w-full
+        grid-cols-2
+        gap-3
+        pb-4
+        font-poppins
+        xl:grid-cols-4
+      "
+    >
       {cards.map((card) => {
         const Icon = card.icon;
 
@@ -42,72 +52,78 @@ const MemberCards = () => {
           <div
             key={card.label}
             className="
-              group relative overflow-hidden
-              rounded-2xl border border-gray-200
-              bg-white p-5
-              shadow-[0_4px_20px_rgba(0,0,0,0.04)]
-              transition-all duration-300
-              hover:-translate-y-1
-              hover:border-red-200
-              hover:shadow-[0_10px_30px_rgba(0,0,0,0.08)]
+              group
+              flex
+              w-full
+              min-w-0
+              flex-col
+              gap-2
+              rounded-xl
+              bg-black/70
+              p-3
+              text-white
+              transition-all
+              duration-200
+              hover:bg-black
+              sm:p-4
             "
           >
-            {/* Decorative accent */}
-            <div
-              className="
-                absolute -right-10 -top-10
-                h-28 w-28 rounded-full
-                bg-red-50
-                transition-transform duration-500
-                group-hover:scale-125
-              "
-            />
-
-            <div className="relative flex items-start justify-between">
-              {/* Icon */}
-              <div
+            {/* Card Header */}
+            <div className="flex min-w-0 items-center justify-between gap-2">
+              <h2
                 className="
-                  flex h-11 w-11 items-center justify-center
-                  rounded-xl bg-black text-white
-                  transition-all duration-300
-                  group-hover:bg-red-600
+                  min-w-0
+                  truncate
+                  text-xs
+                  font-medium
+                  text-gray-200
+                  sm:text-sm
                 "
               >
-                <Icon size={21} strokeWidth={2} />
-              </div>
-
-              {/* Value */}
-              <span
-                className="
-                  text-2xl font-bold tracking-tight
-                  text-gray-900
-                "
-              >
-                {card.value}
-              </span>
-            </div>
-
-            {/* Card information */}
-            <div className="relative mt-5">
-              <h3 className="text-sm font-semibold text-gray-900">
                 {card.label}
-              </h3>
+              </h2>
 
-              <p className="mt-1 text-xs font-medium text-gray-400">
-                {card.description}
-              </p>
+              <Icon
+                className="
+                  h-[18px]
+                  w-[18px]
+                  shrink-0
+                  text-gray-400
+                  transition-colors
+                  duration-200
+                  group-hover:text-red-500
+                  sm:h-5
+                  sm:w-5
+                "
+                strokeWidth={1.7}
+              />
             </div>
 
-            {/* Bottom red indicator */}
-            <div
+            {/* Main Value */}
+            <h1
               className="
-                absolute bottom-0 left-5 right-5
-                h-0.5 scale-x-0
-                bg-red-600
-                transition-transform duration-300
-                group-hover:scale-x-100
+                truncate
+                text-xl
+                font-semibold
+                tracking-tight
+                text-white
+                sm:text-2xl
               "
-            />
+            >
+              {card.value}
+            </h1>
+
+            {/* Bottom Text */}
+            <p
+              className="
+                truncate
+                text-[9px]
+                text-gray-400
+                sm:text-[11px]
+              "
+            >
+              {card.description}
+            </p>
           </div>
         );
       })}

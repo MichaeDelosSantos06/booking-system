@@ -49,6 +49,7 @@ export interface ScheduleListProps {
   bookings: BookingResponseDto[];
   onCancel: (bookingId: number) => void;
   loading: boolean;
+  highlightedBookingId?: number | null;
 }
 
 // Cancel Modal Props
@@ -132,5 +133,21 @@ export interface BookingGraphStat {
 
 export interface GraphResponseDto {
   bookingStat: BookingGraphStat[];
+  loading: boolean;
+}
+
+// member dashboard booking list Dto
+export interface BokingListReponse {
+  bookings: BookingResponseDto[];
+  loading: boolean;
+  onNavigate: (bookingId: number) => void;
+}
+
+export interface BrowseClassProps {
+  browse: () => void;
+}
+
+export interface RecentActivityProps {
+  bookings: BookingResponseDto[];
   loading: boolean;
 }

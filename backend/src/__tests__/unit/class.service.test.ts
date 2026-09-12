@@ -163,14 +163,13 @@ describe("ClassService.fetchClasses", () => {
     await expect(ClassService.fetchClasses()).resolves.toEqual([]);
   });
 
-  it("should throw a 404 AppError when the repository returns null", async () => {
+  it("should pass through a null result without throwing", async () => {
     vi.mocked(ClassRepository.fetchClasses).mockResolvedValue(null as never);
 
-    await expect(ClassService.fetchClasses()).rejects.toMatchObject({
-      name: "AppError",
-      statusCode: 404,
-      message: "No Classes Found.",
-    });
+    const result = await ClassService.fetchClasses();
+
+    expect(ClassRepository.fetchClasses).toHaveBeenCalledWith(undefined);
+    expect(result).toBeNull();
   });
 });
 

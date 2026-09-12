@@ -225,14 +225,10 @@ describe("ScheduleService.getAllSchedule", () => {
     expect(result).toEqual([{ id: 1 }]);
   });
 
-  it("should throw a 404 AppError when the repository returns null", async () => {
-    vi.mocked(ScheduleRepository.getAllSchedule).mockResolvedValue(null as never);
+  it("should return an empty array when there are no schedules", async () => {
+    vi.mocked(ScheduleRepository.getAllSchedule).mockResolvedValue([]);
 
-    await expect(ScheduleService.getAllSchedule()).rejects.toMatchObject({
-      name: "AppError",
-      statusCode: 404,
-      message: "No available shcdule",
-    });
+    await expect(ScheduleService.getAllSchedule()).resolves.toEqual([]);
   });
 });
 
@@ -250,19 +246,16 @@ describe("ScheduleService.getTodaySchedule", () => {
     expect(result).toEqual([{ id: 1 }]);
   });
 
-  it("should throw a 404 AppError when there is no schedule and still expire old schedules", async () => {
+  it("should return a zero count when there are no schedules today", async () => {
     vi.mocked(ScheduleRepository.updateExpiredSchedules).mockResolvedValue({
-      count: 2,
+      count: 0,
     } as never);
-    vi.mocked(ScheduleRepository.getTodaySchedule).mockResolvedValue(null as never);
+    vi.mocked(ScheduleRepository.getTodaySchedule).mockResolvedValue(0);
 
-    await expect(ScheduleService.getTodaySchedule()).rejects.toMatchObject({
-      name: "AppError",
-      statusCode: 404,
-      message: "No schedule found",
-    });
+    const result = await ScheduleService.getTodaySchedule();
 
     expect(ScheduleRepository.updateExpiredSchedules).toHaveBeenCalledTimes(1);
+    expect(result).toBe(0);
   });
 });
 

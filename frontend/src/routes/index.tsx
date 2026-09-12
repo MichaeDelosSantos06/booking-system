@@ -20,6 +20,7 @@ import MemberDashboardPage from "../page/member/DashboardPage";
 import BrowseClassesPage from "../page/member/BrowseClassesPage";
 import ViewSchdulePage from "../page/member/ViewSchedulePage";
 import MyBookingPage from "../page/member/MyBookingsPage";
+import ProfilePage from "../page/member/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
               {
                 path: "/my-bookings",
                 element: <MyBookingPage />,
+              },
+              {
+                path: "/profile",
+                element: <ProfilePage />,
               },
             ],
           },

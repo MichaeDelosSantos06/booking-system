@@ -21,8 +21,16 @@ const BookingController = {
 
   retrieveAllBookings: asyncHandler(async (req: Request, res: Response) => {
     const status = req.query.status as BookingStatus | undefined;
+    const take =
+      req.query.take !== undefined ? Number(req.query.take) : undefined;
+
     const userId = Number(req.user?.id);
-    const bookings = await BookingService.retrieveAllBookings(userId, status);
+
+    const bookings = await BookingService.retrieveAllBookings(
+      userId,
+      status,
+      take,
+    );
     return res.status(200).json({
       success: true,
       message: "Bookings Retrieve",

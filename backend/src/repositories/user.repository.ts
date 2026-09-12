@@ -103,6 +103,43 @@ export const UserRepository = {
       },
     });
   },
+
+  getUserInfo: async (id: number) => {
+    return prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        contact: true,
+        createdAt: true,
+      },
+    });
+  },
+
+  updateProfile: async (
+    id: number,
+    data: { name: string; contact: string },
+  ) => {
+    return prisma.user.update({
+      where: { id },
+      data: {
+        name: data.name,
+        contact: data.contact,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        contact: true,
+        createdAt: true,
+      },
+    });
+  },
 };
 
 export default UserRepository;

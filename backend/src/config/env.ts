@@ -6,8 +6,13 @@ dotenv.config();
 const requiredEnvVars = [
   "DIRECT_DATABASE_URL",
   "CLIENT_URL",
+
   "JWT_EXPIRES_IN",
   "JWT_SECRET",
+
+  "REFRESH_TOKEN_EXPIRES_IN",
+  "REFRESH_TOKEN_SECRET",
+
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
@@ -33,6 +38,9 @@ export const env = {
 
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN as StringValue,
   JWT_SECRET: process.env.JWT_SECRET as StringValue,
+
+  REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as StringValue,
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as StringValue,
 
   SMTP_HOST: process.env.SMTP_HOST!,
   SMTP_PORT: Number(process.env.SMTP_PORT),

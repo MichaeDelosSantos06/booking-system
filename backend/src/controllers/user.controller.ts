@@ -1,8 +1,16 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import UserService from "../services/user.service.js";
-import type { CreateUserDto, LoginDto } from "../types/user.type.js";
-import { setAccessTokenCookie } from "../utils/setAcessTokenCookie.js";
+import type {
+  CreateUserDto,
+  LoginDto,
+  UpdateProfileDto,
+  ChangePasswordDto,
+} from "../types/user.type.js";
+import {
+  setAccessTokenCookie,
+  setRefreshTokenCookie,
+} from "../utils/tokenCookie.js";
 
 const UserController = {
   registerUser: asyncHandler(async (req: Request, res: Response) => {
@@ -21,9 +29,10 @@ const UserController = {
   loginUser: asyncHandler(async (req: Request, res: Response) => {
     const data: LoginDto = req.body;
 
-    const { token } = await UserService.loginUser(data);
+    const { accessToken, refreshToken } = await UserService.loginUser(data);
 
-    setAccessTokenCookie(res, token);
+    setAccessTokenCookie(res, accessToken);
+    setRefreshTokenCookie(res, refreshToken);
 
     return res.status(200).json({
       success: true,
@@ -38,6 +47,19 @@ const UserController = {
     return res.status(200).json({
       success: true,
       user: user,
+    });
+  }),
+
+  refreshAccessToken: asyncHandler(async (req: Request, res: Response) => {
+    // "refreshToken" is what we return on the service when login
+    const refreshToken = req.cookies.refreshToken;
+
+    const accessToken = await UserService.refreshAccessToken(refreshToken);
+    setAccessTokenCookie(res, accessToken);
+
+    return res.status(200).json({
+      success: true,
+      message: "Access token refreshed",
     });
   }),
 
@@ -83,6 +105,41 @@ const UserController = {
       success: true,
       message: "Retrieve total user siccessfully",
       totalUser,
+    });
+  }),
+
+  getUserInfo: asyncHandler(async (req: Request, res: Response) => {
+    const userId = Number(req.user?.id);
+    const userInfo = await UserService.getUserInfo(userId);
+    return res.status(200).json({
+      success: true,
+      message: "User information retrieve!",
+      userInfo,
+    });
+  }),
+
+  updateProfile: asyncHandler(async (req: Request, res: Response) => {
+    const userId = Number(req.user?.id);
+    const data: UpdateProfileDto = req.body;
+
+    const updatedUser = await UserService.updateProfile(userId, data);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully!",
+      userInfo: updatedUser,
+    });
+  }),
+
+  changePassword: asyncHandler(async (req: Request, res: Response) => {
+    const userId = Number(req.user?.id);
+    const data: ChangePasswordDto = req.body;
+
+    await UserService.changePassword(userId, data);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully!",
     });
   }),
 };

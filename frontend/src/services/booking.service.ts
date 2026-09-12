@@ -8,10 +8,11 @@ const BookingService = {
     return result.data;
   },
 
-  getAllBookings: async (status?: BookingStatus) => {
+  getAllBookings: async (status?: BookingStatus, take?: number) => {
     const result = await api.get("/booking/my-bookings", {
       params: {
         status,
+        take,
       },
     });
     return result.data;

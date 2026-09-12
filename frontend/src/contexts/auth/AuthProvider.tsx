@@ -19,6 +19,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(result.user);
   };
 
+  const refreshUser = async () => {
+    await getCurrentUser();
+  };
+
   const login = async (data: LoginDto) => {
     await UserService.loginUser(data);
     await getCurrentUser();
@@ -57,6 +61,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         logout,
         registerUser,
+        refreshUser,
       }}
     >
       {children}

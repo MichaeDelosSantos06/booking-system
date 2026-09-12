@@ -1,5 +1,10 @@
 import { api } from "../api/axios";
-import type { LoginDto, CreateUserDto } from "../types/user.type";
+import type {
+  LoginDto,
+  CreateUserDto,
+  UpdateProfileDto,
+  ChangePasswordDto,
+} from "../types/user.type";
 
 const UserService = {
   loginUser: async (data: LoginDto) => {
@@ -35,6 +40,21 @@ const UserService = {
 
   getNewUserByWeek: async () => {
     const result = await api.get("/user/get-user-count");
+    return result.data;
+  },
+
+  getUserInfo: async () => {
+    const result = await api.get("/user/my-info");
+    return result.data;
+  },
+
+  updateProfile: async (data: UpdateProfileDto) => {
+    const result = await api.put("/user/update-profile", data);
+    return result.data;
+  },
+
+  changePassword: async (data: ChangePasswordDto) => {
+    const result = await api.put("/user/change-password", data);
     return result.data;
   },
 };

@@ -128,6 +128,7 @@ const RegistrationPage = () => {
             id="contact"
             type="tel"
             placeholder="09XX XXX XXXX"
+            maxLength={11}
             className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
             {...register("contact")}
           />

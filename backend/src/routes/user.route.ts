@@ -1,7 +1,12 @@
 import { Router } from "express";
 import UserController from "../controllers/user.controller.js";
 import { validate } from "../middlewares/validator.js";
-import { loginSchema, registerSchema } from "../schema/user.schema.js";
+import {
+  loginSchema,
+  registerSchema,
+  updateProfileSchema,
+  changePasswordSchema,
+} from "../schema/user.schema.js";
 import { tokenAuth } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorized.js";
 
@@ -14,8 +19,22 @@ router.post(
 );
 router.post("/user/login", validate(loginSchema), UserController.loginUser);
 router.get("/user/me", tokenAuth, UserController.getCurrentUser);
+router.post("/user/refresh", UserController.refreshAccessToken);
 router.post("/user/logout", UserController.logoutUser);
 router.get("/user/get-users", tokenAuth, authorize, UserController.getUsers);
+router.get("/user/my-info", tokenAuth, UserController.getUserInfo);
+router.put(
+  "/user/update-profile",
+  tokenAuth,
+  validate(updateProfileSchema),
+  UserController.updateProfile,
+);
+router.put(
+  "/user/change-password",
+  tokenAuth,
+  validate(changePasswordSchema),
+  UserController.changePassword,
+);
 router.get(
   "/user/get-user-count",
   tokenAuth,

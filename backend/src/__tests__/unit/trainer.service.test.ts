@@ -47,14 +47,13 @@ describe("TrainerService.fetchTrainer", () => {
     expect(TrainerRepository.fetchTrainer).toHaveBeenCalledWith("Active");
   });
 
-  it("should throw a 404 AppError when the list is empty", async () => {
-    vi.mocked(TrainerRepository.fetchTrainer).mockResolvedValue([]);
+  it("should return an empty array when there are no trainers", async () => {
+    vi.mocked(TrainerRepository.fetchTrainer).mockResolvedValue([] as never);
 
-    await expect(TrainerService.fetchTrainer()).rejects.toMatchObject({
-      name: "AppError",
-      statusCode: 404,
-      message: "No Trainer/s Found.",
-    });
+    const result = await TrainerService.fetchTrainer();
+
+    expect(TrainerRepository.fetchTrainer).toHaveBeenCalledWith(undefined);
+    expect(result).toEqual([]);
   });
 });
 

@@ -6,12 +6,7 @@ import { Status } from "../generated/prisma/enums.js";
 
 const TrainerService = {
   fetchTrainer: async (status?: Status) => {
-    const trainers = await TrainerRepository.fetchTrainer(status);
-    if (trainers.length === 0) {
-      throw new AppError("No Trainer/s Found.", 404);
-    }
-
-    return trainers;
+    return TrainerRepository.fetchTrainer(status);
   },
 
   findTrainerById: async (id: number) => {

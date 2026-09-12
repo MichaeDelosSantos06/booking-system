@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ScheduleList from "../../feature/bookings/components/ScheduleList";
 import CancelModal from "../../feature/bookings/components/CancelModal";
@@ -11,7 +12,29 @@ import type { BookingTabs } from "../../types/booking.type";
 // import Button from "../../components/ui/Button";
 
 const MyBookingPage = () => {
-  const [activeTab, setActiveTab] = useState<BookingTabs>("All");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tabParam = searchParams.get("tab");
+
+  const initialTab: BookingTabs =
+    tabParam === "All" ||
+    tabParam === "Confirmed" ||
+    tabParam === "Completed" ||
+    tabParam === "Cancelled"
+      ? tabParam
+      : "All";
+
+  const [activeTab, setActiveTab] = useState<BookingTabs>(initialTab);
+
+  const [highlightedBookingId, setHighlightedBookingId] = useState<
+    number | null
+  >(() => {
+    const highlightParam = searchParams.get("highlight");
+
+    return highlightParam !== null && /^\d+$/.test(highlightParam)
+      ? Number(highlightParam)
+      : null;
+  });
 
   const status = activeTab === "All" ? undefined : activeTab;
 
@@ -43,7 +66,7 @@ const MyBookingPage = () => {
   };
 
   return (
-    <div className="mx-12 mt-12 mb-2 flex min-h-0 flex-col">
+    <div className="mx-10 mt-10 mb-2 flex min-h-0 flex-col">
       {/* Header */}
       <header>
         <div className="flex items-center gap-2">
@@ -106,7 +129,11 @@ const MyBookingPage = () => {
                 <button
                   key={tab.value}
                   type="button"
-                  onClick={() => setActiveTab(tab.value)}
+                  onClick={() => {
+                    setActiveTab(tab.value);
+                    setHighlightedBookingId(null);
+                    setSearchParams({});
+                  }}
                   className={`
             relative flex shrink-0 items-center justify-center
             gap-1
@@ -178,6 +205,7 @@ const MyBookingPage = () => {
           bookings={bookings}
           loading={loading}
           onCancel={onCancel}
+          highlightedBookingId={highlightedBookingId}
         />
       </div>
 

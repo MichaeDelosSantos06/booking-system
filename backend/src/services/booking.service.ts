@@ -46,11 +46,20 @@ const BookingService = {
     });
   },
 
-  retrieveAllBookings: async (userId: number, status?: BookingStatus) => {
+  retrieveAllBookings: async (
+    userId: number,
+    status?: BookingStatus,
+    take?: number,
+  ) => {
     await BookingRepository.markAsCompleted();
 
+    const bookingsPromise =
+      take !== undefined
+        ? BookingRepository.retrieveAllBookings(userId, status, take)
+        : BookingRepository.retrieveAllBookings(userId, status);
+
     const [bookings, statusCounts] = await Promise.all([
-      BookingRepository.retrieveAllBookings(userId, status),
+      bookingsPromise,
       BookingRepository.getBookingCounts(userId),
     ]);
 

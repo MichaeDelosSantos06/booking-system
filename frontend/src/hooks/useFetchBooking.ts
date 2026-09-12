@@ -9,7 +9,7 @@ import type {
   BookingCounts,
 } from "../types/booking.type";
 
-const useFetchBooking = (status?: BookingStatus) => {
+const useFetchBooking = (status?: BookingStatus, take?: number) => {
   const [bookings, setBookings] = useState<BookingResponseDto[]>([]);
   const [bookingCount, setBookingCount] = useState<BookingCounts | null>(null);
   const [loading, setLoadig] = useState(true);
@@ -19,7 +19,7 @@ const useFetchBooking = (status?: BookingStatus) => {
     setLoadig(true);
     setError(null);
     try {
-      const result = await BookingService.getAllBookings(status);
+      const result = await BookingService.getAllBookings(status, take);
       setBookings(result.bookings);
       setBookingCount(result.counts);
     } catch (error) {
@@ -28,7 +28,7 @@ const useFetchBooking = (status?: BookingStatus) => {
     } finally {
       setLoadig(false);
     }
-  }, [status]);
+  }, [status, take]);
 
   useEffect(() => {
     fetchBooking();

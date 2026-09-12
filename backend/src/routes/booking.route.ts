@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { tokenAuth } from "../middlewares/authenticate.js";
 import { validate } from "../middlewares/validator.js";
-import { createBookingSchema } from "../schema/booking.schema.js";
+import {
+  createBookingSchema,
+  getBookingSchema,
+} from "../schema/booking.schema.js";
 import BookingController from "../controllers/booking.controller.js";
 import { authorize } from "../middlewares/authorized.js";
 
@@ -17,6 +20,7 @@ router.post(
 router.get(
   "/booking/my-bookings",
   tokenAuth,
+  validate(getBookingSchema, "query"),
   BookingController.retrieveAllBookings,
 );
 

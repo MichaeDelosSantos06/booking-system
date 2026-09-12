@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Button from "../../../components/ui/Button";
 import type { ScheduleListProps } from "../../../types/booking.type";
 import { formatDate, formatTime } from "../../../utils/DateFormatterHelper";
@@ -9,7 +10,20 @@ import {
   UserRound,
 } from "lucide-react";
 
-const ScheduleList = ({ bookings, loading, onCancel }: ScheduleListProps) => {
+const ScheduleList = ({
+  bookings,
+  loading,
+  onCancel,
+  highlightedBookingId,
+}: ScheduleListProps) => {
+  useEffect(() => {
+    if (highlightedBookingId == null) return;
+
+    const element = document.getElementById(`booking-${highlightedBookingId}`);
+
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlightedBookingId, bookings]);
+
   if (loading) {
     return (
       <div className="space-y-3">
@@ -47,20 +61,23 @@ const ScheduleList = ({ bookings, loading, onCancel }: ScheduleListProps) => {
     <div className="space-y-3 pb-2">
       {bookings.map((booking) => {
         const isConfirmed = booking.status === "Confirmed";
+        const isHighlighted = highlightedBookingId === booking.id;
 
         return (
           <div
             key={booking.id}
-            className="
+            id={`booking-${booking.id}`}
+            className={`
               group h-36 overflow-hidden rounded-xl
-              border border-gray-200 bg-white
+              border bg-white
               shadow-[0_1px_2px_rgba(0,0,0,0.03)]
               transition-all duration-200
               hover:border-gray-300
               hover:shadow-md
               sm:h-36
               md:h-36
-            "
+              ${isHighlighted ? "border-gray-300 shadow-md" : "border-gray-200"}
+            `}
           >
             <div className="flex h-full">
               {/* IMAGE */}
@@ -77,11 +94,12 @@ const ScheduleList = ({ bookings, loading, onCancel }: ScheduleListProps) => {
                   <img
                     src={booking.schedule.class.imageUrl}
                     alt={booking.schedule.class.className}
-                    className="
+                    className={`
                       h-full w-full object-cover
                       transition-transform duration-500
                       group-hover:scale-105
-                    "
+                      ${isHighlighted ? "scale-105" : ""}
+                    `}
                   />
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
