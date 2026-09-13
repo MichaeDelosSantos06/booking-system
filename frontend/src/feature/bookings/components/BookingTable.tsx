@@ -214,32 +214,32 @@ const BookingTable = ({
 
           {/* Header */}
           <thead className="sticky top-0 z-10">
-            <tr className="border-b border-slate-200 bg-slate-50/95 backdrop-blur-md">
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+            <tr className="border-b border-slate-800 bg-black">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 MEMBER
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 CLASS
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 TRAINER
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 DATE
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 TIME
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 STATUS
               </th>
 
-              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-slate-500 sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
+              <th className="whitespace-nowrap px-2.5 py-2 text-[8px] font-bold tracking-[0.08em] text-white sm:px-3 sm:py-2.5 sm:text-[9px] sm:tracking-[0.1em] md:px-4 md:py-3 md:text-[10px] md:tracking-[0.12em]">
                 ACTIONS
               </th>
             </tr>

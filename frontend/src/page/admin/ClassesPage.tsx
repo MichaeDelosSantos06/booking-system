@@ -21,7 +21,6 @@ const ClassPage = () => {
 
   const {
     classes,
-    error,
     loading,
     search,
     setSearch,
@@ -245,37 +244,6 @@ const ClassPage = () => {
 
       {/* Classes */}
       <div className="min-w-0 w-full">
-        {/* Error */}
-        {!loading && error && classes.length === 0 && (
-          <div
-            className="
-              mb-3
-              rounded-lg
-              border
-              border-red-100
-              bg-red-50
-              px-3
-              py-2.5
-              sm:mb-4
-              sm:rounded-xl
-              sm:px-5
-              sm:py-3
-            "
-          >
-            <p
-              className="
-                text-[11px]
-                font-medium
-                text-red-600
-                sm:text-xs
-                md:text-sm
-              "
-            >
-              {error}
-            </p>
-          </div>
-        )}
-
         {/* Class Table */}
         <ClassTable
           classes={classes}
