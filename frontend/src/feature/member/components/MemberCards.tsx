@@ -5,29 +5,31 @@ import {
   BadgeCheck,
 } from "lucide-react";
 
-const MemberCards = () => {
+import type { MemberCardDto } from "../../../types/booking.type";
+
+const MemberCards = ({ statistics }: MemberCardDto) => {
   const cards = [
     {
       label: "Upcoming Classes",
-      value: "02",
+      value: statistics.upcoming.toString().padStart(2, "0"),
       description: "Classes scheduled",
       icon: CalendarDays,
     },
     {
       label: "Total Bookings",
-      value: "12",
+      value: statistics.total.toString().padStart(2, "0"),
       description: "All-time bookings",
       icon: ClipboardCheck,
     },
     {
       label: "Completed",
-      value: "08",
+      value: statistics.completed.toString().padStart(2, "0"),
       description: "Classes completed",
       icon: CheckCircle2,
     },
     {
       label: "Membership",
-      value: "Active",
+      value: statistics.membership.user.status,
       description: "Membership status",
       icon: BadgeCheck,
     },

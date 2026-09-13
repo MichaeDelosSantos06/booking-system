@@ -92,4 +92,31 @@ describe("EmailService", () => {
     const mailOptions = transporter.sendMail.mock.calls[0]![0] as { html: string };
     expect(mailOptions.html).toContain("https://app.test/reset?token=xyz");
   });
+
+  it("should propagate the error when sending the email fails", async () => {
+    const { default: EmailService } = await import("../../services/email.service.js");
+    transporter.sendMail.mockRejectedValueOnce(new Error("SMTP send failed"));
+
+    await expect(
+      EmailService.sendPasswordResetEmail(
+        "fail@example.com",
+        "https://app.test/reset?token=fail",
+      ),
+    ).rejects.toThrow("SMTP send failed");
+  });
+
+  it("should log ready when SMTP verification succeeds", async () => {
+    vi.resetModules();
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    transporter.verify.mockImplementationOnce(
+      (callback: (error?: Error | null) => void) => callback(null),
+    );
+
+    await import("../../services/email.service.js");
+
+    expect(transporter.verify).toHaveBeenCalledTimes(1);
+    expect(logSpy).toHaveBeenCalledWith("SMTP server is ready");
+
+    logSpy.mockRestore();
+  });
 });

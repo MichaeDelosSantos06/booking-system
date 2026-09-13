@@ -151,6 +151,22 @@ const BookingService = {
 
     return BookingRepository.gerStatBookingForGraph(startDate, endDate);
   },
+
+  fetchMyDashboardStatistic: async (userId: number) => {
+    const [upcoming, completed, total, membership] = await Promise.all([
+      BookingRepository.getMyUpcomingBooking(userId),
+      BookingRepository.getMyCompletedBooking(userId),
+      BookingRepository.getMyTotalBooking(userId),
+      BookingRepository.getMyMembershipStatus(userId),
+    ]);
+
+    return {
+      upcoming,
+      completed,
+      total,
+      membership,
+    };
+  },
 };
 
 export default BookingService;

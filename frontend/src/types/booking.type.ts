@@ -1,4 +1,5 @@
 import type { Pagination } from "./pagination.type";
+import type { Status } from "./trainer.type";
 
 type Location =
   | "StudioA"
@@ -150,4 +151,20 @@ export interface BrowseClassProps {
 export interface RecentActivityProps {
   bookings: BookingResponseDto[];
   loading: boolean;
+}
+
+// member dashboard statistics
+export interface DashboardStatResponse {
+  upcoming: number;
+  completed: number;
+  total: number;
+  membership: {
+    user: {
+      status: Status | null;
+    };
+  };
+}
+
+export interface MemberCardDto {
+  statistics: DashboardStatResponse;
 }

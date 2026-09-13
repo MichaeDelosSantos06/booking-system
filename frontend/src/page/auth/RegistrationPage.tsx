@@ -66,7 +66,26 @@ const RegistrationPage = () => {
       {/* Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-1 flex-col space-y-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/50 sm:p-10 md:px-50 lg:px-25 xl:px-32 2xl:px-40"
+        className="
+    flex
+    w-full
+    flex-1
+    flex-col
+    space-y-6
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    p-15
+    shadow-xl
+    shadow-slate-200/50
+
+    sm:p-10
+    md:px-50
+    lg:px-25
+    xl:px-32
+    2xl:px-40
+  shadow-slate-200/50 sm:p-10 md:px-50 lg:px-25 xl:px-32 2xl:px-40"
       >
         {/* Header */}
         <div className="flex flex-col items-center space-y-1 pt-10 sm:mb-10">

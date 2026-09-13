@@ -1,4 +1,4 @@
-import { Hand, ArrowRight, CalendarDays, Activity } from "lucide-react";
+import { ArrowRight, CalendarDays, Activity } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import MemberCards from "../../feature/member/components/MemberCards";
@@ -8,9 +8,12 @@ import MyRecentBookings from "../../feature/dashboard/components/RecentBookings"
 
 import { useAuth } from "../../hooks/useAuth";
 import useFetchBooking from "../../hooks/useFetchBooking";
+import useFetchMyDashboardStatistics from "../../hooks/useFetchMyDashboardStatisitcs";
 
 const MemberDashboardPage = () => {
   const { user } = useAuth();
+  const { statistics } = useFetchMyDashboardStatistics();
+  console.log(statistics);
 
   const { bookings, loading } = useFetchBooking("Confirmed");
 
@@ -34,62 +37,60 @@ const MemberDashboardPage = () => {
   return (
     <main
       className="
-  mx-auto
-  flex
-  h-full
-  w-full
-  max-w-[1600px]
-  flex-col
-  overflow-hidden
-  px-10
-  py-6
-  sm:py-7
-  lg:py-8
+        flex
+        h-full
+        w-full
+        min-w-0
+        flex-1
+        flex-col
+        overflow-hidden
 "
     >
       {/* Header */}
-      <header className="mb-6 shrink-0 sm:mb-7 lg:mb-8">
+      <header className="mb-6 shrink-0 pb-1 sm:mb-7 lg:mb-8">
         <div className="flex min-w-0 items-center gap-2">
+          <span
+            className="
+        h-5
+        w-1
+        shrink-0
+        rounded-full
+        bg-red-600
+
+        sm:h-6
+
+        lg:h-6
+      "
+          />
+
           <h1
             className="
-              min-w-0
-              truncate
-              text-lg
-              font-bold
-              tracking-tight
-              text-gray-950
-              sm:text-xl
-              lg:text-2xl
-            "
+        min-w-0
+        truncate
+        text-2xl
+        font-bold
+        tracking-tight
+        text-gray-950
+
+        sm:text-2xl
+
+        lg:text-2xl
+      "
           >
-            Welcome back, {user?.name}
+            Welcome back, {user?.name.split(" ")[0]}
           </h1>
 
-          <Hand
-            className="
-              h-[19px]
-              w-[19px]
-              shrink-0
-              text-red-600
-              sm:h-[21px]
-              sm:w-[21px]
-              lg:h-[23px]
-              lg:w-[23px]
-            "
-            strokeWidth={2}
-          />
+          <span className="text-xl sm:text-2xl">👋</span>
         </div>
 
         <p
           className="
-            mt-1
-            truncate
-            text-[11px]
-            font-medium
-            text-gray-500
-            sm:text-xs
-            lg:text-sm
-          "
+      mt-1.5
+      truncate
+      text-sm
+      font-medium
+      text-gray-500
+    "
         >
           Here's what's coming up for you.
         </p>
@@ -97,7 +98,7 @@ const MemberDashboardPage = () => {
 
       {/* Statistics - NEVER SCROLLS */}
       <div className="shrink-0">
-        <MemberCards />
+        <MemberCards statistics={statistics} />
       </div>
 
       {/* Dashboard Content - SCROLLS ON MOBILE + MEDIUM */}

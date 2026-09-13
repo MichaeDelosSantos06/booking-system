@@ -103,6 +103,20 @@ const BookingController = {
       bookingStat,
     });
   }),
+
+  getMyDashboardStatistics: asyncHandler(
+    async (req: Request, res: Response) => {
+      const userId = Number(req.user?.id);
+      const myDashboardStatisitcs =
+        await BookingService.fetchMyDashboardStatistic(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Member Dashboard Statistics Retrieve",
+        ...myDashboardStatisitcs,
+      });
+    },
+  ),
 };
 
 export default BookingController;

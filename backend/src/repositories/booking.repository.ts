@@ -99,6 +99,46 @@ const BookingRepository = {
     });
   },
 
+  // member dashboard cards analytics
+  getMyUpcomingBooking: async (userId: number) => {
+    return prisma.booking.count({
+      where: {
+        userId,
+        status: BookingStatus.Confirmed,
+      },
+    });
+  },
+
+  getMyTotalBooking: async (userId: number) => {
+    return prisma.booking.count({
+      where: { userId },
+    });
+  },
+
+  getMyCompletedBooking: async (userId: number) => {
+    return prisma.booking.count({
+      where: {
+        userId,
+        status: BookingStatus.Completed,
+      },
+    });
+  },
+
+  getMyMembershipStatus: async (userId: number) => {
+    return prisma.booking.findFirst({
+      where: {
+        userId,
+      },
+      select: {
+        user: {
+          select: {
+            status: true,
+          },
+        },
+      },
+    });
+  },
+
   getBookingCounts: async (userId: number) => {
     return prisma.booking.groupBy({
       by: ["status"],

@@ -14,6 +14,10 @@ vi.mock("../../repositories/booking.repository.js", () => ({
     getYesterBooking: vi.fn(),
     getRecentBookings: vi.fn(),
     gerStatBookingForGraph: vi.fn(),
+    getMyUpcomingBooking: vi.fn(),
+    getMyCompletedBooking: vi.fn(),
+    getMyTotalBooking: vi.fn(),
+    getMyMembershipStatus: vi.fn(),
   },
 }));
 
@@ -280,6 +284,7 @@ describe("BookingService.retrieveBookingForAdmin", () => {
 
     const result = await BookingService.retrieveBookingForAdmin();
 
+    expect(BookingRepository.markAsCompleted).toHaveBeenCalledTimes(1);
     expect(BookingRepository.retrieveBookingForAdmin).toHaveBeenCalledWith(
       1,
       6,
@@ -363,5 +368,52 @@ describe("BookingService.gerStatBookingForGraph", () => {
 
     expect(BookingRepository.gerStatBookingForGraph).toHaveBeenCalledTimes(1);
     expect(result).toEqual([{ bookedAt: "x" }]);
+  });
+
+  it("should query the last 7 days (startDate is 6 days before endDate)", async () => {
+    vi.mocked(BookingRepository.gerStatBookingForGraph).mockResolvedValue([] as never);
+
+    await BookingService.gerStatBookingForGraph();
+
+    expect(BookingRepository.gerStatBookingForGraph).toHaveBeenCalledTimes(1);
+    const [startDate, endDate] = vi.mocked(BookingRepository.gerStatBookingForGraph).mock.calls[0] as [Date, Date];
+    expect(startDate).toBeInstanceOf(Date);
+    expect(endDate).toBeInstanceOf(Date);
+    expect(endDate.getTime() - startDate.getTime()).toBeGreaterThanOrEqual(6 * 24 * 60 * 60 * 1000 - 60_000);
+    expect(endDate.getTime() - startDate.getTime()).toBeLessThanOrEqual(6 * 24 * 60 * 60 * 1000 + 60_000);
+  });
+});
+
+describe("BookingService.fetchMyDashboardStatistic", () => {
+  it("should aggregate upcoming, completed, total and membership for the user", async () => {
+    vi.mocked(BookingRepository.getMyUpcomingBooking).mockResolvedValue(2 as never);
+    vi.mocked(BookingRepository.getMyCompletedBooking).mockResolvedValue(5 as never);
+    vi.mocked(BookingRepository.getMyTotalBooking).mockResolvedValue(7 as never);
+    vi.mocked(BookingRepository.getMyMembershipStatus).mockResolvedValue({ status: "Active" } as never);
+
+    const result = await BookingService.fetchMyDashboardStatistic(1);
+
+    expect(BookingRepository.getMyUpcomingBooking).toHaveBeenCalledWith(1);
+    expect(BookingRepository.getMyCompletedBooking).toHaveBeenCalledWith(1);
+    expect(BookingRepository.getMyTotalBooking).toHaveBeenCalledWith(1);
+    expect(BookingRepository.getMyMembershipStatus).toHaveBeenCalledWith(1);
+    expect(result).toEqual({
+      upcoming: 2,
+      completed: 5,
+      total: 7,
+      membership: { status: "Active" },
+    });
+  });
+
+  it("should return zero counts and null membership when the user has no bookings", async () => {
+    vi.mocked(BookingRepository.getMyUpcomingBooking).mockResolvedValue(0 as never);
+    vi.mocked(BookingRepository.getMyCompletedBooking).mockResolvedValue(0 as never);
+    vi.mocked(BookingRepository.getMyTotalBooking).mockResolvedValue(0 as never);
+    vi.mocked(BookingRepository.getMyMembershipStatus).mockResolvedValue(null as never);
+
+    const result = await BookingService.fetchMyDashboardStatistic(9);
+
+    expect(BookingRepository.getMyUpcomingBooking).toHaveBeenCalledWith(9);
+    expect(result).toEqual({ upcoming: 0, completed: 0, total: 0, membership: null });
   });
 });

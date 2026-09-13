@@ -7,61 +7,101 @@ import { formatDate } from "../../../utils/DateFormatterHelper";
 const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
   if (loading) {
     return (
-      <div className="flex w-full min-w-0 flex-col gap-2 sm:gap-2.5">
+      <div className="flex w-full min-w-0 flex-col gap-1 sm:gap-1.5 lg:gap-1">
         {[1, 2, 3].map((item) => (
           <div
             key={item}
             className="
               flex
-              h-[58px]
+              h-[50px]
               w-full
               min-w-0
               animate-pulse
               items-center
-              gap-2.5
-              rounded-xl
+              gap-2
+              rounded-lg
               border
               border-gray-200
               bg-white
-              p-1.5
-              sm:h-[64px]
-              sm:gap-3
-              sm:p-2
-              lg:h-[68px]
+              p-1
+
+              sm:h-[56px]
+              sm:gap-2.5
+              sm:rounded-xl
+              sm:p-1.5
+
+              lg:h-[64px]
+              lg:gap-3
+              lg:p-2
             "
           >
             {/* Image Skeleton */}
             <div
               className="
-                h-9
-                w-9
+                h-8
+                w-8
                 shrink-0
-                rounded-lg
+                rounded-md
                 bg-gray-200
-                sm:h-10
-                sm:w-10
-                lg:h-11
-                lg:w-11
+
+                sm:h-9
+                sm:w-9
+                sm:rounded-lg
+
+                lg:h-10
+                lg:w-10
               "
             />
 
             {/* Information Skeleton */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-              <div className="h-2.5 w-28 max-w-[70%] rounded bg-gray-200 sm:h-3 sm:w-32" />
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+              <div
+                className="
+                  h-2
+                  w-24
+                  max-w-[70%]
+                  rounded
+                  bg-gray-200
 
-              <div className="h-2 w-20 max-w-[50%] rounded bg-gray-200 sm:h-2.5 sm:w-24" />
+                  sm:h-2.5
+                  sm:w-28
+
+                  lg:h-3
+                  lg:w-32
+                "
+              />
+
+              <div
+                className="
+                  h-1.5
+                  w-16
+                  max-w-[50%]
+                  rounded
+                  bg-gray-200
+
+                  sm:h-2
+                  sm:w-20
+
+                  lg:h-2.5
+                  lg:w-24
+                "
+              />
             </div>
 
             {/* Status Skeleton */}
             <div
               className="
-                h-5
-                w-12
+                h-4
+                w-10
                 shrink-0
                 rounded-full
                 bg-gray-200
-                sm:h-6
-                sm:w-14
+
+                sm:h-5
+                sm:w-12
+
+                lg:h-6
+                lg:w-14
               "
             />
           </div>
@@ -76,22 +116,28 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
         className="
           relative
           flex
-          min-h-[150px]
+          min-h-[125px]
           w-full
           min-w-0
           items-center
           justify-center
           overflow-hidden
-          rounded-xl
+          rounded-lg
           border
           border-gray-200
           bg-white
-          px-4
-          py-6
+          px-3
+          py-4
           text-center
-          sm:min-h-[165px]
-          sm:px-6
-          lg:min-h-[180px]
+
+          sm:min-h-[145px]
+          sm:rounded-xl
+          sm:px-5
+          sm:py-5
+
+          lg:min-h-[165px]
+          lg:px-6
+          lg:py-6
         "
       >
         {/* Subtle background accent */}
@@ -99,15 +145,24 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
           className="
             pointer-events-none
             absolute
-            -right-8
-            -top-8
-            h-24
-            w-24
+            -right-6
+            -top-6
+            h-20
+            w-20
             rounded-full
             bg-red-50
-            blur-xl
-            sm:h-28
-            sm:w-28
+            blur-lg
+
+            sm:-right-7
+            sm:-top-7
+            sm:h-24
+            sm:w-24
+
+            lg:-right-8
+            lg:-top-8
+            lg:h-28
+            lg:w-28
+            lg:blur-xl
           "
         />
 
@@ -116,28 +171,34 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
           <div
             className="
               flex
-              h-9
-              w-9
+              h-8
+              w-8
               items-center
               justify-center
-              rounded-xl
+              rounded-lg
               bg-black
               text-white
               shadow-sm
-              sm:h-10
-              sm:w-10
-              lg:h-11
-              lg:w-11
+
+              sm:h-9
+              sm:w-9
+              sm:rounded-lg
+
+              lg:h-10
+              lg:w-10
+              lg:rounded-xl
             "
           >
             <CalendarDays
               className="
-                h-4
-                w-4
-                sm:h-[17px]
-                sm:w-[17px]
-                lg:h-[18px]
-                lg:w-[18px]
+                h-3.5
+                w-3.5
+
+                sm:h-4
+                sm:w-4
+
+                lg:h-[17px]
+                lg:w-[17px]
               "
               strokeWidth={2}
             />
@@ -146,14 +207,17 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
           {/* Text */}
           <h3
             className="
-              mt-3
+              mt-2
               truncate
-              text-[11px]
+              text-[10px]
               font-semibold
               text-gray-900
-              sm:mt-3.5
-              sm:text-xs
-              lg:text-sm
+
+              sm:mt-2.5
+              sm:text-[11px]
+
+              lg:mt-3
+              lg:text-xs
             "
           >
             No recent activity
@@ -161,14 +225,19 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
 
           <p
             className="
-              mt-1
-              max-w-[230px]
-              text-[9px]
-              leading-4
+              mt-0.5
+              max-w-[200px]
+              text-[8px]
+              leading-3.5
               text-gray-400
-              sm:max-w-[260px]
-              sm:text-[10px]
-              lg:text-xs
+
+              sm:mt-1
+              sm:max-w-[230px]
+              sm:text-[9px]
+
+              lg:max-w-[260px]
+              lg:text-[10px]
+              lg:leading-4
             "
           >
             Your completed and cancelled bookings will appear here.
@@ -177,13 +246,17 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
           {/* Accent */}
           <div
             className="
-              mt-3
+              mt-2
               h-0.5
-              w-8
+              w-6
               rounded-full
               bg-red-600
-              sm:mt-3.5
-              sm:w-9
+
+              sm:mt-2.5
+              sm:w-8
+
+              lg:mt-3
+              lg:w-9
             "
           />
         </div>
@@ -192,7 +265,7 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
   }
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-1 sm:gap-2">
+    <div className="flex w-full min-w-0 flex-col gap-1.5 sm:gap-2">
       {bookings.map((booking) => {
         const status = booking.status;
 
@@ -208,44 +281,51 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
             className="
               group
               flex
-              min-h-[58px]
+              min-h-[44px]
               w-full
               min-w-0
               items-center
-              gap-2.5
+              gap-2
               overflow-hidden
-              rounded-xl
+              rounded-lg
               border
               border-gray-200
               bg-white
-              p-1.5
+              p-1
               shadow-sm
               transition-all
               duration-200
               hover:-translate-y-[.5px]
               hover:border-gray-300
               hover:shadow-md
-              sm:min-h-[64px]
-              sm:gap-3
-              sm:p-2
-              lg:min-h-[68px]
-              lg:gap-3.5
+
+              sm:min-h-[50px]
+              sm:gap-2.5
+              sm:rounded-xl
+              sm:p-1.5
+
+              lg:min-h-[56px]
+              lg:gap-3
+              lg:p-2
             "
           >
             {/* Class Image */}
             <div
               className="
                 relative
-                h-9
-                w-9
+                h-8
+                w-8
                 shrink-0
                 overflow-hidden
-                rounded-lg
+                rounded-md
                 bg-gray-100
-                sm:h-10
-                sm:w-10
-                lg:h-11
-                lg:w-11
+
+                sm:h-9
+                sm:w-9
+                sm:rounded-lg
+
+                lg:h-10
+                lg:w-10
               "
             >
               {booking.schedule.class.imageUrl ? (
@@ -270,13 +350,15 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
                     items-center
                     justify-center
                     bg-gray-100
-                    text-[7px]
+                    text-[6px]
                     font-semibold
                     uppercase
                     tracking-wide
                     text-gray-400
-                    sm:text-[8px]
-                    lg:text-[9px]
+
+                    sm:text-[7px]
+
+                    lg:text-[8px]
                   "
                 >
                   Fit
@@ -289,10 +371,13 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
               <h2
                 className="
                   truncate
-                  text-[10px]
+                  text-[9px]
                   font-semibold
+                  leading-tight
                   text-gray-900
-                  sm:text-[11px]
+
+                  sm:text-[10px]
+
                   lg:text-xs
                 "
               >
@@ -303,10 +388,13 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
                 className="
                   mt-0.5
                   truncate
-                  text-[8px]
+                  text-[7px]
+                  leading-tight
                   text-gray-400
-                  sm:text-[9px]
-                  lg:text-[10px]
+
+                  sm:text-[8px]
+
+                  lg:text-[9px]
                 "
               >
                 {formatDate(booking.schedule.date)}
@@ -319,15 +407,20 @@ const MyRecentBookings = ({ bookings, loading }: RecentActivityProps) => {
                 shrink-0
                 rounded-full
                 border
-                px-1.5
+                px-1
                 py-0.5
-                text-[7px]
+                text-[6px]
                 font-semibold
+                leading-tight
                 ${statusStyle}
-                sm:px-2
-                sm:py-1
-                sm:text-[8px]
-                lg:text-[9px]
+
+                sm:px-1.5
+                sm:py-0.5
+                sm:text-[7px]
+
+                lg:px-2
+                lg:py-0.5
+                lg:text-[8px]
               `}
             >
               {status}

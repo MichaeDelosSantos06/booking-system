@@ -12,7 +12,7 @@ const MemberPage = () => {
   // During refetch/search, keep the existing UI visible.
   if (error && !loading) {
     return (
-      <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
+      <div className="flex w-full min-w-0 flex-1 items-center justify-center">
         <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 sm:px-5 sm:py-4">
           <p className="text-xs font-medium text-red-600 sm:text-sm">{error}</p>
         </div>
@@ -23,16 +23,13 @@ const MemberPage = () => {
   return (
     <div
       className="
-        m-4
         flex
+        w-full
+        min-w-0
         min-h-0
         flex-1
         flex-col
         font-poppins
-        sm:m-6
-        md:m-8
-        lg:m-10
-        xl:m-12
       "
     >
       {/* Header */}

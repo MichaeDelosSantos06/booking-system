@@ -53,15 +53,13 @@ const TrainerPage = () => {
   return (
     <div
       className="
-        m-4
         flex
         h-full
+        w-full
+        min-w-0
         min-h-0
+        flex-1
         flex-col
-        sm:m-6
-        md:m-8
-        lg:m-10
-        xl:m-12
       "
     >
       {/* Page Header */}
@@ -224,7 +222,7 @@ const TrainerPage = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1 scrollbar-hide">
         {/* Error */}
         {!loading && error && (
           <div

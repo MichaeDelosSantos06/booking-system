@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { UpcomingScheduleData } from "../../types/schedule.type";
 
 import { formatDate, formatTime } from "../../utils/DateFormatterHelper";
+import { locationConfig } from "../../types/schedule.type";
 
 const UpcomingClasses = ({ schedules, loading }: UpcomingScheduleData) => {
   if (loading) {
@@ -169,6 +170,10 @@ const UpcomingClasses = ({ schedules, loading }: UpcomingScheduleData) => {
           <tbody>
             {schedules.length > 0 ? (
               schedules.map((item) => {
+                const location = locationConfig.find(
+                  (option) => option.value === item.location
+                );
+
                 const booked = item._count.bookings ?? 0;
 
                 const remaining = Math.max(item.capacity, 0);
@@ -221,7 +226,7 @@ const UpcomingClasses = ({ schedules, loading }: UpcomingScheduleData) => {
                     {/* Location */}
                     <td className="px-4 py-3.5 sm:px-5 sm:py-4 lg:px-6">
                       <span className="whitespace-nowrap rounded-lg bg-gray-100 px-2.5 py-1.5 text-[9px] font-medium text-gray-600 sm:px-3 sm:text-[10px]">
-                        {item.location}
+                        {location?.label}
                       </span>
                     </td>
 

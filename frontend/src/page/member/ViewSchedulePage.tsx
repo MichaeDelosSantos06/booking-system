@@ -37,9 +37,9 @@ const ViewSchedulePage = () => {
 
   if (!state) {
     return (
-      <div className="flex h-full min-h-0 flex-col font-poppins">
+      <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden font-poppins">
         {/* Fixed Back Button */}
-        <div className="shrink-0 px-4 pt-4 sm:px-6 sm:pt-5 md:px-8 lg:px-10 xl:px-12">
+        <div className="shrink-0 pt-1 sm:pt-1.5">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -68,21 +68,13 @@ const ViewSchedulePage = () => {
           className="
             scrollbar-hide
             min-h-0
+            w-full
+            min-w-0
             flex-1
             overflow-y-auto
-            px-4
-            pb-6
             pt-4
 
-            sm:px-6
-            sm:pb-8
             sm:pt-5
-
-            md:px-8
-
-            lg:px-10
-
-            xl:px-12
           "
         >
           <div
@@ -141,17 +133,15 @@ const ViewSchedulePage = () => {
   return (
     <div
       className="
-        m-4
         flex
         h-full
+        w-full
+        min-w-0
         min-h-0
+        flex-1
         flex-col
+        overflow-hidden
         font-poppins
-
-        sm:m-6
-        md:m-8
-        lg:m-10
-        xl:m-12
       "
     >
       {/* ============================================================

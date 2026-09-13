@@ -24,6 +24,7 @@ vi.mock("../../repositories/user.repository.js", () => ({
 vi.mock("../../utils/jwt.js", () => ({
   generateAccessToken: vi.fn(),
   generateRefreshToken: vi.fn(),
+  verifyRefreshToken: vi.fn(),
 }));
 
 vi.mock("../../utils/newUserByWeek.js", () => ({
@@ -32,7 +33,7 @@ vi.mock("../../utils/newUserByWeek.js", () => ({
 
 import UserService from "../../services/user.service.js";
 import UserRepository from "../../repositories/user.repository.js";
-import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt.js";
 import { fetchUserByWeek } from "../../utils/newUserByWeek.js";
 
 const mockedUser = {
@@ -395,6 +396,23 @@ describe("UserService.changePassword", () => {
     expect(UserRepository.updatePassword).not.toHaveBeenCalled();
   });
 
+  it("should throw a 404 AppError when the account record no longer exists", async () => {
+    vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.findByEmail).mockResolvedValue(null);
+
+    await expect(
+      UserService.changePassword(1, changePasswordPayload),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 404,
+      message: "User not found",
+    });
+
+    expect(UserRepository.findByEmail).toHaveBeenCalledWith(mockedUser.email);
+    expect(bcrypt.compare).not.toHaveBeenCalled();
+    expect(UserRepository.updatePassword).not.toHaveBeenCalled();
+  });
+
   it("should hash the new password and update it when the current password matches", async () => {
     mockAccountRecord();
     bcryptCompareMock.mockResolvedValue(true);
@@ -419,5 +437,65 @@ describe("UserService.changePassword", () => {
       1,
       "new-hashed-password",
     );
+  });
+});
+
+describe("UserService.refreshAccessToken", () => {
+  it("should throw a 401 AppError when no refresh token is provided", async () => {
+    await expect(UserService.refreshAccessToken(undefined)).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 401,
+      message: "Refresh token not found!",
+    });
+
+    expect(verifyRefreshToken).not.toHaveBeenCalled();
+  });
+
+  it("should throw a 401 AppError when the refresh token is invalid or expired", async () => {
+    vi.mocked(verifyRefreshToken).mockReturnValue(null as never);
+
+    await expect(
+      UserService.refreshAccessToken("bad-token"),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 401,
+      message: "Inavlid or Expired refresh token",
+    });
+
+    expect(verifyRefreshToken).toHaveBeenCalledWith("bad-token");
+    expect(UserRepository.findById).not.toHaveBeenCalled();
+  });
+
+  it("should throw a 401 AppError when the user no longer exists", async () => {
+    vi.mocked(verifyRefreshToken).mockReturnValue({ id: 1 } as never);
+    vi.mocked(UserRepository.findById).mockResolvedValue(null);
+
+    await expect(
+      UserService.refreshAccessToken("valid-token"),
+    ).rejects.toMatchObject({
+      name: "AppError",
+      statusCode: 401,
+      message: "User not found",
+    });
+
+    expect(generateAccessToken).not.toHaveBeenCalled();
+  });
+
+  it("should return a new access token for a valid refresh token", async () => {
+    vi.mocked(verifyRefreshToken).mockReturnValue({ id: 1 } as never);
+    vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
+    vi.mocked(generateAccessToken).mockReturnValue("new-access-token");
+
+    const result = await UserService.refreshAccessToken("valid-token");
+
+    expect(verifyRefreshToken).toHaveBeenCalledWith("valid-token");
+    expect(UserRepository.findById).toHaveBeenCalledWith(1);
+    expect(generateAccessToken).toHaveBeenCalledWith({
+      id: mockedUser.id,
+      name: mockedUser.name,
+      email: mockedUser.email,
+      role: mockedUser.role,
+    });
+    expect(result).toBe("new-access-token");
   });
 });

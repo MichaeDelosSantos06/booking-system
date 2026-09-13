@@ -40,7 +40,9 @@ const BrowseClassesPage = () => {
   };
 
   return (
-    <div className="m-10 flex h-full min-h-0 flex-col font-poppins">
+    <div
+      className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden"
+    >
       {/* ============================================================
           PAGE HEADER
       ============================================================ */}

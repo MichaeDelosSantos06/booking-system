@@ -1,15 +1,16 @@
 import { useState } from "react";
+
 import { useSearchParams } from "react-router-dom";
 
 import ScheduleList from "../../feature/bookings/components/ScheduleList";
+
 import CancelModal from "../../feature/bookings/components/CancelModal";
 
 import useFetchBooking from "../../hooks/useFetchBooking";
+
 import BookingService from "../../services/booking.service";
 
 import type { BookingTabs } from "../../types/booking.type";
-
-// import Button from "../../components/ui/Button";
 
 const MyBookingPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,6 +42,7 @@ const MyBookingPage = () => {
   const { bookings, bookingCount, loading, refetch } = useFetchBooking(status);
 
   const [cancelModal, setCancelModal] = useState(false);
+
   const [idBooking, setIdBooking] = useState<number | null>(null);
 
   const onClose = () => {
@@ -66,7 +68,7 @@ const MyBookingPage = () => {
   };
 
   return (
-    <div className="mx-10 mt-10 mb-2 flex min-h-0 flex-col">
+    <div className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden">
       {/* Header */}
       <header>
         <div className="flex items-center gap-2">
@@ -87,19 +89,26 @@ const MyBookingPage = () => {
         <div className="flex justify-center sm:justify-start">
           <div
             className="
-        inline-flex w-full max-w-full items-center justify-center
-        gap-2 overflow-x-auto
-        rounded-2xl border border-gray-200/70
-        bg-gray-100/70 p-1
-        shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]
-        backdrop-blur-xl
-        [-ms-overflow-style:none]
-        [scrollbar-width:none]
-        [&::-webkit-scrollbar]:hidden
-
-        sm:inline-flex
-        sm:w-auto
-      "
+              inline-flex
+              w-full
+              max-w-full
+              items-center
+              justify-center
+              gap-2
+              overflow-x-auto
+              rounded-2xl
+              border
+              border-gray-200/70
+              bg-gray-100/70
+              p-1
+              shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]
+              backdrop-blur-xl
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
+              sm:inline-flex
+              sm:w-auto
+            "
           >
             {[
               {
@@ -135,60 +144,69 @@ const MyBookingPage = () => {
                     setSearchParams({});
                   }}
                   className={`
-            relative flex shrink-0 items-center justify-center
-            gap-1
-            rounded-lg
-            px-2.5 py-1.5
-            text-[10px] font-medium
-            leading-none
-            whitespace-nowrap
-            transition-all duration-200 ease-out
-            focus:outline-none
+                    relative
+                    flex
+                    shrink-0
+                    items-center
+                    justify-center
+                    gap-1
+                    rounded-lg
+                    px-2.5
+                    py-1.5
+                    text-[10px]
+                    font-medium
+                    leading-none
+                    whitespace-nowrap
+                    transition-all
+                    duration-200
+                    ease-out
+                    focus:outline-none
+                    sm:gap-1.5
+                    sm:rounded-lg
+                    sm:px-3
+                    sm:py-2
+                    sm:text-[11px]
 
-            sm:gap-1.5
-            sm:rounded-lg
-            sm:px-3
-            sm:py-2
-            sm:text-[11px]
-
-            ${
-              isActive
-                ? `
-                  bg-black
-                  text-white
-                  shadow-[0_2px_6px_rgba(0,0,0,0.14)]
-                `
-                : `
-                  text-gray-500
-                  hover:bg-black/[0.04]
-                  hover:text-gray-900
-                `
-            }
-          `}
+                    ${
+                      isActive
+                        ? `
+                          bg-black
+                          text-white
+                          shadow-[0_2px_6px_rgba(0,0,0,0.14)]
+                        `
+                        : `
+                          text-gray-500
+                          hover:bg-black/[0.04]
+                          hover:text-gray-900
+                        `
+                    }
+                  `}
                 >
                   <span className="whitespace-nowrap">{tab.label}</span>
 
                   <span
                     className={`
-              min-w-4 shrink-0
-              rounded-full
-              px-1 py-0.5
-              text-center
-              text-[9px]
-              font-semibold
-              leading-none
-              transition-all duration-200
+                      min-w-4
+                      shrink-0
+                      rounded-full
+                      px-1
+                      py-0.5
+                      text-center
+                      text-[9px]
+                      font-semibold
+                      leading-none
+                      transition-all
+                      duration-200
+                      sm:min-w-[18px]
+                      sm:px-1.5
+                      sm:text-[9px]
 
-              sm:min-w-[18px]
-              sm:px-1.5
-              sm:text-[9px]
-
-              ${
-                isActive
-                  ? "bg-white/15 text-white"
-                  : "bg-gray-200/70 text-gray-500"
-              }
-            `}
+                      ${
+                        isActive
+                          ? "bg-white/15 text-white"
+                          : "bg-gray-200/70 text-gray-500"
+                      }
+                    `}
                   >
                     {tab.count}
                   </span>
@@ -217,4 +235,5 @@ const MyBookingPage = () => {
     </div>
   );
 };
+
 export default MyBookingPage;

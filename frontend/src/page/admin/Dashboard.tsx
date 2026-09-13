@@ -18,19 +18,14 @@ const Dashboard = () => {
   const { upcoming, loading: upcomingLoading } = useUpcomingSchedule();
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col font-poppins">
+    <div className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden font-poppins">
       {/* Dashboard Header */}
       <header
         className="
-          m-4
-          mb-2
+          mb-9
           shrink-0
-          sm:m-6
-          sm:mb-3
-          md:m-8
-          md:mb-3
-          lg:m-10
-          xl:m-12
+          sm:mb-9
+          md:mb-9
         "
       >
         <div className="flex items-center gap-2">
@@ -50,12 +45,9 @@ const Dashboard = () => {
       <div
         className="
           min-h-0
+          w-full
+          min-w-0
           flex-1
-          px-4
-          sm:px-6
-          md:px-8
-          lg:px-10
-          xl:px-12
         "
       >
         <div className="flex h-full flex-col items-center">
@@ -67,7 +59,7 @@ const Dashboard = () => {
           {/* SCROLLABLE CONTENT ONLY */}
           <div
             className="
-              custom-scrollbar
+              scrollbar-hide
               min-h-0
               w-full
               flex-1

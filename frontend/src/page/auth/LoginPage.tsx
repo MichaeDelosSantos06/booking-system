@@ -54,7 +54,27 @@ const LoginPage = () => {
       {/* Login Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-1 flex-col justify-center space-y-6 rounded-2xl border border-slate-200 bg-white px-6 shadow-xl shadow-slate-200/50 sm:p-10 md:px-50 lg:px-25 xl:px-32 2xl:px-40"
+        className="
+    flex
+    w-full
+    flex-1
+    flex-col
+    justify-center
+    space-y-6
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    px-15
+    shadow-xl
+    shadow-slate-200/50
+
+    sm:p-10
+    md:px-50
+    lg:px-25
+    xl:px-32
+    2xl:px-40
+  "
       >
         {/* Mobile / Medium Branding */}
         <div className="lg:hidden">

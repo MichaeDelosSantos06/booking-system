@@ -21,6 +21,7 @@ vi.mock("../../repositories/schedule.repository.js", () => ({
     searchSchedules: vi.fn(),
     findById: vi.fn(),
     deleteById: vi.fn(),
+    getUpcomingSchedule: vi.fn(),
   },
 }));
 
@@ -243,6 +244,11 @@ describe("ScheduleService.getTodaySchedule", () => {
 
     expect(ScheduleRepository.updateExpiredSchedules).toHaveBeenCalledTimes(1);
     expect(ScheduleRepository.getTodaySchedule).toHaveBeenCalledTimes(1);
+    const expireOrder = vi.mocked(ScheduleRepository.updateExpiredSchedules).mock
+      .invocationCallOrder[0] as number;
+    const fetchOrder = vi.mocked(ScheduleRepository.getTodaySchedule).mock
+      .invocationCallOrder[0] as number;
+    expect(expireOrder).toBeLessThan(fetchOrder);
     expect(result).toEqual([{ id: 1 }]);
   });
 
@@ -261,6 +267,7 @@ describe("ScheduleService.getTodaySchedule", () => {
 
 describe("ScheduleService.searchSchedules", () => {
   it("should use default page, limit, empty search and no filters", async () => {
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [],
       total: 0,
@@ -268,6 +275,7 @@ describe("ScheduleService.searchSchedules", () => {
 
     const result = await ScheduleService.searchSchedules();
 
+    expect(ScheduleRepository.updateSchduleByFull).toHaveBeenCalledTimes(1);
     expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(1, 5, undefined, undefined);
     expect(result).toEqual({
       schedules: [],
@@ -283,6 +291,7 @@ describe("ScheduleService.searchSchedules", () => {
       fromDate: new Date("2026-09-01T00:00:00.000Z"),
       toDate: new Date("2026-09-30T00:00:00.000Z"),
     };
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [{ id: 1 }] as never,
       total: 55,
@@ -295,6 +304,7 @@ describe("ScheduleService.searchSchedules", () => {
   });
 
   it("should convert a whitespace-only search into undefined", async () => {
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [],
       total: 0,
@@ -302,6 +312,7 @@ describe("ScheduleService.searchSchedules", () => {
 
     await ScheduleService.searchSchedules(1, 5, "   ");
 
+    expect(ScheduleRepository.updateSchduleByFull).toHaveBeenCalledTimes(1);
     expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(1, 5, undefined, undefined);
   });
 });
@@ -343,5 +354,25 @@ describe("ScheduleService.deleteById", () => {
     expect(ScheduleRepository.deleteById).toHaveBeenCalledWith(fakeTx, 9);
     expect(BookingRepository.updateStatusByScheduleDelete).toHaveBeenCalledWith(fakeTx, 9);
     expect(callSequence).toEqual(["delete-schedule", "cancel-bookings"]);
+  });
+});
+
+describe("ScheduleService.getUpcomingSchedule", () => {
+  it("should return the upcoming schedules from the repository", async () => {
+    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue([{ id: 1 }] as never);
+
+    const result = await ScheduleService.getUpcomingSchedule();
+
+    expect(ScheduleRepository.getUpcomingSchedule).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([{ id: 1 }]);
+  });
+
+  it("should return an empty array when there are no upcoming schedules", async () => {
+    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue([] as never);
+
+    const result = await ScheduleService.getUpcomingSchedule();
+
+    expect(ScheduleRepository.getUpcomingSchedule).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([]);
   });
 });

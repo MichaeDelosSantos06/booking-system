@@ -1,10 +1,17 @@
 import { useState } from "react";
+
 import axios from "axios";
+
 import { toast } from "sonner";
+
 import MyProfile from "../../feature/member/components/Profile";
+
 import useFetchUserInformation from "../../hooks/useUserInformation";
+
 import { useAuth } from "../../hooks/useAuth";
+
 import UserService from "../../services/user.service";
+
 import type {
   UpdateProfileDto,
   ChangePasswordDto,
@@ -12,13 +19,17 @@ import type {
 
 const ProfilePage = () => {
   const { info, loading, refetch } = useFetchUserInformation();
+
   const { refreshUser } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleEdit = () => {
@@ -71,6 +82,7 @@ const ProfilePage = () => {
 
   const handleChangePassword = async (data: ChangePasswordDto) => {
     setPasswordError(null);
+
     setPasswordSubmitting(true);
 
     try {
@@ -82,8 +94,6 @@ const ProfilePage = () => {
     } catch (error) {
       console.error(error);
 
-      // Show the server's message (e.g. wrong current password)
-      // inside the form so the user knows why it was rejected.
       if (axios.isAxiosError(error)) {
         const errors = error.response?.data?.errors;
 
@@ -103,21 +113,25 @@ const ProfilePage = () => {
   };
 
   return (
-    <MyProfile
-      userData={info}
-      loading={loading}
-      onEdit={handleEdit}
-      isEditing={isEditing}
-      isSubmitting={isSubmitting}
-      onSubmitProfile={handleUpdateProfile}
-      onCancelProfile={handleCancel}
-      onChangePassword={handleOpenChangePassword}
-      isChangingPassword={isChangingPassword}
-      passwordSubmitting={passwordSubmitting}
-      passwordError={passwordError}
-      onSubmitPassword={handleChangePassword}
-      onCancelPassword={handleCancelChangePassword}
-    />
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide">
+        <MyProfile
+          userData={info}
+          loading={loading}
+          onEdit={handleEdit}
+          isEditing={isEditing}
+          isSubmitting={isSubmitting}
+          onSubmitProfile={handleUpdateProfile}
+          onCancelProfile={handleCancel}
+          onChangePassword={handleOpenChangePassword}
+          isChangingPassword={isChangingPassword}
+          passwordSubmitting={passwordSubmitting}
+          passwordError={passwordError}
+          onSubmitPassword={handleChangePassword}
+          onCancelPassword={handleCancelChangePassword}
+        />
+      </div>
+    </div>
   );
 };
 

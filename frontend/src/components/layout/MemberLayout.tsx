@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { Menu, X } from "lucide-react";
+
 import { Outlet } from "react-router-dom";
 
 import SideBar from "./SideBar";
@@ -27,7 +29,22 @@ const MemberLayout = () => {
           <button
             type="button"
             onClick={() => setIsSidebarOpen(false)}
-            className="absolute right-4 top-5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white/20"
+            className="
+              absolute
+              right-4
+              top-5
+              flex
+              h-9
+              w-9
+              cursor-pointer
+              items-center
+              justify-center
+              rounded-lg
+              bg-white/10
+              text-white
+              transition-colors
+              hover:bg-white/20
+            "
           >
             <X size={20} />
           </button>
@@ -43,19 +60,53 @@ const MemberLayout = () => {
       )}
 
       {/* Main Content */}
-      <main className="flex min-w-0 flex-1 flex-col font-poppins">
+      <main
+        className="
+          flex
+          min-h-0
+          min-w-0
+          flex-1
+          flex-col
+          overflow-hidden
+          font-poppins
+        "
+      >
         {/* Mobile / Tablet Header */}
-        <div className="shrink-0 px-4 py-5 sm:px-6 sm:py-6 lg:hidden">
+        <div
+          className="
+            shrink-0
+            px-4
+            py-5
+            sm:px-6
+            sm:py-6
+            lg:hidden
+          "
+        >
           <button
             type="button"
             onClick={() => setIsSidebarOpen(true)}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg bg-black text-white transition-colors hover:bg-gray-800"
+            className="
+              flex
+              h-9
+              w-9
+              cursor-pointer
+              items-center
+              justify-center
+              rounded-lg
+              bg-black
+              text-white
+              transition-colors
+              hover:bg-gray-800
+            "
           >
             <Menu size={20} />
           </button>
         </div>
 
-        <Outlet />
+        {/* Page Content */}
+        <div className="min-h-0 w-full min-w-0 flex-1 overflow-hidden px-9 pt-2 sm:px-5 sm:pt-3 md:px-6 md:pt-4 lg:px-8 lg:pt-12 lg:pb-2">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

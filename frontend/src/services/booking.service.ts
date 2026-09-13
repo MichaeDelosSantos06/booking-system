@@ -37,6 +37,11 @@ const BookingService = {
     const result = await api.get("/booking/book-stat");
     return result.data;
   },
+
+  fetchMyDashboardStatistic: async () => {
+    const result = await api.get("/booking/my-dashboard-statistics");
+    return result.data;
+  },
 };
 
 export default BookingService;

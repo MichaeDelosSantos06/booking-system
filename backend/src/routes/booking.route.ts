@@ -53,4 +53,10 @@ router.get(
   authorize,
   BookingController.gerStatBookingForGraph,
 );
+
+router.get(
+  "/booking/my-dashboard-statistics",
+  tokenAuth,
+  BookingController.getMyDashboardStatistics,
+);
 export default router;

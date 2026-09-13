@@ -68,17 +68,15 @@ const ClassPage = () => {
   return (
     <div
       className="
-        m-4
         flex
+        w-full
+        min-w-0
+        flex-1
         flex-col
         gap-4
-        sm:m-6
         sm:gap-5
-        md:m-8
         md:gap-6
-        lg:m-10
         lg:gap-5
-        xl:m-12
       "
     >
       {/* Page Header */}
