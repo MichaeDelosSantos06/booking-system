@@ -1,8 +1,6 @@
-import prisma from "../../../backend/src/lib/prisma.js";
-import {
-  BookingStatus,
-  Prisma,
-} from "../../../backend/src/generated/prisma/client.js";
+import prisma from "../lib/prisma.js";
+import { Prisma } from "../generated/prisma/client.js";
+import { BookingStatus } from "../generated/prisma/enums.js";
 
 import type { CreateBookingData } from "../../../backend/src/schema/booking.schema.js";
 import type { BookingWhereInput } from "../../../backend/src/generated/prisma/models/Booking.js";
