@@ -8,9 +8,7 @@ const useFetchMyDashboardStatistics = () => {
     completed: 0,
     total: 0,
     membership: {
-      user: {
-        status: null,
-      },
+      status: null,
     },
   });
 

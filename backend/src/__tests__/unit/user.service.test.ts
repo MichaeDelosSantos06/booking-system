@@ -63,11 +63,12 @@ beforeEach(() => {
 });
 
 describe("UserService.registerUser", () => {
-  it("should register a user, hash the password with 12 rounds and return the sanitized payload with a token", async () => {
+  it("should register a user, hash the password with 12 rounds and return access and refresh tokens", async () => {
     vi.mocked(UserRepository.findByEmail).mockResolvedValue(null);
     bcryptHashMock.mockResolvedValue("hashed-password");
     vi.mocked(UserRepository.registerUser).mockResolvedValue(mockedUser as never);
     vi.mocked(generateAccessToken).mockReturnValue("jwt-token");
+    vi.mocked(generateRefreshToken).mockReturnValue("refresh-token");
 
     const result = await UserService.registerUser(registerPayload);
 
@@ -85,15 +86,11 @@ describe("UserService.registerUser", () => {
       email: mockedUser.email,
       role: mockedUser.role,
     });
+    expect(generateRefreshToken).toHaveBeenCalledWith({ id: mockedUser.id });
     expect(result).toEqual({
-      id: 1,
-      name: "Michael Delos Santos",
-      email: "michael@example.com",
-      role: "Member",
-      token: "jwt-token",
+      accessToken: "jwt-token",
+      refreshToken: "refresh-token",
     });
-    expect(result).not.toHaveProperty("passwordHash");
-    expect(result).not.toHaveProperty("contact");
   });
 
   it("should throw a 400 AppError when the email is already registered", async () => {

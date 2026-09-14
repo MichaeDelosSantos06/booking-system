@@ -17,12 +17,11 @@ vi.mock("../../repositories/booking.repository.js", () => ({
     getMyUpcomingBooking: vi.fn(),
     getMyCompletedBooking: vi.fn(),
     getMyTotalBooking: vi.fn(),
-    getMyMembershipStatus: vi.fn(),
   },
 }));
 
 vi.mock("../../repositories/user.repository.js", () => ({
-  default: { findById: vi.fn() },
+  default: { findById: vi.fn(), getMyMembershipStatus: vi.fn() },
 }));
 
 vi.mock("../../repositories/class.repositoy.js", () => ({
@@ -389,14 +388,14 @@ describe("BookingService.fetchMyDashboardStatistic", () => {
     vi.mocked(BookingRepository.getMyUpcomingBooking).mockResolvedValue(2 as never);
     vi.mocked(BookingRepository.getMyCompletedBooking).mockResolvedValue(5 as never);
     vi.mocked(BookingRepository.getMyTotalBooking).mockResolvedValue(7 as never);
-    vi.mocked(BookingRepository.getMyMembershipStatus).mockResolvedValue({ status: "Active" } as never);
+    vi.mocked(UserRepository.getMyMembershipStatus).mockResolvedValue({ status: "Active" } as never);
 
     const result = await BookingService.fetchMyDashboardStatistic(1);
 
     expect(BookingRepository.getMyUpcomingBooking).toHaveBeenCalledWith(1);
     expect(BookingRepository.getMyCompletedBooking).toHaveBeenCalledWith(1);
     expect(BookingRepository.getMyTotalBooking).toHaveBeenCalledWith(1);
-    expect(BookingRepository.getMyMembershipStatus).toHaveBeenCalledWith(1);
+    expect(UserRepository.getMyMembershipStatus).toHaveBeenCalledWith(1);
     expect(result).toEqual({
       upcoming: 2,
       completed: 5,
@@ -409,7 +408,7 @@ describe("BookingService.fetchMyDashboardStatistic", () => {
     vi.mocked(BookingRepository.getMyUpcomingBooking).mockResolvedValue(0 as never);
     vi.mocked(BookingRepository.getMyCompletedBooking).mockResolvedValue(0 as never);
     vi.mocked(BookingRepository.getMyTotalBooking).mockResolvedValue(0 as never);
-    vi.mocked(BookingRepository.getMyMembershipStatus).mockResolvedValue(null as never);
+    vi.mocked(UserRepository.getMyMembershipStatus).mockResolvedValue(null as never);
 
     const result = await BookingService.fetchMyDashboardStatistic(9);
 

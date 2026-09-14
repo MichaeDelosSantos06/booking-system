@@ -11,25 +11,25 @@ const MemberCards = ({ statistics }: MemberCardDto) => {
   const cards = [
     {
       label: "Upcoming Classes",
-      value: statistics.upcoming.toString().padStart(2, "0"),
+      value: statistics.upcoming.toString(),
       description: "Classes scheduled",
       icon: CalendarDays,
     },
     {
       label: "Total Bookings",
-      value: statistics.total.toString().padStart(2, "0"),
+      value: statistics.total.toString(),
       description: "All-time bookings",
       icon: ClipboardCheck,
     },
     {
       label: "Completed",
-      value: statistics.completed.toString().padStart(2, "0"),
+      value: statistics.completed.toString(),
       description: "Classes completed",
       icon: CheckCircle2,
     },
     {
       label: "Membership",
-      value: statistics.membership.user.status,
+      value: statistics.membership.status,
       description: "Membership status",
       icon: BadgeCheck,
     },

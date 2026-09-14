@@ -159,9 +159,7 @@ export interface DashboardStatResponse {
   completed: number;
   total: number;
   membership: {
-    user: {
-      status: Status | null;
-    };
+    status: Status | null;
   };
 }
 

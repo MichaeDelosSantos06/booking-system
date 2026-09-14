@@ -16,9 +16,10 @@ const UserController = {
   registerUser: asyncHandler(async (req: Request, res: Response) => {
     const data: CreateUserDto = req.body;
 
-    const { token } = await UserService.registerUser(data);
+    const { accessToken, refreshToken } = await UserService.registerUser(data);
 
-    setAccessTokenCookie(res, token);
+    setAccessTokenCookie(res, accessToken);
+    setRefreshTokenCookie(res, refreshToken);
 
     return res.status(201).json({
       success: true,

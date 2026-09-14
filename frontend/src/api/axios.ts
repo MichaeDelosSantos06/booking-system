@@ -14,7 +14,7 @@ const subscribeToRefresh = (callback: () => void) => {
 };
 
 const notifyRefreshSubscribers = () => {
-  refreshSubscribers.forEach((callback) => callback);
+  refreshSubscribers.forEach((callback) => callback());
   refreshSubscribers = [];
 };
 

@@ -140,6 +140,17 @@ export const UserRepository = {
       },
     });
   },
+
+  getMyMembershipStatus: async (userId: number) => {
+    return prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        status: true,
+      },
+    });
+  },
 };
 
 export default UserRepository;

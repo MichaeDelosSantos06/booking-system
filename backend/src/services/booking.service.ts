@@ -157,7 +157,7 @@ const BookingService = {
       BookingRepository.getMyUpcomingBooking(userId),
       BookingRepository.getMyCompletedBooking(userId),
       BookingRepository.getMyTotalBooking(userId),
-      BookingRepository.getMyMembershipStatus(userId),
+      UserRepository.getMyMembershipStatus(userId),
     ]);
 
     return {

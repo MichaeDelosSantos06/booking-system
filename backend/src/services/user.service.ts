@@ -34,19 +34,20 @@ const UserService = {
       passwordHash: passwordHashed,
     });
 
-    const token = generateAccessToken({
+    const accessToken = generateAccessToken({
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
     });
 
-    return {
+    const refreshToken = generateRefreshToken({
       id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
     };
   },
 
