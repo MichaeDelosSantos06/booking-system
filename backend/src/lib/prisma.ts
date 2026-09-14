@@ -1,9 +1,17 @@
 import { PrismaClient } from "../generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { env } from "../config/env.js";
+import { AppError } from "../utils/appError.js";
 // import { withAccelerate } from "@prisma/extension-accelerate";
 
+const connectionString = env.DIRECT_DATABASE_URL;
+
+if (!connectionString) {
+  throw new AppError("DIRECT_DATABASE_URL is not  defined", 404);
+}
+
 const adapter = new PrismaPg({
-  connectionString: process.env.DIRECT_DATABASE_URL!,
+  connectionString,
 });
 
 const prisma = new PrismaClient({

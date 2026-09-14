@@ -13,6 +13,9 @@ const requiredEnvVars = [
   "REFRESH_TOKEN_EXPIRES_IN",
   "REFRESH_TOKEN_SECRET",
 
+  "SEED_ADMIN_USER",
+  "SEED_ADMIN_PASS",
+
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
@@ -41,6 +44,9 @@ export const env = {
 
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as StringValue,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as StringValue,
+
+  SEED_ADMIN_USER: process.env.SEED_ADMIN_USER,
+  SEED_ADMIN_PASS: process.env.SEED_ADMIN_PASS,
 
   SMTP_HOST: process.env.SMTP_HOST!,
   SMTP_PORT: Number(process.env.SMTP_PORT),
