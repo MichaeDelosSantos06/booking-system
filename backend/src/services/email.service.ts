@@ -22,6 +22,8 @@ transporter.verify((error) => {
 
 class EmailService {
   async sendPasswordResetEmail(email: string, resetUrl: string) {
+    console.log("[SMTP] Before sendMail");
+
     await transporter.sendMail({
       from: env.EMAIL_FROM,
       to: email,
@@ -266,6 +268,7 @@ class EmailService {
         </html>
       `,
     });
+    console.log("[SMTP] After sendMail");
   }
 }
 
