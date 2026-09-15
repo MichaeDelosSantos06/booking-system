@@ -9,7 +9,7 @@ import { difficultyConfig } from "../../../types/class.types";
 
 const ClassTableSkeleton = () => {
   return (
-    <div className="flex h-[500px] min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[520px] sm:rounded-2xl md:h-[540px]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[520px] sm:rounded-2xl md:h-[540px]">
       {/* Skeleton Table */}
       <div className="custom-scrollbar min-h-0 flex-1 overflow-hidden">
         <table className="w-full min-w-[620px] table-fixed text-left sm:min-w-[700px] md:min-w-[760px]">
@@ -159,7 +159,7 @@ const ClassTable = ({
   }
 
   return (
-    <div className="flex h-[500px] min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[520px] sm:rounded-2xl md:h-[540px]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:h-[520px] sm:rounded-2xl md:h-[540px]">
       {/* Table Area */}
       <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[620px] table-fixed text-left sm:min-w-[700px] md:min-w-[760px]">

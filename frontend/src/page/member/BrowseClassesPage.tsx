@@ -46,7 +46,7 @@ const BrowseClassesPage = () => {
       {/* ============================================================
           PAGE HEADER
       ============================================================ */}
-      <header className="shrink-0 pb-5">
+      <header className="shrink-0 pb-4 sm:pb-5">
         {loading ? (
           <div className="animate-pulse" aria-hidden="true">
             <div className="flex items-center gap-2">
@@ -62,12 +62,12 @@ const BrowseClassesPage = () => {
             <div className="flex items-center gap-2">
               <span className="h-6 w-1 rounded-full bg-red-600" />
 
-              <h1 className="text-2xl font-bold tracking-tight text-gray-950">
+              <h1 className="text-xl font-bold tracking-tight text-gray-950 sm:text-2xl">
                 Browse Classes
               </h1>
             </div>
 
-            <p className="mt-1.5 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 sm:mt-1.5">
               Discover classes that match your fitness goals and book your next
               session.
             </p>
@@ -80,14 +80,17 @@ const BrowseClassesPage = () => {
       ============================================================ */}
       <section
         className="
-          mb-5
+          mb-4
           shrink-0
           rounded-xl
           border
           border-gray-200
           bg-white
-          p-3
+          p-2.5
           shadow-[0_1px_6px_rgba(0,0,0,0.04)]
+
+          sm:mb-5
+          sm:p-3
         "
       >
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">

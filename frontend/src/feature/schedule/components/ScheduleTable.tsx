@@ -20,7 +20,7 @@ const ScheduleTable = ({
       <div
         className="
           flex
-          h-[500px]
+          h-full
           min-h-0
           w-full
           animate-pulse
@@ -191,7 +191,7 @@ const ScheduleTable = ({
     <div
       className="
         flex
-        h-[500px]
+        h-full
         min-h-0
         w-full
         flex-col

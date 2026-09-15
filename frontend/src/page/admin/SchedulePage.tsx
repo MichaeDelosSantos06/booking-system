@@ -61,10 +61,13 @@ const SchedulePage = () => {
     <div
       className="
         flex
+        h-full
         w-full
         min-w-0
+        min-h-0
         flex-1
         flex-col
+        overflow-hidden
         gap-4
         sm:gap-5
         md:gap-6
@@ -72,7 +75,7 @@ const SchedulePage = () => {
       "
     >
       {/* Page Header */}
-      <header>
+      <header className="shrink-0">
         {loading ? (
           <div className="animate-pulse">
             <div className="flex items-center gap-2">
@@ -147,6 +150,7 @@ const SchedulePage = () => {
         className="
           mt-1
           flex
+          shrink-0
           flex-col
           gap-2.5
           sm:mt-2
@@ -250,7 +254,7 @@ const SchedulePage = () => {
       </div>
 
       {/* Schedules */}
-      <div className="min-w-0 w-full">
+      <div className="min-h-0 w-full flex-1">
         <ScheduleTable
           schedule={schedule}
           onDelete={onDelete}

@@ -6,6 +6,7 @@ import { AppError } from "../utils/appError.js";
 import ScheduleRepository from "../repositories/schedule.repository.js";
 import prisma from "../lib/prisma.js";
 import BookingRepository from "../repositories/booking.repository.js";
+import NotificationService from "./notification.service.js";
 
 const ScheduleService = {
   createSchedule: async (data: CreateScheduleDto) => {
@@ -57,7 +58,7 @@ const ScheduleService = {
       throw new AppError("End time must be after start time", 400);
     }
 
-    return ScheduleRepository.createSchedule({
+    const schedule = await ScheduleRepository.createSchedule({
       date: dateValue,
       classId: data.classId,
       trainerId: data.trainerId,
@@ -66,6 +67,11 @@ const ScheduleService = {
       location: data.location,
       capacity: data.capacity,
     });
+
+    // notify members that a new schedule is available
+    await NotificationService.notifyNewSchedule(checkClassId.className, startAt);
+
+    return schedule;
   },
 
   getAllSchedule: async () => {
@@ -109,15 +115,26 @@ const ScheduleService = {
 
   // mark bookings as cancelled thru delettion of schdule
   deleteById: async (id: number) => {
-    const schedule = await ScheduleRepository.findById(id);
+    const schedule = await ScheduleRepository.findByIdWithClass(id);
     if (!schedule) {
       throw new AppError("Id not found!", 404);
     }
 
-    return prisma.$transaction(async (tx) => {
+    // members affected by the cancellation, captured before the statuses change
+    const bookedUserIds =
+      await BookingRepository.findBookedUserIdsBySchedule(id);
+
+    await prisma.$transaction(async (tx) => {
       await ScheduleRepository.deleteById(tx, id);
       await BookingRepository.updateStatusByScheduleDelete(tx, id);
     });
+
+    // notify only the members who actually booked this schedule
+    await NotificationService.notifyScheduleCancellation(
+      bookedUserIds,
+      schedule.class.className,
+      schedule.startAt,
+    );
   },
 
   getUpcomingSchedule: async () => {

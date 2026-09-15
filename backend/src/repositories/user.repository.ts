@@ -104,6 +104,21 @@ export const UserRepository = {
     });
   },
 
+  // used to broadcast notifications to every active member
+  findActiveMemberIds: async () => {
+    const members = await prisma.user.findMany({
+      where: {
+        role: "Member",
+        status: "Active",
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return members.map((member) => member.id);
+  },
+
   getUserInfo: async (id: number) => {
     return prisma.user.findFirst({
       where: {

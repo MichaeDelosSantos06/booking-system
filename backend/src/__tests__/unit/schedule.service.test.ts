@@ -20,13 +20,24 @@ vi.mock("../../repositories/schedule.repository.js", () => ({
     updateSchduleByFull: vi.fn(),
     searchSchedules: vi.fn(),
     findById: vi.fn(),
+    findByIdWithClass: vi.fn(),
     deleteById: vi.fn(),
     getUpcomingSchedule: vi.fn(),
   },
 }));
 
 vi.mock("../../repositories/booking.repository.js", () => ({
-  default: { updateStatusByScheduleDelete: vi.fn() },
+  default: {
+    updateStatusByScheduleDelete: vi.fn(),
+    findBookedUserIdsBySchedule: vi.fn(),
+  },
+}));
+
+vi.mock("../../services/notification.service.js", () => ({
+  default: {
+    notifyNewSchedule: vi.fn(),
+    notifyScheduleCancellation: vi.fn(),
+  },
 }));
 
 vi.mock("../../lib/prisma.js", () => ({
@@ -38,9 +49,12 @@ import ClassRepository from "../../repositories/class.repositoy.js";
 import TrainerRepository from "../../repositories/trainer.repositoy.js";
 import ScheduleRepository from "../../repositories/schedule.repository.js";
 import BookingRepository from "../../repositories/booking.repository.js";
+import NotificationService from "../../services/notification.service.js";
 import prisma from "../../lib/prisma.js";
 
-const transactionMock = prisma.$transaction as unknown as ReturnType<typeof vi.fn>;
+const transactionMock = prisma.$transaction as unknown as ReturnType<
+  typeof vi.fn
+>;
 
 const formatLocalDate = (date: Date) => {
   const year = date.getFullYear();
@@ -63,10 +77,18 @@ const validScheduleData: CreateScheduleDto = {
 };
 
 const actAsFoundValidEntry = () => {
-  vi.mocked(ClassRepository.findClassById).mockResolvedValue({ id: 10 } as never);
-  vi.mocked(TrainerRepository.findTrainerById).mockResolvedValue({ id: 20 } as never);
-  vi.mocked(ScheduleRepository.findTrainerScheduleByDate).mockResolvedValue(null);
-  vi.mocked(ScheduleRepository.findOverlappingLocationSchedule).mockResolvedValue(null);
+  vi.mocked(ClassRepository.findClassById).mockResolvedValue({
+    id: 10,
+  } as never);
+  vi.mocked(TrainerRepository.findTrainerById).mockResolvedValue({
+    id: 20,
+  } as never);
+  vi.mocked(ScheduleRepository.findTrainerScheduleByDate).mockResolvedValue(
+    null,
+  );
+  vi.mocked(
+    ScheduleRepository.findOverlappingLocationSchedule,
+  ).mockResolvedValue(null);
 };
 
 beforeEach(() => {
@@ -77,7 +99,9 @@ describe("ScheduleService.createSchedule", () => {
   it("should throw a 404 AppError when the class does not exist", async () => {
     vi.mocked(ClassRepository.findClassById).mockResolvedValue(null);
 
-    await expect(ScheduleService.createSchedule(validScheduleData)).rejects.toMatchObject({
+    await expect(
+      ScheduleService.createSchedule(validScheduleData),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 404,
       message: "Class not found",
@@ -87,10 +111,14 @@ describe("ScheduleService.createSchedule", () => {
   });
 
   it("should throw a 404 AppError when the trainer does not exist", async () => {
-    vi.mocked(ClassRepository.findClassById).mockResolvedValue({ id: 10 } as never);
+    vi.mocked(ClassRepository.findClassById).mockResolvedValue({
+      id: 10,
+    } as never);
     vi.mocked(TrainerRepository.findTrainerById).mockResolvedValue(null);
 
-    await expect(ScheduleService.createSchedule(validScheduleData)).rejects.toMatchObject({
+    await expect(
+      ScheduleService.createSchedule(validScheduleData),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 404,
       message: "Trainer not found",
@@ -106,23 +134,31 @@ describe("ScheduleService.createSchedule", () => {
       trainerId: 20,
     } as never);
 
-    await expect(ScheduleService.createSchedule(validScheduleData)).rejects.toMatchObject({
+    await expect(
+      ScheduleService.createSchedule(validScheduleData),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 400,
       message: "Trainer has schdule on this date",
     });
 
-    expect(ScheduleRepository.findOverlappingLocationSchedule).not.toHaveBeenCalled();
+    expect(
+      ScheduleRepository.findOverlappingLocationSchedule,
+    ).not.toHaveBeenCalled();
   });
 
   it("should throw a 400 AppError when the location overlaps another schedule", async () => {
     actAsFoundValidEntry();
-    vi.mocked(ScheduleRepository.findOverlappingLocationSchedule).mockResolvedValue({
+    vi.mocked(
+      ScheduleRepository.findOverlappingLocationSchedule,
+    ).mockResolvedValue({
       id: 51,
       location: "StudioA",
     } as never);
 
-    await expect(ScheduleService.createSchedule(validScheduleData)).rejects.toMatchObject({
+    await expect(
+      ScheduleService.createSchedule(validScheduleData),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 400,
       message: "Location being used by another schedule at the same time",
@@ -137,7 +173,10 @@ describe("ScheduleService.createSchedule (time validations)", () => {
     actAsFoundValidEntry();
 
     await expect(
-      ScheduleService.createSchedule({ ...validScheduleData, date: pastDate() }),
+      ScheduleService.createSchedule({
+        ...validScheduleData,
+        date: pastDate(),
+      }),
     ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 400,
@@ -183,7 +222,9 @@ describe("ScheduleService.createSchedule (time validations)", () => {
 
   it("should create the schedule with parsed date and time bounds", async () => {
     actAsFoundValidEntry();
-    vi.mocked(ScheduleRepository.createSchedule).mockResolvedValue({ id: 1 } as never);
+    vi.mocked(ScheduleRepository.createSchedule).mockResolvedValue({
+      id: 1,
+    } as never);
 
     const data = validScheduleData;
     await ScheduleService.createSchedule(data);
@@ -199,11 +240,9 @@ describe("ScheduleService.createSchedule (time validations)", () => {
       expectedStart,
       expectedEnd,
     );
-    expect(ScheduleRepository.findOverlappingLocationSchedule).toHaveBeenCalledWith(
-      "StudioA",
-      expectedStart,
-      expectedEnd,
-    );
+    expect(
+      ScheduleRepository.findOverlappingLocationSchedule,
+    ).toHaveBeenCalledWith("StudioA", expectedStart, expectedEnd);
     expect(ScheduleRepository.createSchedule).toHaveBeenCalledWith({
       date: expectedDate,
       classId: 10,
@@ -218,7 +257,9 @@ describe("ScheduleService.createSchedule (time validations)", () => {
 
 describe("ScheduleService.getAllSchedule", () => {
   it("should return all schedules when found", async () => {
-    vi.mocked(ScheduleRepository.getAllSchedule).mockResolvedValue([{ id: 1 }] as never);
+    vi.mocked(ScheduleRepository.getAllSchedule).mockResolvedValue([
+      { id: 1 },
+    ] as never);
 
     const result = await ScheduleService.getAllSchedule();
 
@@ -238,14 +279,16 @@ describe("ScheduleService.getTodaySchedule", () => {
     vi.mocked(ScheduleRepository.updateExpiredSchedules).mockResolvedValue({
       count: 3,
     } as never);
-    vi.mocked(ScheduleRepository.getTodaySchedule).mockResolvedValue([{ id: 1 }] as never);
+    vi.mocked(ScheduleRepository.getTodaySchedule).mockResolvedValue([
+      { id: 1 },
+    ] as never);
 
     const result = await ScheduleService.getTodaySchedule();
 
     expect(ScheduleRepository.updateExpiredSchedules).toHaveBeenCalledTimes(1);
     expect(ScheduleRepository.getTodaySchedule).toHaveBeenCalledTimes(1);
-    const expireOrder = vi.mocked(ScheduleRepository.updateExpiredSchedules).mock
-      .invocationCallOrder[0] as number;
+    const expireOrder = vi.mocked(ScheduleRepository.updateExpiredSchedules)
+      .mock.invocationCallOrder[0] as number;
     const fetchOrder = vi.mocked(ScheduleRepository.getTodaySchedule).mock
       .invocationCallOrder[0] as number;
     expect(expireOrder).toBeLessThan(fetchOrder);
@@ -267,7 +310,9 @@ describe("ScheduleService.getTodaySchedule", () => {
 
 describe("ScheduleService.searchSchedules", () => {
   it("should use default page, limit, empty search and no filters", async () => {
-    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({
+      count: 0,
+    } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [],
       total: 0,
@@ -276,7 +321,12 @@ describe("ScheduleService.searchSchedules", () => {
     const result = await ScheduleService.searchSchedules();
 
     expect(ScheduleRepository.updateSchduleByFull).toHaveBeenCalledTimes(1);
-    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(1, 5, undefined, undefined);
+    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(
+      1,
+      5,
+      undefined,
+      undefined,
+    );
     expect(result).toEqual({
       schedules: [],
       total: 0,
@@ -291,20 +341,39 @@ describe("ScheduleService.searchSchedules", () => {
       fromDate: new Date("2026-09-01T00:00:00.000Z"),
       toDate: new Date("2026-09-30T00:00:00.000Z"),
     };
-    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({
+      count: 0,
+    } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [{ id: 1 }] as never,
       total: 55,
     });
 
-    const result = await ScheduleService.searchSchedules(-1, 200, "  spin  ", filters);
+    const result = await ScheduleService.searchSchedules(
+      -1,
+      200,
+      "  spin  ",
+      filters,
+    );
 
-    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(1, 50, "spin", filters);
-    expect(result.pagination).toEqual({ page: 1, limit: 50, total: 55, totalPages: 2 });
+    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(
+      1,
+      50,
+      "spin",
+      filters,
+    );
+    expect(result.pagination).toEqual({
+      page: 1,
+      limit: 50,
+      total: 55,
+      totalPages: 2,
+    });
   });
 
   it("should convert a whitespace-only search into undefined", async () => {
-    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({ count: 0 } as never);
+    vi.mocked(ScheduleRepository.updateSchduleByFull).mockResolvedValue({
+      count: 0,
+    } as never);
     vi.mocked(ScheduleRepository.searchSchedules).mockResolvedValue({
       schedules: [],
       total: 0,
@@ -313,13 +382,18 @@ describe("ScheduleService.searchSchedules", () => {
     await ScheduleService.searchSchedules(1, 5, "   ");
 
     expect(ScheduleRepository.updateSchduleByFull).toHaveBeenCalledTimes(1);
-    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(1, 5, undefined, undefined);
+    expect(ScheduleRepository.searchSchedules).toHaveBeenCalledWith(
+      1,
+      5,
+      undefined,
+      undefined,
+    );
   });
 });
 
 describe("ScheduleService.deleteById", () => {
   it("should throw a 404 AppError when the schedule does not exist", async () => {
-    vi.mocked(ScheduleRepository.findById).mockResolvedValue(null);
+    vi.mocked(ScheduleRepository.findByIdWithClass).mockResolvedValue(null);
 
     await expect(ScheduleService.deleteById(999)).rejects.toMatchObject({
       name: "AppError",
@@ -331,7 +405,15 @@ describe("ScheduleService.deleteById", () => {
   });
 
   it("should soft-delete the schedule and then cancel its bookings inside a transaction", async () => {
-    vi.mocked(ScheduleRepository.findById).mockResolvedValue({ id: 9 } as never);
+    vi.mocked(ScheduleRepository.findByIdWithClass).mockResolvedValue({
+      id: 9,
+      startAt: new Date("2026-09-16T10:00:00.000Z"),
+      class: { className: "Yoga Flow" },
+    } as never);
+    vi.mocked(BookingRepository.findBookedUserIdsBySchedule).mockResolvedValue([
+      1,
+      2,
+    ] as never);
 
     const callSequence: string[] = [];
     const fakeTx = {};
@@ -340,26 +422,36 @@ describe("ScheduleService.deleteById", () => {
       callSequence.push("delete-schedule");
       return { id: 9, deletedAt: new Date() } as never;
     });
-    vi.mocked(BookingRepository.updateStatusByScheduleDelete).mockImplementation(
-      async () => {
-        callSequence.push("cancel-bookings");
-        return { count: 3 } as never;
-      },
-    );
+    vi.mocked(
+      BookingRepository.updateStatusByScheduleDelete,
+    ).mockImplementation(async () => {
+      callSequence.push("cancel-bookings");
+      return { count: 3 } as never;
+    });
 
     await ScheduleService.deleteById(9);
 
-    expect(ScheduleRepository.findById).toHaveBeenCalledWith(9);
+    expect(ScheduleRepository.findByIdWithClass).toHaveBeenCalledWith(9);
     expect(transactionMock).toHaveBeenCalledTimes(1);
     expect(ScheduleRepository.deleteById).toHaveBeenCalledWith(fakeTx, 9);
-    expect(BookingRepository.updateStatusByScheduleDelete).toHaveBeenCalledWith(fakeTx, 9);
+    expect(BookingRepository.updateStatusByScheduleDelete).toHaveBeenCalledWith(
+      fakeTx,
+      9,
+    );
     expect(callSequence).toEqual(["delete-schedule", "cancel-bookings"]);
+    expect(NotificationService.notifyScheduleCancellation).toHaveBeenCalledWith(
+      [1, 2],
+      "Yoga Flow",
+      new Date("2026-09-16T10:00:00.000Z"),
+    );
   });
 });
 
 describe("ScheduleService.getUpcomingSchedule", () => {
   it("should return the upcoming schedules from the repository", async () => {
-    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue([{ id: 1 }] as never);
+    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue([
+      { id: 1 },
+    ] as never);
 
     const result = await ScheduleService.getUpcomingSchedule();
 
@@ -368,7 +460,9 @@ describe("ScheduleService.getUpcomingSchedule", () => {
   });
 
   it("should return an empty array when there are no upcoming schedules", async () => {
-    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue([] as never);
+    vi.mocked(ScheduleRepository.getUpcomingSchedule).mockResolvedValue(
+      [] as never,
+    );
 
     const result = await ScheduleService.getUpcomingSchedule();
 

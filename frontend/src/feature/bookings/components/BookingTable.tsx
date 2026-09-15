@@ -17,7 +17,7 @@ const BookingTable = ({
       <div
         className="
           flex
-          h-[410px]
+          h-full
           min-h-0
           w-full
           animate-pulse
@@ -184,7 +184,7 @@ const BookingTable = ({
     <div
       className="
         flex
-        h-[410px]
+        h-full
         min-h-0
         w-full
         flex-col

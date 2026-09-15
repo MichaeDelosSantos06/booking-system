@@ -26,7 +26,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteSchedModal) => {
 
             <p className="mt-1 text-[10px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
               Deleting this schedule will permanently remove its information
-              from FitBook.
+              from Fitnext.
             </p>
           </div>
         </div>

@@ -32,6 +32,7 @@
     "multer": "^2.2.0",
     "nodemailer": "^9.0.5",
     "pg": "^8.22.0",
+    "ws": "^8.21.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -45,6 +46,7 @@
     "@types/multer": "^2.2.0",
     "@types/node": "^26.1.2",
     "@types/nodemailer": "^8.0.1",
+    "@types/ws": "^8.18.1",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.8.0",

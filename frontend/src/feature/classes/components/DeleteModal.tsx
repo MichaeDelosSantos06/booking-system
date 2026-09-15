@@ -26,7 +26,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteClassModal) => {
 
             <p className="mt-1 text-[10px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
               Deleting this class will permanently remove its information from
-              FitBook.
+              Fitnext
             </p>
           </div>
         </div>

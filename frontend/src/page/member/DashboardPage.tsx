@@ -67,7 +67,7 @@ const MemberDashboardPage = () => {
             className="
         min-w-0
         truncate
-        text-2xl
+        text-xl
         font-bold
         tracking-tight
         text-gray-950

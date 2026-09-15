@@ -23,7 +23,7 @@ const RegisterBranding = () => {
             className="text-white text-2xl font-black tracking-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            FITBOOK
+            FITNEXT
           </span>
         </div>
         <div>
@@ -40,7 +40,7 @@ const RegisterBranding = () => {
           </h1>
           <p className="text-white/60 text-base max-w-sm leading-relaxed">
             Join thousands of members who have transformed their fitness
-            routines with FitBook's easy class booking.
+            routines with Fitnext's easy class booking.
           </p>
           <div className="mt-8 space-y-3">
             {[

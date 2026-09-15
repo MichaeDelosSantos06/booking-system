@@ -4,6 +4,14 @@ const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
+import { authenticateWebSocket } from "./utils/webSocketAuth.js";
+import {
+  addConnection,
+  removeConnection,
+} from "./services/websockerManager.service.js";
+
 // helmet, cors, rate-limit, json, errorHandler
 
 import { env } from "./config/env.js";
@@ -22,6 +30,7 @@ import classRoutes from "./routes/class.route.js";
 import trainerRoutes from "./routes/trainer.route.js";
 import scheduleRoute from "./routes/schedule.route.js";
 import bookingRoute from "./routes/booking.route.js";
+import notificationRoute from "./routes/notification.route.js";
 
 app.use(helmet());
 app.use(
@@ -52,10 +61,34 @@ app.use("/api", classRoutes);
 app.use("/api", trainerRoutes);
 app.use("/api", scheduleRoute);
 app.use("/api", bookingRoute);
+app.use("/api", notificationRoute);
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+const server = createServer(app);
+const wss = new WebSocketServer({
+  server,
+  path: "/ws",
+});
+
+wss.on("connection", (ws, req) => {
+  const user = authenticateWebSocket(req);
+
+  if (!user) {
+    ws.close(1008, "Unauthorized");
+    return;
+  }
+
+  addConnection(user.id, ws);
+
+  console.log(`WebSocket user ${user.id} connected`);
+
+  ws.on("close", () => {
+    removeConnection(user.id, ws);
+  });
+});
+
+server.listen(PORT, () => {
   console.log(`Server start listening to PORT ${PORT}`);
 });

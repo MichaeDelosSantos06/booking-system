@@ -12,7 +12,7 @@ const MembersTable = ({
       <div
         className="
           flex
-          h-[420px]
+          h-full
           w-full
           min-h-0
           animate-pulse
@@ -158,7 +158,7 @@ const MembersTable = ({
     <div
       className="
         flex
-        h-[420px]
+        h-full
         w-full
         min-h-0
         flex-col

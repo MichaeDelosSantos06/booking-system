@@ -68,10 +68,13 @@ const ClassPage = () => {
     <div
       className="
         flex
+        h-full
         w-full
         min-w-0
+        min-h-0
         flex-1
         flex-col
+        overflow-hidden
         gap-4
         sm:gap-5
         md:gap-6
@@ -79,7 +82,7 @@ const ClassPage = () => {
       "
     >
       {/* Page Header */}
-      <header>
+      <header className="shrink-0">
         {loading ? (
           <div className="animate-pulse">
             {/* Title Skeleton */}
@@ -153,6 +156,7 @@ const ClassPage = () => {
         className="
           mt-1
           flex
+          shrink-0
           flex-col
           gap-2.5
           sm:mt-2
@@ -243,7 +247,7 @@ const ClassPage = () => {
       </div>
 
       {/* Classes */}
-      <div className="min-w-0 w-full">
+      <div className="min-h-0 w-full flex-1">
         {/* Class Table */}
         <ClassTable
           classes={classes}

@@ -226,6 +226,21 @@ const ScheduleRepository = {
     });
   },
 
+  findByIdWithClass: async (id: number) => {
+    return prisma.schedule.findFirst({
+      where: { id, deletedAt: null },
+      select: {
+        id: true,
+        startAt: true,
+        class: {
+          select: {
+            className: true,
+          },
+        },
+      },
+    });
+  },
+
   // delete schedule
   deleteById: async (tx: Prisma.TransactionClient, id: number) => {
     return tx.schedule.update({

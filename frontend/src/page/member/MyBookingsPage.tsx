@@ -70,11 +70,11 @@ const MyBookingPage = () => {
   return (
     <div className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden">
       {/* Header */}
-      <header>
+      <header className="shrink-0">
         <div className="flex items-center gap-2">
           <span className="h-6 w-1 rounded-full bg-red-600" />
 
-          <h1 className="text-2xl font-bold tracking-tight text-gray-950">
+          <h1 className="text-xl font-bold tracking-tight text-gray-950 sm:text-2xl">
             Bookings
           </h1>
         </div>
@@ -85,7 +85,7 @@ const MyBookingPage = () => {
       </header>
 
       {/* Filters */}
-      <div className="mt-6 w-full shrink-0 sm:mt-7">
+      <div className="mt-4 w-full shrink-0 sm:mt-6">
         <div className="flex justify-center sm:justify-start">
           <div
             className="

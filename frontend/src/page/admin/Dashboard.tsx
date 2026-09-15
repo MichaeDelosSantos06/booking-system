@@ -22,9 +22,9 @@ const Dashboard = () => {
       {/* Dashboard Header */}
       <header
         className="
-          mb-9
+          mb-4
           shrink-0
-          sm:mb-9
+          sm:mb-6
           md:mb-9
         "
       >

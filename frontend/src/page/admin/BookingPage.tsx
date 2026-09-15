@@ -61,10 +61,13 @@ const BookingPage = () => {
     <div
       className="
       flex
+      h-full
       w-full
       min-w-0
+      min-h-0
       flex-1
       flex-col
+      overflow-hidden
       gap-4
       sm:gap-5
       md:gap-6
@@ -72,7 +75,7 @@ const BookingPage = () => {
     "
     >
       {/* Page Header */}
-      <header>
+      <header className="shrink-0">
         {loading ? (
           <div
             className="
@@ -138,6 +141,7 @@ const BookingPage = () => {
       <section
         className="
         mt-1
+        shrink-0
         rounded-lg
         border
         border-slate-200
@@ -342,7 +346,7 @@ const BookingPage = () => {
       </section>
 
       {/* Booking Table */}
-      <div className="w-full min-w-0">
+      <div className="min-h-0 w-full flex-1">
         <BookingTable
           bookings={bookings}
           pagination={pagination}

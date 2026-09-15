@@ -47,18 +47,18 @@ const AdminLayout = () => {
       {/* Main Content */}
       <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden font-poppins">
         {/* Mobile / Tablet Header */}
-        <div className="shrink-0 px-3 py-4 sm:px-5 sm:py-5 md:px-6 md:py-5 lg:hidden">
+        <div className="shrink-0 px-4 py-4 sm:px-5 sm:py-5 md:px-6 md:py-5 lg:hidden">
           <button
             type="button"
             onClick={() => setIsSidebarOpen(true)}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg bg-black text-white transition-colors hover:bg-gray-800"
+            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-black text-white transition-colors hover:bg-gray-800"
           >
             <Menu size={20} />
           </button>
         </div>
 
         {/* Page Content */}
-        <div className="min-h-0 w-full min-w-0 flex-1 overflow-hidden px-9 pt-2 sm:px-5 sm:pt-3 md:px-6 md:pt-4 lg:px-8 lg:pt-12">
+        <div className="min-h-0 w-full min-w-0 flex-1 overflow-hidden px-4 pt-2 sm:px-5 sm:pt-3 md:px-6 md:pt-4 lg:px-8 lg:pt-12">
           <Outlet />
         </div>
       </main>

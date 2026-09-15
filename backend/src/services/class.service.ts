@@ -11,6 +11,7 @@ import { Status } from "../generated/prisma/enums.js";
 import prisma from "../lib/prisma.js";
 import ScheduleRepository from "../repositories/schedule.repository.js";
 import BookingRepository from "../repositories/booking.repository.js";
+import NotificationService from "./notification.service.js";
 
 const ClassService = {
   addClass: async (data: CreateClassDto, image?: UploadedImage) => {
@@ -38,7 +39,12 @@ const ClassService = {
       imageId = result.public_id;
     }
 
-    return ClassRepository.addClass(data, imageUrl, imageId);
+    const createdClass = await ClassRepository.addClass(data, imageUrl, imageId);
+
+    // notify members that a new class is available
+    await NotificationService.notifyNewClass(createdClass.className);
+
+    return createdClass;
   },
 
   fetchClasses: async (status?: Status) => {

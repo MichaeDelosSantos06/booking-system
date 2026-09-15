@@ -23,7 +23,7 @@ const LoginBranding = () => {
             className="text-white text-2xl font-black tracking-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            FITBOOK
+            FITNEXT
           </span>
         </div>
         <div>

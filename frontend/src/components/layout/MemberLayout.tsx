@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
 import SideBar from "./SideBar";
+import NotificationBell from "../ui/NotificationBell";
 
 const MemberLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -62,6 +63,7 @@ const MemberLayout = () => {
       {/* Main Content */}
       <main
         className="
+          relative
           flex
           min-h-0
           min-w-0
@@ -71,12 +73,21 @@ const MemberLayout = () => {
           font-poppins
         "
       >
+        {/* Desktop Header - Notification Bell */}
+        <div className="absolute right-8 top-5 z-30 hidden lg:block">
+          <NotificationBell />
+        </div>
+
         {/* Mobile / Tablet Header */}
         <div
           className="
+            flex
             shrink-0
+            items-
+            justify-between
+            gap-3
             px-4
-            py-5
+            py-4
             sm:px-6
             sm:py-6
             lg:hidden
@@ -89,6 +100,7 @@ const MemberLayout = () => {
               flex
               h-9
               w-9
+              shrink-0
               cursor-pointer
               items-center
               justify-center
@@ -101,10 +113,12 @@ const MemberLayout = () => {
           >
             <Menu size={20} />
           </button>
+
+          <NotificationBell />
         </div>
 
         {/* Page Content */}
-        <div className="min-h-0 w-full min-w-0 flex-1 overflow-hidden px-9 pt-2 sm:px-5 sm:pt-3 md:px-6 md:pt-4 lg:px-8 lg:pt-12 lg:pb-2">
+        <div className="min-h-0 w-full min-w-0 flex-1 overflow-hidden px-4 pt-2 sm:px-5 sm:pt-3 md:px-6 md:pt-4 lg:px-8 lg:pt-12 lg:pb-2">
           <Outlet />
         </div>
       </main>

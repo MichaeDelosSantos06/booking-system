@@ -83,7 +83,7 @@ const SideBar = () => {
     user?.role === "Admin" ? adminNavigation : memberNavigation;
 
   return (
-    <aside className="flex min-h-screen w-[280px] flex-col gap-6 bg-black px-1 pt-10 text-white">
+    <aside className="flex h-full min-h-0 w-[280px] flex-col gap-6 overflow-y-auto bg-black px-1 pt-10 text-white">
       {/* Brand */}
       <div className="mb-5 flex flex-col items-start px-8">
         <div className="flex items-center justify-center gap-3">
@@ -102,7 +102,7 @@ const SideBar = () => {
               className="text-xl font-black tracking-tight text-white"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              FITBOOK
+              FITNEXT
             </span>
 
             <p className="font-poppins text-[10px]">

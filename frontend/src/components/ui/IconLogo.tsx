@@ -13,7 +13,7 @@ const IconLogo = () => {
       </div>
 
       <span className="text-xl font-black font-poppins tracking-tight text-slate-900">
-        FITBOOK
+        FITNEXT
       </span>
     </div>
   );

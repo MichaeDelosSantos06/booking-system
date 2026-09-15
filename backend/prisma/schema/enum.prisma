@@ -54,3 +54,10 @@ enum BookingStatus {
   Confirmed
   Cancelled
 }
+
+enum NotificationType {
+  Class
+  Booking
+  Schedule
+  System
+}

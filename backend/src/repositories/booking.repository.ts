@@ -54,6 +54,23 @@ const BookingRepository = {
     });
   },
 
+  // members with an active booking on a schedule (used when a schedule is cancelled)
+  findBookedUserIdsBySchedule: async (scheduleId: number) => {
+    const bookings = await prisma.booking.findMany({
+      where: {
+        scheduleId,
+        status: {
+          not: BookingStatus.Cancelled,
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    return bookings.map((booking) => booking.userId);
+  },
+
   // make retrive of bookings for all statuses for the user see of their booking statuses
   retrieveAllBookings: async (
     userId: number,

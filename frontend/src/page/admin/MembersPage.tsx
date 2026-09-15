@@ -24,11 +24,13 @@ const MemberPage = () => {
     <div
       className="
         flex
+        h-full
         w-full
         min-w-0
         min-h-0
         flex-1
         flex-col
+        overflow-hidden
         font-poppins
       "
     >
@@ -132,12 +134,14 @@ const MemberPage = () => {
       </div>
 
       {/* Members Table */}
-      <MembersTable
-        users={users}
-        pagination={pagination}
-        onPageChange={fetchUsers}
-        loading={loading}
-      />
+      <div className="min-h-0 w-full flex-1">
+        <MembersTable
+          users={users}
+          pagination={pagination}
+          onPageChange={fetchUsers}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };
