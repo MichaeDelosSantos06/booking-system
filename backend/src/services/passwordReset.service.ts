@@ -36,7 +36,7 @@ class PasswordResetService {
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
-    await emailService.sendPasswordResetEmail(user.email, resetUrl);
+    await emailService.sendPasswordReset(user.email, resetUrl);
   }
 
   async resetPassword(token: string, password: string) {

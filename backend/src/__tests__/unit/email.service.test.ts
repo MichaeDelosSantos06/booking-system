@@ -1,122 +1,99 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import nodemailer from "nodemailer";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const transporter = vi.hoisted(() => ({
-  sendMail: vi.fn(),
-  verify: vi.fn(),
-  createTransport: vi.fn(),
-}));
+const brevoMocks = vi.hoisted(() => {
+  const sendTransacEmail = vi.fn();
+  let lastOptions: unknown;
+  // Use a real class so `new BrevoClient()` works and records its options.
+  class BrevoClient {
+    transactionalEmails = { sendTransacEmail };
+    constructor(options: unknown) {
+      lastOptions = options;
+    }
+  }
+  return {
+    sendTransacEmail,
+    BrevoClient,
+    getLastOptions: () => lastOptions,
+  };
+});
 
-vi.mock("nodemailer", () => ({
-  default: {
-    createTransport: transporter.createTransport,
-  },
+vi.mock("@getbrevo/brevo", () => ({
+  BrevoClient: brevoMocks.BrevoClient,
 }));
 
 vi.mock("../../config/env.js", () => ({
   env: {
-    SMTP_HOST: "smtp.test.com",
-    SMTP_PORT: 465,
-    SMTP_USER: "smtp_user",
-    SMTP_PASSWORD: "smtp_pass",
+    BREVO_API_KEY: "test-brevo-api-key",
     EMAIL_FROM: "no-reply@fitbook.test",
   },
 }));
 
-const createTransportMock = nodemailer.createTransport as unknown as ReturnType<
+import { BrevoClient } from "@getbrevo/brevo";
+import EmailService from "../../services/email.service.js";
+
+const sendTransacEmailMock = brevoMocks.sendTransacEmail as unknown as ReturnType<
   typeof vi.fn
 >;
+// Keep TS happy that the mocked module shape matches the real one.
+void BrevoClient;
 
-describe("EmailService", () => {
-  beforeAll(() => {
-    // Simulate an SMTP connection failure during startup verification.
-    transporter.createTransport.mockImplementation(() => ({
-      sendMail: transporter.sendMail,
-      verify: transporter.verify,
-    }));
-    transporter.verify.mockImplementation(
-      (callback: (error?: Error | null) => void) => callback(new Error("SMTP boom")),
-    );
-  });
+beforeEach(() => {
+  sendTransacEmailMock.mockClear();
+  sendTransacEmailMock.mockResolvedValue({ messageId: "brevo-id" } as never);
+});
 
-  beforeEach(() => {
-    transporter.sendMail.mockClear();
-    transporter.verify.mockClear();
-  });
-
-  it("should create the transporter with the configured options and verify the connection on startup", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
-
-    // The module is loaded lazily so the startup verify callback runs here.
-    await import("../../services/email.service.js");
-
-    expect(createTransportMock).toHaveBeenCalledWith({
-      host: "smtp.test.com",
-      port: 465,
-      secure: true,
-      auth: { user: "smtp_user", pass: "smtp_pass" },
+describe("EmailService.sendPasswordReset", () => {
+  it("should construct the Brevo client with the configured API key", () => {
+    expect(brevoMocks.getLastOptions()).toEqual({
+      apiKey: "test-brevo-api-key",
     });
-    expect(transporter.verify).toHaveBeenCalledTimes(1);
-    expect(errorSpy).toHaveBeenCalledWith("SMTP connection failed:", expect.any(Error));
-
-    errorSpy.mockRestore();
   });
 
-  it("should send a password reset email with the correct options", async () => {
-    const { default: EmailService } = await import("../../services/email.service.js");
-    transporter.sendMail.mockResolvedValue({ messageId: "m1" });
-
-    await EmailService.sendPasswordResetEmail(
+  it("should send the reset email with the correct sender, recipient and subject", async () => {
+    await EmailService.sendPasswordReset(
       "user@example.com",
       "https://app.test/reset-password?token=abc",
     );
 
-    expect(transporter.sendMail).toHaveBeenCalledWith(
+    expect(sendTransacEmailMock).toHaveBeenCalledTimes(1);
+    expect(sendTransacEmailMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        from: "no-reply@fitbook.test",
-        to: "user@example.com",
-        subject: "Reset your FitBook password",
+        sender: { name: "Fitnext", email: "no-reply@fitbook.test" },
+        to: [{ email: "user@example.com" }],
+        subject: "Reset your Fitnext password",
       }),
     );
   });
 
-  it("should embed the reset link in the html body", async () => {
-    const { default: EmailService } = await import("../../services/email.service.js");
-    transporter.sendMail.mockResolvedValue({ messageId: "m2" });
+  it("should embed the reset url in the html content", async () => {
+    const resetUrl = "https://app.test/reset-password?token=xyz";
 
-    await EmailService.sendPasswordResetEmail(
-      "someone@example.com",
-      "https://app.test/reset?token=xyz",
-    );
+    await EmailService.sendPasswordReset("someone@example.com", resetUrl);
 
-    const mailOptions = transporter.sendMail.mock.calls[0]![0] as { html: string };
-    expect(mailOptions.html).toContain("https://app.test/reset?token=xyz");
+    const payload = sendTransacEmailMock.mock.calls[0]![0] as {
+      htmlContent: string;
+    };
+    expect(payload.htmlContent).toContain(resetUrl);
+    expect(payload.htmlContent).toContain("15 minutes");
   });
 
-  it("should propagate the error when sending the email fails", async () => {
-    const { default: EmailService } = await import("../../services/email.service.js");
-    transporter.sendMail.mockRejectedValueOnce(new Error("SMTP send failed"));
+  it("should resolve to undefined on success", async () => {
+    await expect(
+      EmailService.sendPasswordReset(
+        "user@example.com",
+        "https://app.test/reset-password?token=abc",
+      ),
+    ).resolves.toBeUndefined();
+  });
+
+  it("should propagate the error when Brevo fails to send", async () => {
+    sendTransacEmailMock.mockRejectedValueOnce(new Error("Brevo send failed"));
 
     await expect(
-      EmailService.sendPasswordResetEmail(
+      EmailService.sendPasswordReset(
         "fail@example.com",
         "https://app.test/reset?token=fail",
       ),
-    ).rejects.toThrow("SMTP send failed");
-  });
-
-  it("should log ready when SMTP verification succeeds", async () => {
-    vi.resetModules();
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
-    transporter.verify.mockImplementationOnce(
-      (callback: (error?: Error | null) => void) => callback(null),
-    );
-
-    await import("../../services/email.service.js");
-
-    expect(transporter.verify).toHaveBeenCalledTimes(1);
-    expect(logSpy).toHaveBeenCalledWith("SMTP server is ready");
-
-    logSpy.mockRestore();
+    ).rejects.toThrow("Brevo send failed");
   });
 });

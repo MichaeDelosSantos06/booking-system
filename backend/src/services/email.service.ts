@@ -1,34 +1,28 @@
-import nodemailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
 
 import { env } from "../config/env.js";
 
-const transporter = nodemailer.createTransport({
-  host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
-  secure: env.SMTP_PORT === 465,
-  auth: {
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASSWORD,
-  },
+const brevo = new BrevoClient({
+  apiKey: env.BREVO_API_KEY,
 });
 
-transporter.verify((error) => {
-  if (error) {
-    console.error("SMTP connection failed:", error);
-  } else {
-    console.log("SMTP server is ready");
-  }
-});
+const EmailService = {
+  sendPasswordReset: async (to: string, resetUrl: string): Promise<void> => {
+    await brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        name: "Fitnext",
+        email: env.EMAIL_FROM,
+      },
 
-class EmailService {
-  async sendPasswordResetEmail(email: string, resetUrl: string) {
-    console.log("[SMTP] Before sendMail");
+      to: [
+        {
+          email: to,
+        },
+      ],
 
-    await transporter.sendMail({
-      from: env.EMAIL_FROM,
-      to: email,
-      subject: "Reset your FitBook password",
-      html: `
+      subject: "Reset your Fitnext password",
+
+      htmlContent: `
         <!DOCTYPE html>
         <html lang="en">
           <head>
@@ -37,7 +31,7 @@ class EmailService {
               name="viewport"
               content="width=device-width, initial-scale=1.0"
             />
-            <title>Reset your FitBook password</title>
+            <title>Reset your Fitnext password</title>
           </head>
 
           <body
@@ -62,7 +56,6 @@ class EmailService {
             >
               <tr>
                 <td align="center">
-
                   <table
                     role="presentation"
                     width="100%"
@@ -77,7 +70,6 @@ class EmailService {
                       border: 1px solid #e5e5e5;
                     "
                   >
-
                     <!-- Header -->
                     <tr>
                       <td
@@ -95,7 +87,7 @@ class EmailService {
                             color: #ffffff;
                           "
                         >
-                          FitBook
+                          Fitnext
                         </div>
                       </td>
                     </tr>
@@ -103,7 +95,6 @@ class EmailService {
                     <!-- Content -->
                     <tr>
                       <td style="padding: 40px 40px 32px;">
-
                         <h1
                           style="
                             margin: 0 0 16px;
@@ -125,7 +116,7 @@ class EmailService {
                           "
                         >
                           We received a request to reset the password
-                          for your FitBook account.
+                          for your Fitnext account.
                         </p>
 
                         <p
@@ -220,7 +211,6 @@ class EmailService {
                           safely ignore this email. Your password will
                           remain unchanged.
                         </p>
-
                       </td>
                     </tr>
 
@@ -242,7 +232,7 @@ class EmailService {
                             color: #404040;
                           "
                         >
-                          FitBook
+                          Fitnext
                         </p>
 
                         <p
@@ -258,9 +248,7 @@ class EmailService {
                         </p>
                       </td>
                     </tr>
-
                   </table>
-
                 </td>
               </tr>
             </table>
@@ -268,8 +256,7 @@ class EmailService {
         </html>
       `,
     });
-    console.log("[SMTP] After sendMail");
-  }
-}
+  },
+};
 
-export default new EmailService();
+export default EmailService;

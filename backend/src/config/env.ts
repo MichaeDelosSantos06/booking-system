@@ -16,11 +16,9 @@ const requiredEnvVars = [
   // "SEED_ADMIN_USER",
   // "SEED_ADMIN_PASS",
 
-  "SMTP_HOST",
-  "SMTP_PORT",
-  "SMTP_USER",
-  "SMTP_PASSWORD",
   "EMAIL_FROM",
+  "BREVO_API_KEY",
+
   "CLOUDINARY_CLOUD_NAME",
   "CLOUDINARY_API_KEY",
   "CLOUDINARY_API_SECRET",
@@ -48,11 +46,8 @@ export const env = {
   // SEED_ADMIN_USER: process.env.SEED_ADMIN_USER!,
   // SEED_ADMIN_PASS: process.env.SEED_ADMIN_PASS!,
 
-  SMTP_HOST: process.env.SMTP_HOST!,
-  SMTP_PORT: Number(process.env.SMTP_PORT),
-  SMTP_USER: process.env.SMTP_USER!,
-  SMTP_PASSWORD: process.env.SMTP_PASSWORD!,
   EMAIL_FROM: process.env.EMAIL_FROM!,
+  BREVO_API_KEY: process.env.BREVO_API_KEY!,
 
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY!,

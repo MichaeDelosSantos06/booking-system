@@ -24,7 +24,7 @@ vi.mock("../../repositories/passwordReset.repositoty.js", () => ({
 
 vi.mock("../../services/email.service.js", () => ({
   default: {
-    sendPasswordResetEmail: vi.fn(),
+    sendPasswordReset: vi.fn(),
   },
 }));
 
@@ -57,7 +57,7 @@ describe("PasswordResetService.forgotPassword", () => {
 
     expect(passwordResetRepository.deleteExistingToken).not.toHaveBeenCalled();
     expect(generateResetToken).not.toHaveBeenCalled();
-    expect(emailService.sendPasswordResetEmail).not.toHaveBeenCalled();
+    expect(emailService.sendPasswordReset).not.toHaveBeenCalled();
   });
 
   it("should delete old tokens, store a hashed token expiring in 15 minutes and send the reset email", async () => {
@@ -73,7 +73,7 @@ describe("PasswordResetService.forgotPassword", () => {
     vi.mocked(passwordResetRepository.generateResetToken).mockResolvedValue({
       id: 1,
     } as never);
-    vi.mocked(emailService.sendPasswordResetEmail).mockResolvedValue(undefined as never);
+    vi.mocked(emailService.sendPasswordReset).mockResolvedValue(undefined as never);
 
     const before = Date.now();
     const result = await PasswordResetService.forgotPassword("michael@example.com");
@@ -91,7 +91,7 @@ describe("PasswordResetService.forgotPassword", () => {
     expect(expiresInMs).toBeGreaterThanOrEqual(15 * 60 * 1000);
     expect(expiresInMs).toBeLessThan(15 * 60 * 1000 + 60_000);
 
-    expect(emailService.sendPasswordResetEmail).toHaveBeenCalledWith(
+    expect(emailService.sendPasswordReset).toHaveBeenCalledWith(
       "michael@example.com",
       "https://app.example.com/reset-password?token=raw-token",
     );

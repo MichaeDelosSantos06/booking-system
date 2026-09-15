@@ -16,6 +16,7 @@
   "author": "Michel Delos Santos",
   "license": "MIT",
   "dependencies": {
+    "@getbrevo/brevo": "^6.0.3",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@prisma/extension-accelerate": "^3.0.1",
@@ -31,7 +32,6 @@
     "multer": "^2.2.0",
     "nodemailer": "^9.0.5",
     "pg": "^8.22.0",
-    "resend": "^6.20.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
