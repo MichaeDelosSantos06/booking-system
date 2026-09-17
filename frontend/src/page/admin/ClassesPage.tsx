@@ -79,6 +79,8 @@ const ClassPage = () => {
         sm:gap-5
         md:gap-6
         lg:gap-5
+
+        pb-2
       "
     >
       {/* Page Header */}

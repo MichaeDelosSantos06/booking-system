@@ -41,6 +41,16 @@ const MyBookingPage = () => {
 
   const { bookings, bookingCount, loading, refetch } = useFetchBooking(status);
 
+  const bookingCountKey: Record<
+    BookingTabs,
+    "all" | "confirmed" | "completed" | "cancelled"
+  > = {
+    All: "all",
+    Confirmed: "confirmed",
+    Completed: "completed",
+    Cancelled: "cancelled",
+  };
+
   const [cancelModal, setCancelModal] = useState(false);
 
   const [idBooking, setIdBooking] = useState<number | null>(null);
@@ -86,129 +96,127 @@ const MyBookingPage = () => {
 
       {/* Filters */}
       <div className="mt-4 w-full shrink-0 sm:mt-6">
-        <div className="flex justify-center sm:justify-start">
+        <div className="flex w-full justify-start">
           <div
             className="
-              inline-flex
-              w-full
-              max-w-full
-              items-center
-              justify-center
-              gap-2
-              overflow-x-auto
-              rounded-2xl
-              border
-              border-gray-200/70
-              bg-gray-100/70
-              p-1
-              shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]
-              backdrop-blur-xl
-              [-ms-overflow-style:none]
-              [scrollbar-width:none]
-              [&::-webkit-scrollbar]:hidden
-              sm:inline-flex
-              sm:w-auto
-            "
+        inline-flex
+        w-full
+        max-w-full
+        min-w-0
+        items-center
+        justify-center
+        gap-1
+        overflow-x-auto
+        rounded-2xl
+        border
+        border-gray-200/70
+        bg-gray-100/70
+        p-1
+        shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]
+        backdrop-blur-xl
+        [-ms-overflow-style:none]
+        [scrollbar-width:none]
+        [&::-webkit-scrollbar]:hidden
+
+        max-[359px]:gap-0.5
+        max-[359px]:p-0.5
+
+        min-[360px]:gap-1
+        min-[360px]:p-1
+
+        sm:w-auto
+        sm:justify-center
+        sm:gap-2
+        sm:p-1
+      "
           >
-            {[
-              {
-                label: "All",
-                count: bookingCount?.all ?? 0,
-                value: "All" as BookingTabs,
-              },
-              {
-                label: "Confirmed",
-                count: bookingCount?.confirmed ?? 0,
-                value: "Confirmed" as BookingTabs,
-              },
-              {
-                label: "Completed",
-                count: bookingCount?.completed ?? 0,
-                value: "Completed" as BookingTabs,
-              },
-              {
-                label: "Cancelled",
-                count: bookingCount?.cancelled ?? 0,
-                value: "Cancelled" as BookingTabs,
-              },
-            ].map((tab) => {
-              const isActive = activeTab === tab.value;
+            {(
+              ["All", "Confirmed", "Completed", "Cancelled"] as BookingTabs[]
+            ).map((tab) => {
+              const isActive = activeTab === tab;
 
               return (
                 <button
-                  key={tab.value}
+                  key={tab}
                   type="button"
                   onClick={() => {
-                    setActiveTab(tab.value);
+                    setActiveTab(tab);
                     setHighlightedBookingId(null);
-                    setSearchParams({});
+                    setSearchParams(tab === "All" ? {} : { tab: tab });
                   }}
                   className={`
-                    relative
-                    flex
-                    shrink-0
-                    items-center
-                    justify-center
-                    gap-1
-                    rounded-lg
-                    px-2.5
-                    py-1.5
-                    text-[10px]
-                    font-medium
-                    leading-none
-                    whitespace-nowrap
-                    transition-all
-                    duration-200
-                    ease-out
-                    focus:outline-none
-                    sm:gap-1.5
-                    sm:rounded-lg
-                    sm:px-3
-                    sm:py-2
-                    sm:text-[11px]
+              relative
+              flex
+              min-w-0
+              shrink-0
+              items-center
+              justify-center
+              gap-1
+              rounded-lg
+              px-2
+              py-1.5
+              text-[10px]
+              font-medium
+              leading-none
+              whitespace-nowrap
+              transition-all
+              duration-200
 
-                    ${
-                      isActive
-                        ? `
-                          bg-black
-                          text-white
-                          shadow-[0_2px_6px_rgba(0,0,0,0.14)]
-                        `
-                        : `
-                          text-gray-500
-                          hover:bg-black/[0.04]
-                          hover:text-gray-900
-                        `
-                    }
-                  `}
+              max-[359px]:gap-0.5
+              max-[359px]:px-1.5
+              max-[359px]:py-1.5
+              max-[359px]:text-[9px]
+
+              min-[360px]:px-2
+              min-[360px]:py-1.5
+              min-[360px]:text-[10px]
+
+              sm:gap-1.5
+              sm:px-3
+              sm:py-2
+              sm:text-[11px]
+
+              ${
+                isActive
+                  ? "bg-black text-white shadow-sm"
+                  : "text-gray-500 hover:bg-white/70 hover:text-gray-900"
+              }
+            `}
                 >
-                  <span className="whitespace-nowrap">{tab.label}</span>
+                  <span>{tab}</span>
 
                   <span
                     className={`
-                      min-w-4
-                      shrink-0
-                      rounded-full
-                      px-1
-                      py-0.5
-                      text-center
-                      text-[9px]
-                      font-semibold
-                      leading-none
-                      transition-all
-                      duration-200
-                      sm:min-w-[18px]
-                      sm:px-1.5
-                      sm:text-[9px]
+                min-w-4
+                shrink-0
+                rounded-full
+                px-1
+                py-0.5
+                text-center
+                text-[8px]
+                font-semibold
+                leading-none
 
-                      ${
-                        isActive
-                          ? "bg-white/15 text-white"
-                          : "bg-gray-200/70 text-gray-500"
-                      }
-                    `}
+                max-[359px]:min-w-3.5
+                max-[359px]:px-0.5
+                max-[359px]:text-[8px]
+
+                min-[360px]:min-w-4
+                min-[360px]:px-1
+                min-[360px]:text-[8px]
+
+                sm:min-w-[18px]
+                sm:px-1.5
+                sm:text-[9px]
+
+                ${
+                  isActive
+                    ? "bg-white/15 text-white"
+                    : "bg-gray-200/70 text-gray-500"
+                }
+              `}
                   >
-                    {tab.count}
+                    {bookingCount?.[bookingCountKey[tab]] ?? 0}
                   </span>
                 </button>
               );

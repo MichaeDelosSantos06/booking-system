@@ -32,6 +32,8 @@ const MemberPage = () => {
         flex-col
         overflow-hidden
         font-poppins
+
+        pb-2
       "
     >
       {/* Header */}
@@ -87,6 +89,7 @@ const MemberPage = () => {
           sm:items-center
           sm:justify-between
           sm:gap-3
+          
         "
       >
         <div

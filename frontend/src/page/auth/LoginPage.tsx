@@ -63,12 +63,10 @@ const LoginPage = () => {
     space-y-6
     rounded-2xl
     border
-    border-slate-200
+    border-slate-200/80
     bg-white
-    px-15
-    shadow-xl
-    shadow-slate-200/50
-
+    px-10
+    shadow-[0_20px_60px_-20px_rgba(15,23,42,0.15)]
     sm:p-10
     md:px-50
     lg:px-25
@@ -77,16 +75,19 @@ const LoginPage = () => {
   "
       >
         {/* Mobile / Medium Branding */}
-        <div className="lg:hidden">
+        <div className="flex justify-start lg:hidden">
           <IconLogo />
         </div>
+
         {/* Header */}
-        <div className="mb-8 flex flex-col items-center space-y-1 sm:mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <div className="mb-8 flex flex-col items-start space-y-2 sm:mb-10">
+          <div className="hidden h-1 w-10 rounded-full bg-red-600 lg:block" />
+
+          <h1 className="text-3xl font-bold tracking-[-0.02em] text-slate-900 sm:text-4xl">
             Welcome back
           </h1>
 
-          <p className="font-poppins text-[13px] text-slate-500">
+          <p className="font-poppins text-[13px] leading-5 text-slate-500">
             Sign in to continue to your account.
           </p>
         </div>
@@ -105,7 +106,24 @@ const LoginPage = () => {
             placeholder="you@example.com"
             id="email"
             {...register("email")}
-            className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
+            className="
+        h-11
+        w-full
+        rounded-xl
+        border-slate-300
+        bg-slate-50
+        px-3
+        text-sm
+        text-slate-900
+        outline-none
+        transition
+        placeholder:text-[13px]
+        placeholder:text-slate-400
+        focus:border-red-500
+        focus:bg-white
+        focus:ring-3
+        focus:ring-red-500/10
+      "
           />
         </div>
 
@@ -124,14 +142,40 @@ const LoginPage = () => {
               placeholder="Enter your password"
               id="pass"
               {...register("password")}
-              className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 pr-10 text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
+              className="
+          h-11
+          w-full
+          rounded-xl
+          border-slate-300
+          bg-slate-50
+          px-3
+          pr-10
+          text-sm
+          text-slate-900
+          outline-none
+          transition
+          placeholder:text-[13px]
+          placeholder:text-slate-400
+          focus:border-red-500
+          focus:bg-white
+          focus:ring-3
+          focus:ring-red-500/10
+        "
             />
 
             {/* Show / Hide Password */}
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+              className="
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          text-slate-400
+          transition
+          hover:text-slate-600
+        "
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
@@ -141,7 +185,7 @@ const LoginPage = () => {
           {/* Forgot Password */}
           <Link
             to="/forgot-password"
-            className="font-medium text-red-500 ml-auto text-xs"
+            className="ml-auto font-poppins text-xs font-medium text-red-500 transition hover:text-red-600"
           >
             Forgot password?
           </Link>
@@ -164,17 +208,38 @@ const LoginPage = () => {
         {/* Submit */}
         <Button
           type="submit"
-          disabled={isSubmitting}
-          className="flex h-11 w-full items-center justify-center rounded-xl bg-red-600 font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700 hover:shadow-red-600/30 disabled:cursor-not-allowed disabled:opacity-60"
+          loading={isSubmitting}
+          loadingText="Signing in..."
+          className="
+      flex
+      h-11
+      w-full
+      items-center
+      justify-center
+      rounded-xl
+      bg-red-600
+      font-semibold
+      text-white
+      shadow-lg
+      shadow-red-600/20
+      transition
+      hover:bg-red-700
+      hover:shadow-red-600/30
+      disabled:cursor-not-allowed
+      disabled:opacity-60
+    "
         >
-          {isSubmitting ? "Signing in..." : "Sign In"}
+          Sign in
         </Button>
 
         {/* Register */}
         <div className="flex justify-center font-poppins text-[13px]">
           <span className="opacity-[.6]">Don't have an account?&nbsp;</span>
 
-          <Link to="/regis" className="font-medium text-red-500">
+          <Link
+            to="/regis"
+            className="font-medium text-red-500 transition hover:text-red-600"
+          >
             Create one
           </Link>
         </div>

@@ -72,6 +72,8 @@ const SchedulePage = () => {
         sm:gap-5
         md:gap-6
         lg:gap-5
+
+        pb-2
       "
     >
       {/* Page Header */}
@@ -254,7 +256,7 @@ const SchedulePage = () => {
       </div>
 
       {/* Schedules */}
-      <div className="min-h-0 w-full flex-1">
+      <div className="min-h-0 w-full flex-1 ">
         <ScheduleTable
           schedule={schedule}
           onDelete={onDelete}

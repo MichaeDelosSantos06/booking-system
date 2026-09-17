@@ -40,9 +40,7 @@ const BrowseClassesPage = () => {
   };
 
   return (
-    <div
-      className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden"
-    >
+    <div className="flex h-full w-full min-w-0 flex-1 flex-col overflow-hidden">
       {/* ============================================================
           PAGE HEADER
       ============================================================ */}
@@ -68,8 +66,7 @@ const BrowseClassesPage = () => {
             </div>
 
             <p className="mt-1 text-sm text-gray-500 sm:mt-1.5">
-              Discover classes that match your fitness goals and book your next
-              session.
+              Discover classes that match your fitness goals.
             </p>
           </>
         )}

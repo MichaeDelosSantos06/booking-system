@@ -1,5 +1,6 @@
-import { useAuth } from "../hooks/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
+
+import { useAuth } from "../hooks/useAuth";
 
 const MemberRoute = () => {
   const { user } = useAuth();
@@ -8,8 +9,8 @@ const MemberRoute = () => {
     return <Navigate to="/" replace />;
   }
 
-  if (user?.role !== "Member") {
-    return <Navigate to="" replace />;
+  if (user.role !== "Member") {
+    return <Navigate to="/403" replace />;
   }
 
   return <Outlet />;

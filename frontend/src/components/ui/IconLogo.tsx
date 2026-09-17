@@ -1,9 +1,11 @@
 const IconLogo = () => {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e63946]">
+    <div className="flex items-center justify-center gap-2">
+      <div className="relative flex h-7 w-7 items-center justify-center rounded-lg bg-red-600 shadow-md shadow-red-600/20">
+        <div className="absolute inset-0 rounded-lg bg-red-500/10 ring-1 ring-red-400/20" />
+
         <svg
-          className="h-4 w-4 text-white"
+          className="relative h-4 w-4 text-white"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -12,7 +14,7 @@ const IconLogo = () => {
         </svg>
       </div>
 
-      <span className="text-xl font-black font-poppins tracking-tight text-slate-900">
+      <span className="font-poppins text-lg font-black tracking-[-0.03em] text-slate-900">
         FITNEXT
       </span>
     </div>

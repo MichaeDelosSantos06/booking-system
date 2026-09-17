@@ -29,7 +29,6 @@ const RegistrationPage = () => {
   const onSubmit = async (data: CreateUserDto) => {
     try {
       await registerUser(data);
-
       toast.success("Successfully Registered!");
       reset();
       navigate("/dashboard");
@@ -44,7 +43,6 @@ const RegistrationPage = () => {
   };
 
   const firstError = Object.values(errors)[0];
-
   const values = getValues();
 
   const allFieldsEmpty =
@@ -67,42 +65,44 @@ const RegistrationPage = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="
-    flex
-    w-full
-    flex-1
-    flex-col
-    space-y-6
-    rounded-2xl
-    border
-    border-slate-200
-    bg-white
-    p-15
-    shadow-xl
-    shadow-slate-200/50
-
-    sm:p-10
-    md:px-50
-    lg:px-25
-    xl:px-32
-    2xl:px-40
-  shadow-slate-200/50 sm:p-10 md:px-50 lg:px-25 xl:px-32 2xl:px-40"
+          flex
+          w-full
+          flex-1
+          flex-col
+          justify-center
+          space-y-6
+          rounded-2xl
+          border
+          border-slate-200
+          bg-white
+          p-10
+          shadow-xl
+          shadow-slate-200/50
+          max-[414px]:space-y-4
+          max-[414px]:p-6
+          sm:p-10
+          md:px-50
+          lg:px-25
+          xl:px-32
+          2xl:px-40
+        "
       >
         {/* Header */}
-        <div className="flex flex-col items-center space-y-1 pt-10 sm:mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+        <div className="mb-10 flex flex-col items-center space-y-1 pt-10 max-[414px]:mb-6 max-[414px]:space-y-0.5 max-[414px]:pt-6 sm:mb-10">
+          <h1 className="text-3xl font-bold tracking-[-0.02em] text-slate-900 max-[414px]:text-2xl">
             Create your account
           </h1>
 
-          <p className="font-poppins text-[13px] text-slate-500">
+          <p className="font-poppins text-[13px] leading-5 text-slate-500 max-[414px]:text-[11px] max-[414px]:leading-4">
             Enter your information to get started.
           </p>
         </div>
 
         {/* Full Name */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 max-[414px]:gap-1.5">
           <label
             htmlFor="fullname"
-            className="font-poppins text-sm font-semibold text-slate-700"
+            className="font-poppins text-sm font-semibold text-slate-700 max-[414px]:text-xs"
           >
             Full name <span className="text-red-500">*</span>
           </label>
@@ -111,16 +111,39 @@ const RegistrationPage = () => {
             id="fullname"
             type="text"
             placeholder="Juan Dela Cruz"
-            className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
+            className="
+              h-11
+              w-full
+              rounded-xl
+              border-slate-300
+              bg-slate-50
+              px-3
+              font-poppins
+              text-sm
+              text-slate-900
+              outline-none
+              transition
+              placeholder:text-[13px]
+              placeholder:text-slate-400
+              focus:border-red-500
+              focus:bg-white
+              focus:ring-3
+              focus:ring-red-500/10
+              max-[414px]:h-10
+              max-[414px]:rounded-lg
+              max-[414px]:px-2.5
+              max-[414px]:text-xs
+              max-[414px]:placeholder:text-[10px]
+            "
             {...register("name")}
           />
         </div>
 
         {/* Email */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 max-[414px]:gap-1.5">
           <label
             htmlFor="email"
-            className="font-poppins text-sm font-semibold text-slate-700"
+            className="font-poppins text-sm font-semibold text-slate-700 max-[414px]:text-xs"
           >
             Email address <span className="text-red-500">*</span>
           </label>
@@ -129,16 +152,39 @@ const RegistrationPage = () => {
             id="email"
             type="email"
             placeholder="you@example.com"
-            className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
+            className="
+              h-11
+              w-full
+              rounded-xl
+              border-slate-300
+              bg-slate-50
+              px-3
+              font-poppins
+              text-sm
+              text-slate-900
+              outline-none
+              transition
+              placeholder:text-[13px]
+              placeholder:text-slate-400
+              focus:border-red-500
+              focus:bg-white
+              focus:ring-3
+              focus:ring-red-500/10
+              max-[414px]:h-10
+              max-[414px]:rounded-lg
+              max-[414px]:px-2.5
+              max-[414px]:text-xs
+              max-[414px]:placeholder:text-[10px]
+            "
             {...register("email")}
           />
         </div>
 
         {/* Contact */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 max-[414px]:gap-1.5">
           <label
             htmlFor="contact"
-            className="font-poppins text-sm font-semibold text-slate-700"
+            className="font-poppins text-sm font-semibold text-slate-700 max-[414px]:text-xs"
           >
             Contact number <span className="text-red-500">*</span>
           </label>
@@ -148,18 +194,41 @@ const RegistrationPage = () => {
             type="tel"
             placeholder="09XX XXX XXXX"
             maxLength={11}
-            className="h-11 w-full rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[13px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10"
+            className="
+              h-11
+              w-full
+              rounded-xl
+              border-slate-300
+              bg-slate-50
+              px-3
+              font-poppins
+              text-sm
+              text-slate-900
+              outline-none
+              transition
+              placeholder:text-[13px]
+              placeholder:text-slate-400
+              focus:border-red-500
+              focus:bg-white
+              focus:ring-3
+              focus:ring-red-500/10
+              max-[414px]:h-10
+              max-[414px]:rounded-lg
+              max-[414px]:px-2.5
+              max-[414px]:text-xs
+              max-[414px]:placeholder:text-[10px]
+            "
             {...register("contact")}
           />
         </div>
 
         {/* Password + Confirm Password */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+        <div className="grid grid-cols-2 gap-3 max-[414px]:grid-cols-1 max-[414px]:gap-4 sm:gap-4 md:gap-6">
           {/* Password */}
-          <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex min-w-0 flex-col gap-2 max-[414px]:gap-1.5">
             <label
               htmlFor="password"
-              className="font-poppins text-sm font-semibold text-slate-700"
+              className="font-poppins text-sm font-semibold text-slate-700 max-[414px]:text-xs"
             >
               Password <span className="text-red-500">*</span>
             </label>
@@ -168,16 +237,41 @@ const RegistrationPage = () => {
               id="password"
               type="password"
               placeholder="Create a password"
-              className="h-11 w-full min-w-0 rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[11px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10 sm:placeholder:text-[13px]"
+              className="
+                h-11
+                w-full
+                min-w-0
+                rounded-xl
+                border-slate-300
+                bg-slate-50
+                px-3
+                font-poppins
+                text-sm
+                text-slate-900
+                outline-none
+                transition
+                placeholder:text-[11px]
+                placeholder:text-slate-400
+                focus:border-red-500
+                focus:bg-white
+                focus:ring-3
+                focus:ring-red-500/10
+                max-[414px]:h-10
+                max-[414px]:rounded-lg
+                max-[414px]:px-2.5
+                max-[414px]:text-xs
+                max-[414px]:placeholder:text-[10px]
+                sm:placeholder:text-[13px]
+              "
               {...register("password")}
             />
           </div>
 
           {/* Confirm Password */}
-          <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex min-w-0 flex-col gap-2 max-[414px]:gap-1.5">
             <label
               htmlFor="confirmPassword"
-              className="font-poppins text-sm font-semibold text-slate-700"
+              className="font-poppins text-sm font-semibold text-slate-700 max-[414px]:text-xs"
             >
               Confirm password <span className="text-red-500">*</span>
             </label>
@@ -186,7 +280,32 @@ const RegistrationPage = () => {
               id="confirmPassword"
               type="password"
               placeholder="Confirm your password"
-              className="h-11 w-full min-w-0 rounded-xl border-slate-300 bg-slate-50 px-3 font-poppins text-sm text-slate-900 outline-none transition placeholder:text-[11px] placeholder:text-slate-400 focus:border-red-500 focus:bg-white focus:ring-3 focus:ring-red-500/10 sm:placeholder:text-[13px]"
+              className="
+                h-11
+                w-full
+                min-w-0
+                rounded-xl
+                border-slate-300
+                bg-slate-50
+                px-3
+                font-poppins
+                text-sm
+                text-slate-900
+                outline-none
+                transition
+                placeholder:text-[11px]
+                placeholder:text-slate-400
+                focus:border-red-500
+                focus:bg-white
+                focus:ring-3
+                focus:ring-red-500/10
+                max-[414px]:h-10
+                max-[414px]:rounded-lg
+                max-[414px]:px-2.5
+                max-[414px]:text-xs
+                max-[414px]:placeholder:text-[10px]
+                sm:placeholder:text-[13px]
+              "
               {...register("confirmPassword")}
             />
           </div>
@@ -194,10 +313,13 @@ const RegistrationPage = () => {
 
         {/* Validation Error */}
         {Object.keys(errors).length > 0 && (
-          <div className="flex animate-in items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-            <FiAlertCircle size={16} className="mt-0.5 shrink-0 text-red-500" />
+          <div className="flex animate-in items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 max-[414px]:gap-1.5 max-[414px]:rounded-lg max-[414px]:px-3 max-[414px]:py-2.5">
+            <FiAlertCircle
+              size={16}
+              className="mt-0.5 shrink-0 text-red-500 max-[414px]:h-3.5 max-[414px]:w-3.5"
+            />
 
-            <p className="font-poppins text-[13px] font-medium leading-5 text-red-600">
+            <p className="font-poppins text-[13px] font-medium leading-5 text-red-600 max-[414px]:text-[11px] max-[414px]:leading-4">
               {errorMessage}
             </p>
           </div>
@@ -206,17 +328,44 @@ const RegistrationPage = () => {
         {/* Submit */}
         <Button
           type="submit"
-          className="h-11 w-full rounded-xl bg-red-600 font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700 hover:shadow-red-600/30 disabled:cursor-not-allowed disabled:opacity-60 flex flex-col justify-center items-center font-poppins text-sm"
-          disabled={isSubmitting}
+          className="
+            flex
+            h-11
+            w-full
+            flex-col
+            items-center
+            justify-center
+            rounded-xl
+            bg-red-600
+            font-poppins
+            text-sm
+            font-semibold
+            text-white
+            shadow-lg
+            shadow-red-600/20
+            transition
+            hover:bg-red-700
+            hover:shadow-red-600/30
+            disabled:cursor-not-allowed
+            disabled:opacity-60
+            max-[414px]:h-10
+            max-[414px]:rounded-lg
+            max-[414px]:text-xs
+          "
+          loading={isSubmitting}
+          loadingText="Creating account..."
         >
-          {isSubmitting ? "Loading..." : "Create Account"}
+          Create Account
         </Button>
 
         {/* Register */}
-        <div className="flex justify-center font-poppins text-[13px]">
+        <div className="flex justify-center font-poppins text-[13px] max-[414px]:text-[11px]">
           <span className="opacity-[.6]">Already have an account?&nbsp;</span>
 
-          <Link to="/" className="font-medium text-red-500">
+          <Link
+            to="/"
+            className="font-medium text-red-500 transition hover:text-red-600"
+          >
             Sign in
           </Link>
         </div>

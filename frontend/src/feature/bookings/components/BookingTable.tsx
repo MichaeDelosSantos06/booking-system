@@ -19,8 +19,8 @@ const BookingTable = ({
           flex
           h-full
           min-h-0
+          min-w-0
           w-full
-          animate-pulse
           flex-col
           overflow-hidden
           rounded-xl
@@ -31,11 +31,12 @@ const BookingTable = ({
           sm:h-[435px]
           sm:rounded-2xl
           md:h-[515px]
+          max-[639px]:min-h-[380px]
         "
         aria-hidden="true"
       >
         {/* Table */}
-        <div className="min-h-0 flex-1 overflow-hidden">
+        <div className="min-h-0 min-w-0 flex-1 overflow-auto">
           <table className="w-full min-w-[1050px] border-collapse text-left">
             {/* Same column widths as real table */}
             <colgroup>
@@ -186,6 +187,7 @@ const BookingTable = ({
         flex
         h-full
         min-h-0
+        min-w-0
         w-full
         flex-col
         overflow-hidden
@@ -197,10 +199,11 @@ const BookingTable = ({
         sm:h-[435px]
         sm:rounded-2xl
         md:h-[515px]
+        max-[639px]:min-h-[380px]
       "
     >
       {/* Table */}
-      <div className="custom-scrollbar min-h-0 flex-1 overflow-auto">
+      <div className="custom-scrollbar min-h-0 min-w-0 flex-1 overflow-auto">
         <table className="w-full min-w-[1050px] border-collapse text-left">
           <colgroup>
             <col className="w-[20%]" />

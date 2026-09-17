@@ -22,6 +22,10 @@ import ViewSchdulePage from "../page/member/ViewSchedulePage";
 import MyBookingPage from "../page/member/MyBookingsPage";
 import ProfilePage from "../page/member/ProfilePage";
 
+// 404 Frobidden
+import Forbidden from "../page/ForbiddenPage";
+import NotFound from "../page/NotFoudPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -113,5 +117,13 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/403",
+    element: <Forbidden />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
