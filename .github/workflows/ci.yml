@@ -2,11 +2,17 @@ name: Backend CI
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - "feature/**"
+      - main
+      - develop
     paths:
       - "backend/**"
+
   pull_request:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
     paths:
       - "backend/**"
 
@@ -18,14 +24,14 @@ jobs:
   backend:
     name: Backend CI
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: backend
 
     env:
-      # Dummy, non-functional connection string required only for the Prisma
-      # CLI to resolve DIRECT_DATABASE_URL from prisma.config.ts. No database
-      # connection is made during ci, and no migrations are ever run.
+      # Dummy, non-functional connection string required only for Prisma
+      # CLI resolution. No database connection is made during CI.
       DIRECT_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
 
     steps:
