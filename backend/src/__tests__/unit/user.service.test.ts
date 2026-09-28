@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import bcrypt from "bcrypt";
 
+vi.mock("../../config/redis.js", () => ({
+  default: {
+    get: vi.fn(),
+    set: vi.fn(),
+    del: vi.fn(),
+  },
+}));
+
 vi.mock("bcrypt", () => {
   const hash = vi.fn();
   const compare = vi.fn();
@@ -33,7 +41,12 @@ vi.mock("../../utils/newUserByWeek.js", () => ({
 
 import UserService from "../../services/user.service.js";
 import UserRepository from "../../repositories/user.repository.js";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt.js";
+import redisClient from "../../config/redis.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../../utils/jwt.js";
 import { fetchUserByWeek } from "../../utils/newUserByWeek.js";
 
 const mockedUser = {
@@ -60,19 +73,26 @@ const bcryptCompareMock = bcrypt.compare as unknown as ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.mocked(redisClient.get).mockResolvedValue(null);
+  vi.mocked(redisClient.set).mockResolvedValue("OK" as never);
+  vi.mocked(redisClient.del).mockResolvedValue(1 as never);
 });
 
 describe("UserService.registerUser", () => {
   it("should register a user, hash the password with 12 rounds and return access and refresh tokens", async () => {
     vi.mocked(UserRepository.findByEmail).mockResolvedValue(null);
     bcryptHashMock.mockResolvedValue("hashed-password");
-    vi.mocked(UserRepository.registerUser).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.registerUser).mockResolvedValue(
+      mockedUser as never,
+    );
     vi.mocked(generateAccessToken).mockReturnValue("jwt-token");
     vi.mocked(generateRefreshToken).mockReturnValue("refresh-token");
 
     const result = await UserService.registerUser(registerPayload);
 
-    expect(UserRepository.findByEmail).toHaveBeenCalledWith(registerPayload.email);
+    expect(UserRepository.findByEmail).toHaveBeenCalledWith(
+      registerPayload.email,
+    );
     expect(bcrypt.hash).toHaveBeenCalledWith(registerPayload.password, 12);
     expect(UserRepository.registerUser).toHaveBeenCalledWith({
       name: registerPayload.name,
@@ -94,9 +114,13 @@ describe("UserService.registerUser", () => {
   });
 
   it("should throw a 400 AppError when the email is already registered", async () => {
-    vi.mocked(UserRepository.findByEmail).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.findByEmail).mockResolvedValue(
+      mockedUser as never,
+    );
 
-    await expect(UserService.registerUser(registerPayload)).rejects.toMatchObject({
+    await expect(
+      UserService.registerUser(registerPayload),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 400,
       message: "Email already exist",
@@ -109,7 +133,9 @@ describe("UserService.registerUser", () => {
 
 describe("UserService.loginUser", () => {
   it("should return the access and refresh tokens on valid credentials", async () => {
-    vi.mocked(UserRepository.findByEmail).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.findByEmail).mockResolvedValue(
+      mockedUser as never,
+    );
     bcryptCompareMock.mockResolvedValue(true);
     vi.mocked(generateAccessToken).mockReturnValue("jwt-token");
     vi.mocked(generateRefreshToken).mockReturnValue("refresh-token");
@@ -119,8 +145,13 @@ describe("UserService.loginUser", () => {
       password: "StrongPass1!",
     });
 
-    expect(UserRepository.findByEmail).toHaveBeenCalledWith("michael@example.com");
-    expect(bcrypt.compare).toHaveBeenCalledWith("StrongPass1!", mockedUser.passwordHash);
+    expect(UserRepository.findByEmail).toHaveBeenCalledWith(
+      "michael@example.com",
+    );
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      "StrongPass1!",
+      mockedUser.passwordHash,
+    );
     expect(generateAccessToken).toHaveBeenCalledWith({
       id: 1,
       name: "Michael Delos Santos",
@@ -138,7 +169,10 @@ describe("UserService.loginUser", () => {
     vi.mocked(UserRepository.findByEmail).mockResolvedValue(null);
 
     await expect(
-      UserService.loginUser({ email: "ghost@example.com", password: "WrongPass1!" }),
+      UserService.loginUser({
+        email: "ghost@example.com",
+        password: "WrongPass1!",
+      }),
     ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 401,
@@ -149,11 +183,16 @@ describe("UserService.loginUser", () => {
   });
 
   it("should throw a 401 AppError when the password is incorrect", async () => {
-    vi.mocked(UserRepository.findByEmail).mockResolvedValue(mockedUser as never);
+    vi.mocked(UserRepository.findByEmail).mockResolvedValue(
+      mockedUser as never,
+    );
     bcryptCompareMock.mockResolvedValue(false);
 
     await expect(
-      UserService.loginUser({ email: "michael@example.com", password: "WrongPass1!" }),
+      UserService.loginUser({
+        email: "michael@example.com",
+        password: "WrongPass1!",
+      }),
     ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 401,
@@ -187,7 +226,10 @@ describe("UserService.getCurrentUser", () => {
 
 describe("UserService.getUsers", () => {
   it("should use default page, limit and empty search", async () => {
-    vi.mocked(UserRepository.getUsers).mockResolvedValue({ users: [], total: 0 } as never);
+    vi.mocked(UserRepository.getUsers).mockResolvedValue({
+      users: [],
+      total: 0,
+    } as never);
 
     const result = await UserService.getUsers();
 
@@ -208,11 +250,19 @@ describe("UserService.getUsers", () => {
     const result = await UserService.getUsers(-3, 100, "   jane  ");
 
     expect(UserRepository.getUsers).toHaveBeenCalledWith(1, 50, "jane");
-    expect(result.pagination).toEqual({ page: 1, limit: 50, total: 40, totalPages: 1 });
+    expect(result.pagination).toEqual({
+      page: 1,
+      limit: 50,
+      total: 40,
+      totalPages: 1,
+    });
   });
 
   it("should convert a whitespace-only search into undefined", async () => {
-    vi.mocked(UserRepository.getUsers).mockResolvedValue({ users: [], total: 0 } as never);
+    vi.mocked(UserRepository.getUsers).mockResolvedValue({
+      users: [],
+      total: 0,
+    } as never);
 
     await UserService.getUsers(0, 5, "   ");
 
@@ -220,7 +270,10 @@ describe("UserService.getUsers", () => {
   });
 
   it("should clamp a limit below 1 to 1", async () => {
-    vi.mocked(UserRepository.getUsers).mockResolvedValue({ users: [], total: 0 } as never);
+    vi.mocked(UserRepository.getUsers).mockResolvedValue({
+      users: [],
+      total: 0,
+    } as never);
 
     await UserService.getUsers(1, 0);
 
@@ -228,12 +281,20 @@ describe("UserService.getUsers", () => {
   });
 
   it("should compute totalPages using Math.ceil(total / pageSize)", async () => {
-    vi.mocked(UserRepository.getUsers).mockResolvedValue({ users: [], total: 21 } as never);
+    vi.mocked(UserRepository.getUsers).mockResolvedValue({
+      users: [],
+      total: 21,
+    } as never);
 
     const result = await UserService.getUsers(2, 8);
 
     expect(UserRepository.getUsers).toHaveBeenCalledWith(2, 8, undefined);
-    expect(result.pagination).toEqual({ page: 2, limit: 8, total: 21, totalPages: 3 });
+    expect(result.pagination).toEqual({
+      page: 2,
+      limit: 8,
+      total: 21,
+      totalPages: 3,
+    });
   });
 });
 
@@ -247,7 +308,10 @@ describe("UserService.fetchNewUserByWeek", () => {
     const result = await UserService.fetchNewUserByWeek();
 
     expect(fetchUserByWeek).toHaveBeenCalledTimes(1);
-    expect(UserRepository.fetchNewUserByWeek).toHaveBeenCalledWith(startOfWeek, endOfWeek);
+    expect(UserRepository.fetchNewUserByWeek).toHaveBeenCalledWith(
+      startOfWeek,
+      endOfWeek,
+    );
     expect(result).toBe(7);
   });
 });
@@ -347,8 +411,6 @@ describe("UserService.changePassword", () => {
     confirmPassword: "NewPass1!",
   };
 
-  // Mirrors the login flow: findById for the logged-in user, then
-  // findByEmail (email is unique) to fetch the registered hash.
   const mockAccountRecord = () => {
     vi.mocked(UserRepository.findById).mockResolvedValue(mockedUser as never);
     vi.mocked(UserRepository.findByEmail).mockResolvedValue({
@@ -420,7 +482,6 @@ describe("UserService.changePassword", () => {
 
     const result = UserService.changePassword(1, changePasswordPayload);
 
-    // Guarantees the hash / user record is never returned or leaked.
     await expect(result).resolves.toBeUndefined();
 
     expect(UserRepository.findById).toHaveBeenCalledWith(1);
@@ -439,7 +500,9 @@ describe("UserService.changePassword", () => {
 
 describe("UserService.refreshAccessToken", () => {
   it("should throw a 401 AppError when no refresh token is provided", async () => {
-    await expect(UserService.refreshAccessToken(undefined)).rejects.toMatchObject({
+    await expect(
+      UserService.refreshAccessToken(undefined),
+    ).rejects.toMatchObject({
       name: "AppError",
       statusCode: 401,
       message: "Refresh token not found!",

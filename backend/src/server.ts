@@ -12,6 +12,8 @@ import {
   removeConnection,
 } from "./services/websockerManager.service.js";
 
+import redisClient from "./config/redis.js";
+
 // helmet, cors, rate-limit, json, errorHandler
 
 import { env } from "./config/env.js";
@@ -89,6 +91,18 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server start listening to PORT ${PORT}`);
-});
+// redis set up
+const startServer = async () => {
+  try {
+    await redisClient.connect();
+
+    server.listen(PORT, () => {
+      console.log(`Server Running on PORT::${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server", error);
+    process.exit(1);
+  }
+};
+
+startServer();

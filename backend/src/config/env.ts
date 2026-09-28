@@ -22,6 +22,8 @@ const requiredEnvVars = [
   "CLOUDINARY_CLOUD_NAME",
   "CLOUDINARY_API_KEY",
   "CLOUDINARY_API_SECRET",
+
+  "REDIS_URL",
 ] as const;
 
 for (const envVar of requiredEnvVars) {
@@ -45,6 +47,8 @@ export const env = {
 
   // SEED_ADMIN_USER: process.env.SEED_ADMIN_USER!,
   // SEED_ADMIN_PASS: process.env.SEED_ADMIN_PASS!,
+
+  REDIS_URL: process.env.REDIS_URL!,
 
   EMAIL_FROM: process.env.EMAIL_FROM!,
   BREVO_API_KEY: process.env.BREVO_API_KEY!,
