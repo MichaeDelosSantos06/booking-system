@@ -30,7 +30,7 @@ const SchedulePage = () => {
   } = useFetchSchedules();
 
   const { trainer } = useFetchTrainer("Active");
-  const { classes } = useFetchActiveClasses("Active");
+  const { classes } = useFetchActiveClasses();
 
   const onDelete = async (id: number) => {
     setOnDeleteId(id);

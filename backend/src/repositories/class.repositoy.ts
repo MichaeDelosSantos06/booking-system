@@ -1,6 +1,9 @@
 import prisma from "../lib/prisma.js";
 import { Prisma } from "../generated/prisma/client.js";
-import type { CreateClassDto, ClassSearchFilters } from "../types/class.type.js";
+import type {
+  CreateClassDto,
+  ClassSearchFilters,
+} from "../types/class.type.js";
 import type { ClassWhereInput } from "../generated/prisma/models/Class.js";
 import { Status } from "../generated/prisma/enums.js";
 
