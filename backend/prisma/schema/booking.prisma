@@ -12,4 +12,6 @@ model Booking {
   schedule Schedule @relation(fields: [scheduleId], references: [id])
 
   @@unique([userId, scheduleId])
+  @@index([classId])
+  @@index([scheduleId])
 }
