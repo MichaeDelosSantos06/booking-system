@@ -13,4 +13,8 @@ model Class {
 
   trainer   Trainer    @relation(fields: [trainerId], references: [id])
   schedules Schedule[]
+
+  @@index([trainerId])
+  @@index([status, deletedAt])
+
 }
