@@ -17,11 +17,7 @@ router.post(
   ClassController.addClass,
 );
 router.get("/class/fetch-class/", tokenAuth, ClassController.fetchClasses);
-router.get(
-  "/class/search-class",
-  tokenAuth,
-  ClassController.searchClasses,
-);
+router.get("/class/search-class", tokenAuth, ClassController.searchClasses);
 router.delete(
   "/class/delete-class/:id",
   tokenAuth,

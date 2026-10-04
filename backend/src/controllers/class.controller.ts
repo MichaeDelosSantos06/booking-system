@@ -36,8 +36,7 @@ const ClassController = {
   }),
 
   fetchClasses: asyncHandler(async (req: Request, res: Response) => {
-    const status = req.query.status as Status | undefined;
-    const classes = await ClassService.fetchClasses(status);
+    const classes = await ClassService.fetchClasses();
     return res.status(200).json({
       success: true,
       message: "Classess Retrieve!",

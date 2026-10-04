@@ -1,5 +1,4 @@
 import ClassService from "../services/class.service";
-import type { Status } from "../types/trainer.type";
 
 import type { ClassResponseDto } from "../types/class.types";
 
@@ -7,7 +6,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useCallback } from "react";
 
-const useFetchActiveClasses = (status?: Status) => {
+const useFetchActiveClasses = () => {
   const [classes, setClasses] = useState<ClassResponseDto[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +15,7 @@ const useFetchActiveClasses = (status?: Status) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await ClassService.fetchClasses(status); // GET /class/fetch-class?status=...
+      const response = await ClassService.fetchClasses(); // GET /class/fetch-class?status=...
       setClasses(response.classes); // flat array
     } catch (error) {
       console.error("Failed to fetch classes:", error);
@@ -24,7 +23,7 @@ const useFetchActiveClasses = (status?: Status) => {
     } finally {
       setLoading(false);
     }
-  }, [status]);
+  }, []);
 
   useEffect(() => {
     fetchClasses();

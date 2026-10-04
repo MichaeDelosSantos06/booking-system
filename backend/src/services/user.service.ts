@@ -13,6 +13,7 @@ import {
   verifyRefreshToken,
 } from "../utils/jwt.js";
 import { fetchUserByWeek } from "../utils/newUserByWeek.js";
+import redisClient from "../config/redis.js";
 
 const UserService = {
   registerUser: async (data: CreateUserDto) => {
@@ -82,11 +83,26 @@ const UserService = {
   },
 
   getCurrentUser: async (id: number) => {
+    const cacheKey = `user:id:${id}`;
+
+    const cachedUser = await redisClient.get(cacheKey);
+    if (cachedUser !== null) {
+      console.log("cache HIT", cachedUser);
+
+      return JSON.parse(cachedUser);
+    }
+
+    console.log("cache MISS", cachedUser);
+
     const user = await UserRepository.findById(id);
 
     if (!user) {
       throw new AppError("User not found", 404);
     }
+
+    redisClient.set(cacheKey, JSON.stringify(user), {
+      EX: 60,
+    });
 
     return user;
   },
@@ -151,12 +167,29 @@ const UserService = {
   },
 
   getUserInfo: async (userId: number) => {
+    const cacheKey = `user:userInfo:${userId}`;
+
+    const cachedUserInfo = await redisClient.get(cacheKey);
+    if (cachedUserInfo !== null) {
+      console.log("cache HIT", cachedUserInfo);
+
+      return JSON.parse(cachedUserInfo);
+    }
+
+    console.log("cache MISS", cachedUserInfo);
+
     const user = await UserRepository.findById(userId);
     if (!user) {
       throw new AppError("User not found", 404);
     }
 
-    return UserRepository.getUserInfo(userId);
+    const userInfo = await UserRepository.getUserInfo(userId);
+
+    await redisClient.set(cacheKey, JSON.stringify(userInfo), {
+      EX: 60,
+    });
+
+    return userInfo;
   },
 
   updateProfile: async (userId: number, data: UpdateProfileDto) => {
@@ -165,7 +198,11 @@ const UserService = {
       throw new AppError("User not found", 404);
     }
 
-    return UserRepository.updateProfile(userId, data);
+    const userProfile = UserRepository.updateProfile(userId, data);
+
+    await redisClient.del(`user:userInfo:${userId}`);
+
+    return userProfile;
   },
 
   changePassword: async (userId: number, data: ChangePasswordDto) => {
