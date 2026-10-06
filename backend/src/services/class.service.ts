@@ -13,6 +13,7 @@ import ScheduleRepository from "../repositories/schedule.repository.js";
 import BookingRepository from "../repositories/booking.repository.js";
 import NotificationService from "./notification.service.js";
 import redisClient from "../config/redis.js";
+import invalidateCacheByPattern from "../utils/cachedListInvalidator.js";
 
 const ClassService = {
   addClass: async (data: CreateClassDto, image?: UploadedImage) => {
@@ -45,6 +46,8 @@ const ClassService = {
       imageUrl,
       imageId,
     );
+
+    await invalidateCacheByPattern("class:*");
 
     // notify members that a new class is available
     await NotificationService.notifyNewClass(createdClass.className);
@@ -119,9 +122,11 @@ const ClassService = {
       },
     };
 
-    redisClient.set(cacheKey, JSON.stringify(searchFilter), {
+    await redisClient.set(cacheKey, JSON.stringify(searchFilter), {
       EX: 30,
     });
+
+    return searchFilter;
   },
 
   deleteDataById: async (id: number) => {
@@ -136,10 +141,7 @@ const ClassService = {
       await ClassRepository.deleteDataById(tx, id);
     });
 
-    await redisClient.del(`class:id:${id}`);
-    await redisClient.del("class:count:inactive");
-    await redisClient.del("class:count:active");
-    await redisClient.del("class:list:all");
+    await invalidateCacheByPattern("class:*");
 
     return updatedClass;
   },
@@ -188,10 +190,7 @@ const ClassService = {
       imageId,
     );
 
-    await redisClient.del(`class:id:${id}`);
-    await redisClient.del("class:count:inactive");
-    await redisClient.del("class:count:active");
-    await redisClient.del("class:list:all");
+    await invalidateCacheByPattern("class:*");
 
     return updatedClass;
   },
