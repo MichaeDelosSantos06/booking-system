@@ -36,7 +36,7 @@ const ClassRepository = {
 
   findByClassnName: async (className: string) => {
     return prisma.class.findFirst({
-      where: { className },
+      where: { className, deletedAt: null },
     });
   },
 
