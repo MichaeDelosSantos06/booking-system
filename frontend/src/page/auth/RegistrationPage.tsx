@@ -29,9 +29,9 @@ const RegistrationPage = () => {
   const onSubmit = async (data: CreateUserDto) => {
     try {
       await registerUser(data);
-      toast.success("Successfully Registered!");
+      toast.success("Registration successful!");
       reset();
-      navigate("/dashboard");
+      navigate("/member-dashboard");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Registration Failed");

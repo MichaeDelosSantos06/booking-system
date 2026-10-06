@@ -6,6 +6,11 @@ const Forbidden = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  if (!user) {
+    navigate("/");
+    return;
+  }
+
   const handleGoBack = () => {
     if (user?.role === "Admin") {
       navigate("/dashboard");
