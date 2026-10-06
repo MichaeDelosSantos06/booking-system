@@ -7,15 +7,14 @@ export const errorHandler = (
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
-  const statusCode =
-    err instanceof AppError ? err.statusCode : 500;
+  const statusCode = err instanceof AppError ? err.statusCode : 500;
 
   const message =
     err instanceof AppError
       ? err.message
-      : "Internal Server Error";
+      : "Something went wrong. Please try again later.";
 
   if (env.NODE_ENV !== "test") {
     console.error(err);
