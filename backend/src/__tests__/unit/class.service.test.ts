@@ -6,6 +6,8 @@ vi.mock("../../config/redis.js", () => ({
     get: vi.fn(),
     set: vi.fn(),
     del: vi.fn(),
+    scan: vi.fn(),
+    keys: vi.fn(),
   },
 }));
 
@@ -78,6 +80,8 @@ beforeEach(() => {
   vi.mocked(redisClient.get).mockResolvedValue(null);
   vi.mocked(redisClient.set).mockResolvedValue("OK" as never);
   vi.mocked(redisClient.del).mockResolvedValue(1 as never);
+  vi.mocked(redisClient.scan).mockResolvedValue({ cursor: "0", keys: [] } as never);
+  vi.mocked(redisClient.keys).mockResolvedValue([] as never);
 });
 
 describe("ClassService.addClass", () => {
@@ -218,7 +222,16 @@ describe("ClassService.searchClasses", () => {
       total: 0,
     } as never);
 
-    await expect(ClassService.searchClasses()).resolves.toBeUndefined();
+    await expect(ClassService.searchClasses()).resolves.toEqual({
+      classes: [],
+      total: 0,
+      pagination: {
+        page: 1,
+        limit: 5,
+        total: 0,
+        totalPages: 0,
+      },
+    });
 
     expect(ClassRepository.searchClasses).toHaveBeenCalledWith(
       1,
@@ -236,7 +249,16 @@ describe("ClassService.searchClasses", () => {
 
     await expect(
       ClassService.searchClasses(-2, 100, "  pilates "),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual({
+      classes: [{ id: 1 }],
+      total: 55,
+      pagination: {
+        page: 1,
+        limit: 50,
+        total: 55,
+        totalPages: 2,
+      },
+    });
 
     expect(ClassRepository.searchClasses).toHaveBeenCalledWith(
       1,

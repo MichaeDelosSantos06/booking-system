@@ -1,6 +1,16 @@
 import redisClient from "../config/redis.js";
 
 const invalidateCacheByPattern = async (pattern: string): Promise<void> => {
+  if (typeof redisClient.scan !== "function") {
+    if (typeof redisClient.keys === "function") {
+      const keys = await redisClient.keys(pattern);
+      if (keys.length > 0) {
+        await redisClient.del(keys);
+      }
+    }
+    return;
+  }
+
   let cursor = "0";
 
   do {
