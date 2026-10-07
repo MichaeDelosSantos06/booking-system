@@ -10,7 +10,7 @@ model User {
 
   bookings            Booking[]
   passwordResetTokens PasswordResetToken[]
-  notifications Notification[]
+  notifications       Notification[]
 
   @@index([role])
 }

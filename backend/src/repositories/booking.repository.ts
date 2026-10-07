@@ -253,6 +253,7 @@ const BookingRepository = {
         select: {
           id: true,
           status: true,
+          scheduleId: true,
 
           user: {
             select: {
