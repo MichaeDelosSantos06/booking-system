@@ -273,23 +273,16 @@ const ScheduleTable = ({
                   (option) => option.value === item.class.category
                 );
 
-                const booked = item._count.bookings ?? 0;
+                const booked = item.booked;
+                const capacity = item.capacity;
 
-                const remaining = Math.max(item.capacity, 0);
+                const remaining = item.capacity - item.booked;
 
-                const maxCapacity = Math.max(item.capacity + booked, 0);
-
-                const currentBooked = Math.min(
-                  Math.max(booked, 0),
-                  maxCapacity
-                );
-
-                const percentage =
-                  maxCapacity > 0 ? (currentBooked / maxCapacity) * 100 : 0;
+                const percentage = capacity > 0 ? (booked / capacity) * 100 : 0;
 
                 let progressColor = "bg-slate-300";
 
-                if (currentBooked > 0) {
+                if (booked > 0) {
                   if (percentage < 60) {
                     progressColor = "bg-green-500";
                   } else if (percentage < 85) {
@@ -363,7 +356,7 @@ const ScheduleTable = ({
                       <div className="w-full">
                         <div className="mb-1.5 flex items-center justify-between">
                           <span className="text-[9px] font-semibold text-slate-700 sm:text-[10px]">
-                            {currentBooked}/{maxCapacity}
+                            {booked}/{capacity}
                           </span>
 
                           <span className="text-[8px] text-slate-400 sm:text-[9px]">

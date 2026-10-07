@@ -35,6 +35,7 @@ export interface ScheduleResponseDto {
     bookings: number;
   };
 
+  booked: number;
   startAt: string;
   endAt: string;
   location: Location;

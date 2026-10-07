@@ -14,9 +14,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isInitializing, setIsInitializing] = useState(true);
 
   const getCurrentUser = async () => {
-    const result = await UserService.getCurrentUser();
+    const result = await UserService.getUserInfo();
 
-    setUser(result.user);
+    setUser(result.userInfo);
   };
 
   const refreshUser = async () => {
