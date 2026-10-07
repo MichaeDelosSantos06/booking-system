@@ -32,17 +32,6 @@ const ScheduleRepository = {
     });
   },
 
-  updateCapacity: async (tx: Prisma.TransactionClient, id: number) => {
-    return tx.schedule.update({
-      where: { id },
-      data: {
-        booked: {
-          decrement: 1,
-        },
-      },
-    });
-  },
-
   increaseBookedCount: async (tx: Prisma.TransactionClient, id: number) => {
     return tx.schedule.update({
       where: { id },
