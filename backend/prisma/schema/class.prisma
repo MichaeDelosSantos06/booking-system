@@ -16,5 +16,4 @@ model Class {
 
   @@index([trainerId])
   @@index([status, deletedAt])
-
 }

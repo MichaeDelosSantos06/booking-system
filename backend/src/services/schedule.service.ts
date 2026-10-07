@@ -69,7 +69,10 @@ const ScheduleService = {
     });
 
     // notify members that a new schedule is available
-    await NotificationService.notifyNewSchedule(checkClassId.className, startAt);
+    await NotificationService.notifyNewSchedule(
+      checkClassId.className,
+      startAt,
+    );
 
     return schedule;
   },

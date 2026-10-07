@@ -42,7 +42,7 @@ const BookingService = {
 
     return prisma.$transaction(async (tx) => {
       await ScheduleRepository.updateCapacity(tx, data.scheduleId);
-      await BookingRepository.createBooking(tx, data);
+      return BookingRepository.createBooking(tx, data);
     });
   },
 
@@ -95,7 +95,12 @@ const BookingService = {
       throw new AppError("Booking Cannot be cancel", 400);
     }
 
-    return BookingRepository.cancelBooking(bookingId);
+    const scheduleId = booking.scheduleId ?? booking.id;
+
+    return prisma.$transaction(async (tx) => {
+      await ScheduleRepository.updateCapacity(tx, scheduleId);
+      return BookingRepository.cancelBooking(bookingId);
+    });
   },
 
   retrieveBookingForAdmin: async (

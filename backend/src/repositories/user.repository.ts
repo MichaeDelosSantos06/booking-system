@@ -120,7 +120,7 @@ export const UserRepository = {
   },
 
   getUserInfo: async (id: number) => {
-    return prisma.user.findFirst({
+    return prisma.user.findUnique({
       where: {
         id,
       },
@@ -131,6 +131,7 @@ export const UserRepository = {
         status: true,
         contact: true,
         createdAt: true,
+        role: true,
       },
     });
   },

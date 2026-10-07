@@ -32,6 +32,39 @@ const ScheduleRepository = {
     });
   },
 
+  updateCapacity: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.schedule.update({
+      where: { id },
+      data: {
+        booked: {
+          decrement: 1,
+        },
+      },
+    });
+  },
+
+  increaseBookedCount: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.schedule.update({
+      where: { id },
+      data: {
+        booked: {
+          increment: 1,
+        },
+      },
+    });
+  },
+
+  decreaseBookedCount: async (tx: Prisma.TransactionClient, id: number) => {
+    return tx.schedule.update({
+      where: { id },
+      data: {
+        booked: {
+          decrement: 1,
+        },
+      },
+    });
+  },
+
   updateExpiredSchedules: async () => {
     return prisma.schedule.updateMany({
       where: {
@@ -183,6 +216,7 @@ const ScheduleRepository = {
           capacity: true,
           status: true,
           date: true,
+          booked: true,
 
           class: {
             select: {
@@ -293,17 +327,6 @@ const ScheduleRepository = {
             id: true,
             name: true,
           },
-        },
-      },
-    });
-  },
-
-  updateCapacity: async (tx: Prisma.TransactionClient, id: number) => {
-    return tx.schedule.update({
-      where: { id },
-      data: {
-        capacity: {
-          decrement: 1,
         },
       },
     });
