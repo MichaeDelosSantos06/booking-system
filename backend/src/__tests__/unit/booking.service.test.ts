@@ -33,7 +33,7 @@ vi.mock("../../repositories/trainer.repositoy.js", () => ({
 }));
 
 vi.mock("../../repositories/schedule.repository.js", () => ({
-  default: { findById: vi.fn(), updateCapacity: vi.fn() },
+  default: { findById: vi.fn(), increaseBookedCount: vi.fn(), decreaseBookedCount: vi.fn() },
 }));
 
 vi.mock("../../lib/prisma.js", () => ({
@@ -137,14 +137,14 @@ describe("BookingService.createBooking", () => {
 
     const fakeTx = {};
     transactionMock.mockImplementation(async (callback) => callback(fakeTx));
-    vi.mocked(ScheduleRepository.updateCapacity).mockResolvedValue({ id: 4, capacity: 9 } as never);
+    vi.mocked(ScheduleRepository.increaseBookedCount).mockResolvedValue({ id: 4, booked: 1 } as never);
     vi.mocked(BookingRepository.createBooking).mockResolvedValue({ id: 11 } as never);
 
     await BookingService.createBooking(bookingData);
 
     expect(BookingRepository.checkDoubleBooking).toHaveBeenCalledWith(1, 4);
     expect(transactionMock).toHaveBeenCalledTimes(1);
-    expect(ScheduleRepository.updateCapacity).toHaveBeenCalledWith(fakeTx, 4);
+    expect(ScheduleRepository.increaseBookedCount).toHaveBeenCalledWith(fakeTx, 4);
     expect(BookingRepository.createBooking).toHaveBeenCalledWith(fakeTx, bookingData);
   });
 });

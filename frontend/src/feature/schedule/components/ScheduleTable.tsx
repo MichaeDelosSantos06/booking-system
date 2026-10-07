@@ -280,6 +280,8 @@ const ScheduleTable = ({
 
                 const percentage = capacity > 0 ? (booked / capacity) * 100 : 0;
 
+                const isFull = remaining <= 0;
+
                 let progressColor = "bg-slate-300";
 
                 if (booked > 0) {
@@ -378,15 +380,15 @@ const ScheduleTable = ({
 
                     {/* Status */}
                     <td className="px-2 py-2.5 text-center sm:px-3 sm:py-3 md:px-4 md:py-4">
-                      {item.status === "Open" ? (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-semibold text-emerald-600 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
-                          <span className="h-1 w-1 shrink-0 rounded-full bg-emerald-500 sm:h-1.5 sm:w-1.5" />
-                          Open
-                        </span>
-                      ) : item.status === "Full" ? (
+                      {isFull || item.status === "Full" ? (
                         <span className="inline-flex items-center gap-0.5 rounded-full bg-red-50 px-1.5 py-0.5 text-[8px] font-semibold text-red-600 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
                           <span className="h-1 w-1 shrink-0 rounded-full bg-red-500 sm:h-1.5 sm:w-1.5" />
                           Full
+                        </span>
+                      ) : item.status === "Open" ? (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-semibold text-emerald-600 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-emerald-500 sm:h-1.5 sm:w-1.5" />
+                          Open
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[8px] font-semibold text-slate-500 sm:gap-1 sm:px-2 sm:py-1 sm:text-[9px] md:gap-1.5 md:px-2.5 md:text-xs">
