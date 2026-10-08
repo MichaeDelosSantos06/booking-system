@@ -13,7 +13,7 @@ import {
   verifyRefreshToken,
 } from "../utils/jwt.js";
 import { fetchUserByWeek } from "../utils/newUserByWeek.js";
-import redisClient from "../config/redis.js";
+import { deleteCache, getCache, setCache } from "../utils/redisCache.js";
 
 const UserService = {
   registerUser: async (data: CreateUserDto) => {
@@ -85,14 +85,14 @@ const UserService = {
   getCurrentUser: async (id: number) => {
     const cacheKey = `user:id:${id}`;
 
-    const cachedUser = await redisClient.get(cacheKey);
+    const cachedUser = await getCache(cacheKey);
     if (cachedUser !== null) {
       console.log("cache HIT", cachedUser);
 
-      return JSON.parse(cachedUser);
+      return cachedUser;
     }
 
-    console.log("cache MISS", cachedUser);
+    console.log("cache MISS");
 
     const user = await UserRepository.findById(id);
 
@@ -100,9 +100,7 @@ const UserService = {
       throw new AppError("User not found", 404);
     }
 
-    redisClient.set(cacheKey, JSON.stringify(user), {
-      EX: 60,
-    });
+    await setCache(cacheKey, user, 60);
 
     return user;
   },
@@ -169,14 +167,14 @@ const UserService = {
   getUserInfo: async (userId: number) => {
     const cacheKey = `user:userInfo:${userId}`;
 
-    const cachedUserInfo = await redisClient.get(cacheKey);
+    const cachedUserInfo = await getCache(cacheKey);
     if (cachedUserInfo !== null) {
       console.log("cache HIT", cachedUserInfo);
 
-      return JSON.parse(cachedUserInfo);
+      return cachedUserInfo;
     }
 
-    console.log("cache MISS", cachedUserInfo);
+    console.log("cache MISS");
 
     const user = await UserRepository.findById(userId);
     if (!user) {
@@ -185,9 +183,7 @@ const UserService = {
 
     const userInfo = await UserRepository.getUserInfo(userId);
 
-    await redisClient.set(cacheKey, JSON.stringify(userInfo), {
-      EX: 60,
-    });
+    await setCache(cacheKey, userInfo, 60);
 
     return userInfo;
   },
@@ -200,7 +196,7 @@ const UserService = {
 
     const userProfile = UserRepository.updateProfile(userId, data);
 
-    await redisClient.del(`user:userInfo:${userId}`);
+    await deleteCache(`user:userInfo:${userId}`);
 
     return userProfile;
   },

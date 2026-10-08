@@ -5,6 +5,7 @@ import {
   Difficulty,
   Location,
   Status,
+  ScheduleStat,
 } from "../generated/prisma/enums.js";
 
 export type CreateClassDto = z.infer<typeof createClassSchema>;
@@ -52,3 +53,46 @@ export interface ClassresponseDto {
     name: string;
   };
 }
+
+export interface ClassSearchDto {
+  id: number;
+  className: string;
+  description: string | null;
+  category: Category;
+  duration: number;
+  status: Status;
+  imageUrl: string | null;
+  difficulty: Difficulty;
+  trainerId: number;
+
+  trainer: {
+    id: number;
+    name: string;
+  } | null;
+
+  schedules: {
+    id: number;
+    date: Date;
+    startAt: Date;
+    endAt: Date;
+    status: ScheduleStat;
+    location: Location;
+    capacity: number;
+
+    bookings: {
+      id: number;
+      userId: number;
+    }[];
+  }[];
+}
+
+export type ClassSearchResult = {
+  classes: ClassSearchDto[];
+  total: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+};

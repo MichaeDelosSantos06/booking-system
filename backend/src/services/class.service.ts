@@ -5,6 +5,7 @@ import type {
   ClassSearchFilters,
   UploadedImage,
   ClassresponseDto,
+  ClassSearchResult,
 } from "../types/class.type.js";
 import { AppError } from "../utils/appError.js";
 import { uploadImage } from "./cloudinary.service.js";
@@ -12,7 +13,7 @@ import prisma from "../lib/prisma.js";
 import ScheduleRepository from "../repositories/schedule.repository.js";
 import BookingRepository from "../repositories/booking.repository.js";
 import NotificationService from "./notification.service.js";
-import redisClient from "../config/redis.js";
+import { getCache, setCache } from "../utils/redisCache.js";
 import invalidateCacheByPattern from "../utils/cachedListInvalidator.js";
 
 const ClassService = {
@@ -59,20 +60,18 @@ const ClassService = {
   fetchClasses: async () => {
     const cacheKey = "class:list:all";
 
-    const cachedClass = await redisClient.get(cacheKey);
+    const cachedClass = await getCache<ClassresponseDto[]>(cacheKey);
     if (cachedClass !== null) {
       console.log("cached HIT", cachedClass);
 
-      return JSON.parse(cachedClass) as ClassresponseDto[];
+      return cachedClass;
     }
 
-    console.log("cached MISS", cachedClass);
+    console.log("cached MISS");
 
     const classes = await ClassRepository.fetchClasses();
 
-    await redisClient.set(cacheKey, JSON.stringify(classes), {
-      EX: 60,
-    });
+    await setCache(cacheKey, classes, 60);
 
     return classes;
   },
@@ -95,14 +94,14 @@ const ClassService = {
       `:page:${currentPage}` +
       `:filters:${filterKey}`;
 
-    const cachedSearch = await redisClient.get(cacheKey);
+    const cachedSearch = await getCache<ClassSearchResult>(cacheKey);
     if (cachedSearch !== null) {
       console.log("cache HIT", cachedSearch);
 
-      return JSON.parse(cachedSearch);
+      return cachedSearch;
     }
 
-    console.log("cache MISS", cachedSearch);
+    console.log("cache MISS");
 
     const { classes, total } = await ClassRepository.searchClasses(
       currentPage,
@@ -111,7 +110,7 @@ const ClassService = {
       filters,
     );
 
-    const searchFilter = {
+    const searchFilter: ClassSearchResult = {
       classes,
       total,
       pagination: {
@@ -122,9 +121,7 @@ const ClassService = {
       },
     };
 
-    await redisClient.set(cacheKey, JSON.stringify(searchFilter), {
-      EX: 30,
-    });
+    await setCache(cacheKey, searchFilter, 30);
 
     return searchFilter;
   },
@@ -199,19 +196,17 @@ const ClassService = {
   getInactiveClass: async () => {
     const cacheKey = "class:count:inactive";
 
-    const cachedClass = await redisClient.get(cacheKey);
+    const cachedClass = await getCache(cacheKey);
     if (cachedClass) {
       console.log("Cached HIT", cachedClass);
-      return JSON.parse(cachedClass);
+      return cachedClass;
     }
 
-    console.log("cached MISS", cachedClass);
+    console.log("cached MISS");
 
     const inactive = await ClassRepository.getInactiveClass();
 
-    await redisClient.set(cacheKey, JSON.stringify(inactive), {
-      EX: 60,
-    });
+    await setCache(cacheKey, inactive, 60);
 
     return inactive;
   },
@@ -220,20 +215,18 @@ const ClassService = {
   getActiveClass: async () => {
     const cacheKey = "class:count:active";
 
-    const cachedClass = await redisClient.get(cacheKey);
+    const cachedClass = await getCache(cacheKey);
     if (cachedClass) {
       console.log("cache HIT", cachedClass);
 
-      return JSON.parse(cachedClass);
+      return cachedClass;
     }
 
-    console.log("cached MISS", cachedClass);
+    console.log("cached MISS");
 
     const active = await ClassRepository.getActiveClass();
 
-    await redisClient.set(cacheKey, JSON.stringify(active), {
-      EX: 60,
-    });
+    await setCache(cacheKey, active, 60);
 
     return active;
   },
