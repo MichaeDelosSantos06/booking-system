@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   ArrowLeft,
   CalendarDays,
@@ -6,6 +7,7 @@ import {
   MapPin,
   UserRound,
 } from "lucide-react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { formatDate, formatTime } from "../../utils/DateFormatterHelper";
@@ -20,19 +22,45 @@ const ViewSchedulePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [bookedScheduleIds, setBookedScheduleIds] = useState<Set<number>>(
+    () => new Set()
+  );
+  const [bookingInProgress, setBookingInProgress] = useState<Set<number>>(
+    () => new Set()
+  );
 
   const createBooking = async (
     classId: number,
     trainerId: number,
     scheduleId: number
   ) => {
-    await BookingService.createBooking({
-      classId,
-      trainerId,
-      scheduleId,
-    });
+    if (bookingInProgress.has(scheduleId)) return;
 
-    toast.success("Booked Successfully!");
+    setBookingInProgress((current) => new Set(current).add(scheduleId));
+
+    try {
+      await BookingService.createBooking({
+        classId,
+        trainerId,
+        scheduleId,
+      });
+
+      setBookedScheduleIds((current) => new Set(current).add(scheduleId));
+      toast.success("Booked Successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        axios.isAxiosError(error)
+          ? (error.response?.data?.message ?? "Unable to book this schedule.")
+          : "Unable to book this schedule."
+      );
+    } finally {
+      setBookingInProgress((current) => {
+        const updated = new Set(current);
+        updated.delete(scheduleId);
+        return updated;
+      });
+    }
   };
 
   if (!state) {
@@ -112,7 +140,6 @@ const ViewSchedulePage = () => {
   }
 
   const {
-    schedules,
     imageUrl,
     className,
     category,
@@ -122,6 +149,7 @@ const ViewSchedulePage = () => {
     trainerId,
     classId,
     trainer,
+    schedules,
   } = state as ViewScheduleState;
 
   const formatLocation = (location: string) => {
@@ -498,13 +526,20 @@ const ViewSchedulePage = () => {
           <div className="space-y-3 sm:space-y-4">
             {schedules.length > 0 ? (
               schedules.map((schedule) => {
-                const isBooked = schedule.bookings.some(
-                  (booking) => booking.userId === user?.id
+                const isBooked =
+                  bookedScheduleIds.has(schedule.id) ||
+                  schedule.bookings.some(
+                    (booking) => booking.userId === user?.id
+                  );
+                const remainingCapacity = Math.max(
+                  0,
+                  schedule.capacity -
+                    (bookedScheduleIds.has(schedule.id) ? 1 : 0)
                 );
 
                 const isPast = new Date(schedule.endAt) <= new Date();
 
-                const isFull = schedule.capacity === 0;
+                const isFull = remainingCapacity === 0;
 
                 return (
                   <article
@@ -601,7 +636,7 @@ const ViewSchedulePage = () => {
                         <div className="mt-2 sm:mt-3">
                           <p className="text-[11px] text-gray-400 sm:text-xs">
                             <span className="font-bold text-gray-700">
-                              {schedule.capacity}
+                              {remainingCapacity}
                             </span>{" "}
                             spots available
                           </p>
@@ -773,6 +808,8 @@ const ViewSchedulePage = () => {
                         ) : (
                           <Button
                             type="button"
+                            loading={bookingInProgress.has(schedule.id)}
+                            loadingText="Booking..."
                             className="
                               group
                               relative
@@ -805,9 +842,9 @@ const ViewSchedulePage = () => {
                               hover:shadow-red-500/20
                               active:translate-y-0
                             "
-                            onClick={() => {
-                              createBooking(classId, trainerId, schedule.id);
-                            }}
+                            onClick={() =>
+                              createBooking(classId, trainerId, schedule.id)
+                            }
                           >
                             <span className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2">
                               Book Now
