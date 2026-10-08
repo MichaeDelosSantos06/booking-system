@@ -5,6 +5,7 @@ import type {
   ClassSearchFilters,
   UploadedImage,
   ClassresponseDto,
+  ClassSearchResult,
 } from "../types/class.type.js";
 import { AppError } from "../utils/appError.js";
 import { uploadImage } from "./cloudinary.service.js";
@@ -93,7 +94,7 @@ const ClassService = {
       `:page:${currentPage}` +
       `:filters:${filterKey}`;
 
-    const cachedSearch = await getCache(cacheKey);
+    const cachedSearch = await getCache<ClassSearchResult>(cacheKey);
     if (cachedSearch !== null) {
       console.log("cache HIT", cachedSearch);
 
@@ -109,7 +110,7 @@ const ClassService = {
       filters,
     );
 
-    const searchFilter = {
+    const searchFilter: ClassSearchResult = {
       classes,
       total,
       pagination: {
